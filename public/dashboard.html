@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>UA Recovery Map</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#0B1829;
+  --navy2:#0E1F35;
+  --navy3:#132540;
+  --blue:#1D55E8;
+  --blue2:#2563EB;
+  --blue-glow:rgba(29,85,232,0.2);
+  --green:#15803D;
+  --green-bright:#22C55E;
+  --amber:#B45309;
+  --amber-bright:#F59E0B;
+  --red:#991B1B;
+  --red-bright:#EF4444;
+  --border:rgba(255,255,255,0.07);
+  --text-dim:rgba(255,255,255,0.45);
+  --text-mid:rgba(255,255,255,0.7);
+  --text:rgba(255,255,255,0.92);
+  --left-w:280px;
+  --right-w:340px;
+  --top-h:50px;
+}
+html,body{height:100%;font-family:'Inter',sans-serif;overflow:hidden;background:var(--navy);}
+body{display:flex;flex-direction:column;}
+
+/* ── TOPBAR ── */
+#topbar{
+  height:var(--top-h);flex-shrink:0;
+  background:var(--navy2);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;
+  padding:0 14px;gap:10px;
+  z-index:1000;
+}
+.logo{display:flex;align-items:center;gap:8px;margin-right:6px;}
+.logo-flag{width:20px;height:14px;border-radius:2px;overflow:hidden;display:flex;flex-direction:column;}
+.logo-flag-t{flex:1;background:#005BBB;}
+.logo-flag-b{flex:1;background:#FFD700;}
+.logo-name{font-size:13px;font-weight:700;color:var(--text);letter-spacing:-.01em;}
+.logo-name b{color:#60A5FA;}
+.tb-div{width:1px;height:18px;background:var(--border);}
+.pilot-pill{
+  display:flex;align-items:center;gap:5px;
+  background:rgba(34,197,94,0.1);
+  border:1px solid rgba(34,197,94,0.25);
+  padding:3px 10px;border-radius:20px;
+  font-size:11px;font-weight:600;color:#4ADE80;
+}
+.pilot-dot{width:5px;height:5px;border-radius:50%;background:#4ADE80;animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.layer-btns{display:flex;gap:4px;}
+.layer-btn{
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--border);
+  color:var(--text-dim);
+  font-size:11px;font-weight:500;
+  padding:4px 11px;border-radius:5px;
+  cursor:pointer;font-family:inherit;
+  transition:all .15s;
+}
+.layer-btn:hover{color:var(--text-mid);background:rgba(255,255,255,.08);}
+.layer-btn.active{background:rgba(29,85,232,.25);border-color:rgba(29,85,232,.5);color:#93C5FD;}
+.tb-spacer{flex:1;}
+.lang-tog{display:flex;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:5px;overflow:hidden;}
+.lang-btn{padding:4px 9px;font-size:11px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--text-dim);font-family:inherit;transition:all .15s;}
+.lang-btn.active{background:rgba(29,85,232,.4);color:white;}
+.chat-tog-btn{
+  background:var(--blue);border:none;color:white;
+  font-size:11px;font-weight:600;
+  padding:5px 13px;border-radius:6px;
+  cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;gap:5px;
+  transition:background .15s;
+}
+.chat-tog-btn:hover{background:var(--blue2);}
+
+/* ── LAYOUT ── */
+#main{flex:1;display:flex;overflow:hidden;position:relative;}
+
+/* ── LEFT PANEL ── */
+#lpanel{
+  width:var(--left-w);flex-shrink:0;
+  background:var(--navy2);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  overflow:hidden;
+  transition:margin-left .25s;
+}
+.lp-head{padding:12px 14px 8px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.lp-title{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text-dim);}
+.lp-body{flex:1;overflow-y:auto;padding:8px 0;}
+.lp-body::-webkit-scrollbar{width:2px;}
+.lp-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);}
+.lg-head{padding:6px 14px;font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.22);}
+.lr{padding:7px 14px;display:flex;align-items:center;gap:9px;cursor:pointer;transition:background .12s;}
+.lr:hover{background:rgba(255,255,255,.03);}
+.lr-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.lr-name{font-size:12px;color:var(--text-mid);flex:1;}
+.tog{width:28px;height:16px;background:rgba(255,255,255,.1);border-radius:8px;position:relative;transition:background .2s;flex-shrink:0;}
+.tog.on{background:var(--blue);}
+.tog::after{content:'';position:absolute;width:12px;height:12px;border-radius:50%;background:white;top:2px;left:2px;transition:transform .2s;}
+.tog.on::after{transform:translateX(12px);}
+
+/* area info */
+#area-info{border-top:1px solid var(--border);flex-shrink:0;padding:12px 14px;}
+#area-info.hidden{display:none;}
+.ai-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px;}
+.ai-sub{font-size:10px;color:var(--text-dim);margin-bottom:11px;}
+.ai-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px;}
+.ai-m{background:rgba(255,255,255,.04);border-radius:6px;padding:8px 10px;}
+.ai-ml{font-size:9px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--text-dim);margin-bottom:3px;}
+.ai-mv{font-size:17px;font-weight:700;line-height:1;}
+.ai-bars{display:flex;flex-direction:column;gap:6px;margin-bottom:10px;}
+.ai-br{display:flex;align-items:center;gap:7px;}
+.ai-bl{font-size:10px;color:var(--text-dim);width:82px;flex-shrink:0;}
+.ai-bw{flex:1;height:3px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden;}
+.ai-bf{height:100%;border-radius:2px;transition:width .5s;}
+.ai-bp{font-size:10px;color:var(--text-dim);width:24px;text-align:right;}
+.chain-row{
+  display:flex;align-items:center;gap:6px;
+  padding:7px 9px;
+  background:rgba(34,197,94,.07);
+  border:1px solid rgba(34,197,94,.18);
+  border-radius:6px;margin-bottom:9px;
+}
+.chain-ok{color:#4ADE80;font-size:10px;font-weight:700;}
+.chain-txt{font-size:10px;color:var(--text-dim);}
+.chain-hash{font-size:10px;color:#60A5FA;font-family:monospace;}
+.ask-btn{
+  width:100%;padding:8px;
+  background:var(--blue);border:none;border-radius:6px;
+  color:white;font-size:12px;font-weight:600;
+  cursor:pointer;font-family:inherit;transition:background .15s;
+}
+.ask-btn:hover{background:var(--blue2);}
+
+/* ── MAP ── */
+#mapwrap{flex:1;position:relative;}
+#map{width:100%;height:100%;}
+.leaflet-container{background:#0B1829!important;}
+.leaflet-control-zoom a{background:rgba(11,24,41,.9)!important;color:rgba(255,255,255,.6)!important;border-color:rgba(255,255,255,.1)!important;}
+.leaflet-control-zoom a:hover{background:rgba(29,85,232,.5)!important;color:white!important;}
+
+/* tooltip */
+.ua-tip{
+  background:rgba(11,24,41,.96)!important;
+  border:1px solid rgba(255,255,255,.1)!important;
+  border-radius:8px!important;padding:10px 12px!important;
+  font-family:'Inter',sans-serif!important;font-size:12px!important;
+  color:white!important;box-shadow:0 4px 24px rgba(0,0,0,.5)!important;
+  min-width:160px;
+}
+.ua-tip strong{display:block;font-size:13px;margin-bottom:6px;}
+.tt-r{display:flex;justify-content:space-between;gap:14px;margin-bottom:3px;}
+.tt-l{color:rgba(255,255,255,.4);font-size:11px;}
+.tt-v{font-weight:600;font-size:11px;}
+
+/* map overlays */
+#map-legend{
+  position:absolute;bottom:14px;left:14px;z-index:400;
+  background:rgba(11,24,41,.92);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:9px;padding:11px 13px;
+  backdrop-filter:blur(8px);
+}
+.leg-t{font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text-dim);margin-bottom:7px;}
+.leg-r{display:flex;align-items:center;gap:7px;margin-bottom:4px;font-size:11px;color:var(--text-mid);}
+.leg-d{width:9px;height:9px;border-radius:2px;}
+
+#map-ts{
+  position:absolute;top:10px;left:50%;transform:translateX(-50%);
+  z-index:400;
+  background:rgba(11,24,41,.85);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:20px;padding:4px 13px;
+  font-size:11px;color:var(--text-dim);
+  backdrop-filter:blur(8px);white-space:nowrap;
+}
+
+#layer-badge{
+  position:absolute;top:10px;right:10px;z-index:400;
+  background:rgba(11,24,41,.88);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:7px;padding:7px 11px;
+  backdrop-filter:blur(8px);
+}
+.lb-l{font-size:9px;color:var(--text-dim);margin-bottom:3px;}
+.lb-v{font-size:12px;font-weight:600;color:var(--text);}
+
+/* ── RIGHT PANEL — CHAT ── */
+#rpanel{
+  width:var(--right-w);flex-shrink:0;
+  background:var(--navy2);
+  border-left:1px solid var(--border);
+  display:flex;flex-direction:column;
+  transition:margin-right .25s;
+}
+#rpanel.collapsed{margin-right:calc(-1 * var(--right-w));}
+
+.rp-head{
+  padding:12px 14px 10px;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.rp-title-row{display:flex;align-items:center;gap:8px;margin-bottom:2px;}
+.rp-dot{width:6px;height:6px;border-radius:50%;background:#4ADE80;animation:blink 2s infinite;}
+.rp-title{font-size:13px;font-weight:700;color:var(--text);}
+.rp-sub{font-size:10px;color:var(--text-dim);}
+
+.rp-ctx{
+  padding:7px 14px;
+  background:rgba(29,85,232,.06);
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.rp-ctx-l{font-size:9px;color:var(--text-dim);margin-bottom:4px;}
+.rp-ctx-tags{display:flex;gap:4px;flex-wrap:wrap;}
+.ctx-t{
+  background:rgba(29,85,232,.15);
+  border:1px solid rgba(29,85,232,.25);
+  color:#93C5FD;font-size:10px;font-weight:500;
+  padding:2px 7px;border-radius:4px;
+}
+
+.rp-msgs{
+  flex:1;overflow-y:auto;
+  padding:12px;display:flex;flex-direction:column;gap:9px;
+}
+.rp-msgs::-webkit-scrollbar{width:2px;}
+.rp-msgs::-webkit-scrollbar-thumb{background:rgba(255,255,255,.07);}
+
+.msg-u{
+  align-self:flex-end;
+  background:var(--blue);color:white;
+  border-radius:9px 9px 2px 9px;
+  padding:8px 12px;font-size:12px;
+  max-width:86%;line-height:1.5;
+}
+.msg-a{
+  align-self:flex-start;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:9px 9px 9px 2px;
+  padding:10px 12px;font-size:12px;
+  max-width:93%;color:var(--text-mid);line-height:1.6;
+}
+.msg-src{
+  display:inline-flex;align-items:center;gap:3px;
+  background:rgba(29,85,232,.15);
+  border:1px solid rgba(29,85,232,.25);
+  color:#93C5FD;border-radius:4px;
+  padding:2px 7px;font-size:10px;font-weight:500;
+  margin-top:5px;
+}
+.msg-typing{
+  align-self:flex-start;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:9px 9px 9px 2px;
+  padding:11px 14px;display:flex;gap:4px;align-items:center;
+}
+.td{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.3);animation:td .8s ease-in-out infinite;}
+.td:nth-child(2){animation-delay:.15s;}
+.td:nth-child(3){animation-delay:.3s;}
+@keyframes td{0%,60%,100%{transform:translateY(0);opacity:.3}30%{transform:translateY(-4px);opacity:1}}
+
+.rp-sugs{
+  padding:7px 12px;border-top:1px solid var(--border);
+  display:flex;gap:5px;flex-wrap:wrap;flex-shrink:0;
+}
+.sug{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.09);
+  color:var(--text-dim);font-size:10px;
+  padding:4px 9px;border-radius:4px;
+  cursor:pointer;transition:all .15s;font-family:inherit;
+}
+.sug:hover{background:rgba(29,85,232,.15);border-color:rgba(29,85,232,.3);color:#93C5FD;}
+
+.rp-inp{padding:9px 12px;border-top:1px solid var(--border);flex-shrink:0;}
+.api-row{display:flex;gap:5px;margin-bottom:7px;}
+.api-inp{
+  flex:1;background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:5px;padding:5px 9px;
+  font-size:11px;color:var(--text-mid);
+  font-family:monospace;outline:none;
+  transition:border-color .15s;
+}
+.api-inp:focus{border-color:rgba(29,85,232,.4);}
+.api-inp::placeholder{color:rgba(255,255,255,.18);}
+.api-save{
+  background:rgba(29,85,232,.25);
+  border:1px solid rgba(29,85,232,.35);
+  color:#93C5FD;font-size:11px;font-weight:600;
+  padding:5px 9px;border-radius:5px;
+  cursor:pointer;font-family:inherit;white-space:nowrap;
+}
+.inp-row{display:flex;gap:7px;}
+.chat-inp{
+  flex:1;background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:7px;padding:8px 11px;
+  font-size:12px;color:white;
+  font-family:inherit;outline:none;
+  transition:border-color .15s;
+}
+.chat-inp:focus{border-color:rgba(29,85,232,.4);}
+.chat-inp::placeholder{color:rgba(255,255,255,.18);}
+.send-btn{
+  width:34px;height:34px;flex-shrink:0;
+  background:var(--blue);border:none;
+  border-radius:7px;cursor:pointer;color:white;
+  font-size:13px;transition:background .15s;
+  display:flex;align-items:center;justify-content:center;
+}
+.send-btn:hover{background:var(--blue2);}
+.send-btn:disabled{background:rgba(255,255,255,.08);cursor:not-allowed;}
+.api-note{font-size:10px;color:rgba(255,255,255,.18);margin-top:5px;text-align:center;}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <div class="logo">
+    <div class="logo-flag"><div class="logo-flag-t"></div><div class="logo-flag-b"></div></div>
+    <span class="logo-name">UA <b>Recovery</b> Map</span>
+  </div>
+  <div class="tb-div"></div>
+  <div class="pilot-pill"><span class="pilot-dot"></span><span id="t-pilot">Пілотний доступ</span></div>
+  <div class="tb-div"></div>
+  <div class="layer-btns">
+    <button class="layer-btn active" id="btn-rec" onclick="setLayer('recovery')" data-ua="Відновлення" data-en="Recovery">Відновлення</button>
+    <button class="layer-btn" id="btn-dmg" onclick="setLayer('damage')" data-ua="Руйнування" data-en="Damage">Руйнування</button>
+    <button class="layer-btn" id="btn-aid" onclick="setLayer('aid')" data-ua="Допомога" data-en="Aid">Допомога</button>
+  </div>
+  <div class="tb-spacer"></div>
+  <div class="lang-tog">
+    <button class="lang-btn active" onclick="setLang('ua')">UA</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+  </div>
+  <button class="chat-tog-btn" onclick="toggleChat()">
+    <svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span id="t-ai-btn">AI Аналітика</span>
+  </button>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+
+  <!-- LEFT -->
+  <div id="lpanel">
+    <div class="lp-head"><div class="lp-title" id="t-layers">Шари даних</div></div>
+    <div class="lp-body">
+      <div class="lg-head" id="t-grp1">Стан відновлення</div>
+      <div class="lr" onclick="toggleCat('recovery')">
+        <div class="lr-dot" style="background:#22C55E;"></div>
+        <span class="lr-name" id="t-l-rec">Активне відновлення</span>
+        <div class="tog on" id="tog-recovery"></div>
+      </div>
+      <div class="lr" onclick="toggleCat('inprogress')">
+        <div class="lr-dot" style="background:#F59E0B;"></div>
+        <span class="lr-name" id="t-l-inp">В процесі</span>
+        <div class="tog on" id="tog-inprogress"></div>
+      </div>
+      <div class="lr" onclick="toggleCat('critical')">
+        <div class="lr-dot" style="background:#EF4444;"></div>
+        <span class="lr-name" id="t-l-crit">Критична потреба</span>
+        <div class="tog on" id="tog-critical"></div>
+      </div>
+      <div class="lg-head" id="t-grp2" style="margin-top:6px;">Джерела даних</div>
+      <div class="lr"><div class="lr-dot" style="background:#60A5FA;border-radius:2px;"></div><span class="lr-name">OCHA Ukraine</span><div class="tog on"></div></div>
+      <div class="lr"><div class="lr-dot" style="background:#A78BFA;border-radius:2px;"></div><span class="lr-name">UNHCR</span><div class="tog on"></div></div>
+      <div class="lr"><div class="lr-dot" style="background:#34D399;border-radius:2px;"></div><span class="lr-name" id="t-l-min">Мінреінтеграції</span><div class="tog"></div></div>
+      <div class="lg-head" style="margin-top:6px;">Web3</div>
+      <div class="lr"><div class="lr-dot" style="background:#F59E0B;border-radius:2px;"></div><span class="lr-name">BNB Chain</span><div class="tog on"></div></div>
+    </div>
+
+    <div id="area-info" class="hidden">
+      <div class="ai-name" id="info-name">—</div>
+      <div class="ai-sub" id="info-sub">—</div>
+      <div class="ai-grid">
+        <div class="ai-m"><div class="ai-ml" id="t-dmg">Руйнування</div><div class="ai-mv" id="info-dmg" style="color:#F87171;">—</div></div>
+        <div class="ai-m"><div class="ai-ml" id="t-rec">Відновлено</div><div class="ai-mv" id="info-rec" style="color:#4ADE80;">—</div></div>
+        <div class="ai-m"><div class="ai-ml" id="t-need">Потреба</div><div class="ai-mv" id="info-need" style="color:#FBBF24;">—</div></div>
+        <div class="ai-m"><div class="ai-ml" id="t-aid">Допомога</div><div class="ai-mv" id="info-aid" style="color:#60A5FA;font-size:13px;">—</div></div>
+      </div>
+      <div class="ai-bars">
+        <div class="ai-br"><span class="ai-bl" id="t-infra">Інфраструктура</span><div class="ai-bw"><div class="ai-bf" id="bf-infra" style="background:#60A5FA;"></div></div><span class="ai-bp" id="bp-infra">—</span></div>
+        <div class="ai-br"><span class="ai-bl" id="t-housing">Житло</span><div class="ai-bw"><div class="ai-bf" id="bf-housing" style="background:#A78BFA;"></div></div><span class="ai-bp" id="bp-housing">—</span></div>
+        <div class="ai-br"><span class="ai-bl" id="t-social">Соц. сервіси</span><div class="ai-bw"><div class="ai-bf" id="bf-social" style="background:#34D399;"></div></div><span class="ai-bp" id="bp-social">—</span></div>
+      </div>
+      <div class="chain-row">
+        <span class="chain-ok">✓</span>
+        <span class="chain-txt">BNB Chain ·</span>
+        <span class="chain-hash" id="info-hash">—</span>
+      </div>
+      <button class="ask-btn" onclick="askAbout()" id="t-ask">Запитати AI про цей регіон →</button>
+    </div>
+  </div>
+
+  <!-- MAP -->
+  <div id="mapwrap">
+    <div id="map"></div>
+    <div id="map-ts"><span id="t-updated">Оновлено:</span> 18 квітня 2026 · Open datasets</div>
+    <div id="map-legend">
+      <div class="leg-t" id="t-legend">Стан відновлення</div>
+      <div class="leg-r"><div class="leg-d" style="background:#15803D;"></div><span id="leg1">Активне відновлення</span></div>
+      <div class="leg-r"><div class="leg-d" style="background:#B45309;"></div><span id="leg2">В процесі</span></div>
+      <div class="leg-r"><div class="leg-d" style="background:#991B1B;"></div><span id="leg3">Критична потреба</span></div>
+      <div class="leg-r"><div class="leg-d" style="background:#1E3A5F;"></div><span id="leg4">Дані оновлюються</span></div>
+    </div>
+    <div id="layer-badge">
+      <div class="lb-l" id="t-active-layer">Активний шар</div>
+      <div class="lb-v" id="active-layer-name">Відновлення</div>
+    </div>
+  </div>
+
+  <!-- RIGHT CHAT -->
+  <div id="rpanel">
+    <div class="rp-head">
+      <div class="rp-title-row"><span class="rp-dot"></span><span class="rp-title">UA Recovery AI</span></div>
+      <div class="rp-sub" id="t-chat-sub">Аналітика · Groq LLM · Відкриті дані</div>
+    </div>
+    <div class="rp-ctx">
+      <div class="rp-ctx-l" id="t-ctx">Контекст</div>
+      <div class="rp-ctx-tags">
+        <span class="ctx-t" id="ctx-region">Україна · всі регіони</span>
+        <span class="ctx-t" id="ctx-layer">Відновлення</span>
+        <span class="ctx-t">Open data</span>
+      </div>
+    </div>
+    <div class="rp-msgs" id="msgs">
+      <div class="msg-a" id="t-welcome">
+        Привіт. Я аналізую дані про відновлення України.<br><br>
+        Виберіть регіон на карті або задайте питання напряму.
+        <div><span class="msg-src">OCHA · UNHCR · Open data</span></div>
+      </div>
+    </div>
+    <div class="rp-sugs" id="sugs-wrap">
+      <button class="sug" onclick="useSug(0)" id="sug0">Де найбільша потреба?</button>
+      <button class="sug" onclick="useSug(1)" id="sug1">Порівняй Херсон і Миколаїв</button>
+      <button class="sug" onclick="useSug(2)" id="sug2">Де найменше допомоги?</button>
+    </div>
+    <div class="rp-inp">
+      <div class="api-row">
+        <input class="api-inp" id="api-inp" type="password" placeholder="Groq API key (gsk_...)"/>
+        <button class="api-save" onclick="saveKey()" id="t-save">Зберегти</button>
+      </div>
+      <div class="inp-row">
+        <input class="chat-inp" id="chat-inp" placeholder="Запитайте про будь-який регіон..." onkeydown="if(event.key==='Enter')sendMsg();"/>
+        <button class="send-btn" id="send-btn" onclick="sendMsg()">→</button>
+      </div>
+      <div class="api-note" id="t-api-note">Введіть Groq API ключ для активації AI</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ────────────────────────────────────────────
+const D = {
+  'Закарпатська':     {d:5, r:68,need:27,aid:'$180M',infra:65,hou:58,soc:72,hash:'0x9a2f...e41b'},
+  'Львівська':        {d:8, r:62,need:30,aid:'$420M',infra:58,hou:55,soc:68,hash:'0x7c3a...f892'},
+  'Івано-Франківська':{d:4, r:71,need:25,aid:'$95M', infra:70,hou:65,soc:74,hash:'0x4e1d...c23f'},
+  'Чернівецька':      {d:3, r:74,need:23,aid:'$62M', infra:72,hou:68,soc:76,hash:'0x2b8e...a19c'},
+  'Волинська':        {d:6, r:65,need:29,aid:'$110M',infra:62,hou:60,soc:65,hash:'0x5f4c...d78a'},
+  'Рівненська':       {d:12,r:54,need:34,aid:'$88M', infra:50,hou:48,soc:58,hash:'0x8a7b...1e34'},
+  'Тернопільська':    {d:9, r:58,need:33,aid:'$76M', infra:55,hou:52,soc:62,hash:'0x3d9e...b56f'},
+  'Хмельницька':      {d:11,r:56,need:33,aid:'$92M', infra:52,hou:50,soc:60,hash:'0x6c2f...e894'},
+  'Вінницька':        {d:14,r:52,need:34,aid:'$124M',infra:48,hou:46,soc:56,hash:'0x1a8d...7c23'},
+  'Житомирська':      {d:18,r:48,need:34,aid:'$145M',infra:44,hou:42,soc:52,hash:'0x9e3a...2f17'},
+  'Київська':         {d:22,r:45,need:33,aid:'$890M',infra:42,hou:40,soc:50,hash:'0xb4c1...8e92'},
+  'Чернігівська':     {d:35,r:32,need:33,aid:'$310M',infra:28,hou:26,soc:38,hash:'0x4f2e...1a78'},
+  'Сумська':          {d:38,r:28,need:34,aid:'$275M',infra:24,hou:22,soc:34,hash:'0x7b4d...c912'},
+  'Полтавська':       {d:24,r:41,need:35,aid:'$198M',infra:38,hou:36,soc:46,hash:'0x2e9f...5a34'},
+  'Черкаська':        {d:16,r:50,need:34,aid:'$115M',infra:46,hou:44,soc:54,hash:'0x8c3b...f741'},
+  'Кіровоградська':   {d:13,r:53,need:34,aid:'$88M', infra:50,hou:48,soc:56,hash:'0x5a1e...3c89'},
+  'Миколаївська':     {d:48,r:22,need:30,aid:'$640M',infra:18,hou:16,soc:28,hash:'0xf3a2...7b14'},
+  'Одеська':          {d:19,r:47,need:34,aid:'$380M',infra:44,hou:40,soc:52,hash:'0x6d8e...4f23'},
+  'Херсонська':       {d:71,r:18,need:11,aid:'$980M',infra:14,hou:12,soc:24,hash:'0xa9c4...2e81'},
+  'Запорізька':       {d:62,r:14,need:24,aid:'$1.1B',infra:10,hou:8, soc:20,hash:'0x3f7a...9b56'},
+  'Дніпропетровська': {d:28,r:38,need:34,aid:'$720M',infra:34,hou:32,soc:44,hash:'0xc8e1...3d74'},
+  'Харківська':       {d:54,r:20,need:26,aid:'$1.4B',infra:16,hou:14,soc:26,hash:'0x7e3b...a512'},
+  'Донецька':         {d:88,r:4, need:8, aid:'$2.1B',infra:3, hou:2, soc:6, hash:'0xd2f4...8c39'},
+  'Луганська':        {d:92,r:2, need:6, aid:'$1.8B',infra:1, hou:1, soc:4, hash:'0xb9a3...5e72'},
+  'Київ (місто)':     {d:6, r:70,need:24,aid:'$2.4B',infra:68,hou:62,soc:74,hash:'0x4a8f...1d93'},
+};
+
+// ── LANG ────────────────────────────────────────────
+let lang = 'ua';
+const TR = {
+  ua:{
+    pilot:'Пілотний доступ',
+    layers:'Шари даних',grp1:'Стан відновлення',grp2:'Джерела даних',
+    lRec:'Активне відновлення',lInp:'В процесі',lCrit:'Критична потреба',lMin:'Мінреінтеграції',
+    dmg:'Руйнування',rec:'Відновлено',need:'Потреба',aid:'Допомога',
+    infra:'Інфраструктура',housing:'Житло',social:'Соц. сервіси',
+    ask:'Запитати AI про цей регіон →',
+    updated:'Оновлено:',legend:'Стан відновлення',
+    leg1:'Активне відновлення',leg2:'В процесі',leg3:'Критична потреба',leg4:'Дані оновлюються',
+    activeLayer:'Активний шар',
+    layRec:'Відновлення',layDmg:'Руйнування',layAid:'Допомога',
+    aiBtn:'AI Аналітика',chatSub:'Аналітика · Groq LLM · Відкриті дані',
+    ctx:'Контекст',ctxAll:'Україна · всі регіони',
+    welcome:'Привіт. Я аналізую дані про відновлення України.<br><br>Виберіть регіон на карті або задайте питання напряму.',
+    sug0:'Де найбільша потреба?',sug1:'Порівняй Херсон і Миколаїв',sug2:'Де найменше допомоги?',
+    save:'Зберегти',apiNote:'Введіть Groq API ключ для активації AI',
+    placeholder:'Запитайте про будь-який регіон...',
+    ttDmg:'Руйнування',ttRec:'Відновлено',ttAid:'Допомога',
+    oblast:'область',
+  },
+  en:{
+    pilot:'Pilot access',
+    layers:'Data layers',grp1:'Recovery status',grp2:'Data sources',
+    lRec:'Active recovery',lInp:'In progress',lCrit:'Critical need',lMin:'MinReintegration',
+    dmg:'Damage',rec:'Recovered',need:'Open need',aid:'Aid tracked',
+    infra:'Infrastructure',housing:'Housing',social:'Social services',
+    ask:'Ask AI about this region →',
+    updated:'Updated:',legend:'Recovery status',
+    leg1:'Active recovery',leg2:'In progress',leg3:'Critical need',leg4:'Data updating',
+    activeLayer:'Active layer',
+    layRec:'Recovery',layDmg:'Damage',layAid:'Aid',
+    aiBtn:'AI Analytics',chatSub:'Analytics · Groq LLM · Open data',
+    ctx:'Context',ctxAll:'Ukraine · all regions',
+    welcome:'Hello. I analyze Ukraine recovery data based on open datasets.<br><br>Select a region on the map or ask directly.',
+    sug0:'Where is the greatest need?',sug1:'Compare Kherson and Mykolaiv',sug2:'Where is the least aid?',
+    save:'Save',apiNote:'Enter Groq API key to activate AI',
+    placeholder:'Ask about any region...',
+    ttDmg:'Damage',ttRec:'Recovered',ttAid:'Aid',
+    oblast:'oblast',
+  }
+};
+
+function t(key){ return TR[lang][key] || key; }
+
+function setLang(l){
+  lang = l;
+  document.querySelectorAll('.lang-btn').forEach((b,i)=>b.classList.toggle('active',i===(l==='ua'?0:1)));
+  applyLang();
+}
+
+function applyLang(){
+  const ids = {
+    't-pilot':'pilot','t-layers':'layers','t-grp1':'grp1','t-grp2':'grp2',
+    't-l-rec':'lRec','t-l-inp':'lInp','t-l-crit':'lCrit','t-l-min':'lMin',
+    't-dmg':'dmg','t-rec':'rec','t-need':'need','t-aid':'aid',
+    't-infra':'infra','t-housing':'housing','t-social':'social',
+    't-ask':'ask','t-updated':'updated','t-legend':'legend',
+    'leg1':'leg1','leg2':'leg2','leg3':'leg3','leg4':'leg4',
+    't-active-layer':'activeLayer',
+    't-ai-btn':'aiBtn','t-chat-sub':'chatSub','t-ctx':'ctx',
+    'sug0':'sug0','sug1':'sug1','sug2':'sug2',
+    't-save':'save','t-api-note':'apiNote',
+  };
+  Object.entries(ids).forEach(([id,key])=>{
+    const el = document.getElementById(id);
+    if(el) el.textContent = t(key);
+  });
+  document.querySelector('.chat-inp').placeholder = t('placeholder');
+  document.getElementById('ctx-region').textContent = selectedArea
+    ? selectedArea + (lang==='ua' ? ' · '+t('oblast') : ' Oblast')
+    : t('ctxAll');
+  document.getElementById('ctx-layer').textContent = t('lay'+currentLayer.charAt(0).toUpperCase()+currentLayer.slice(1));
+  document.getElementById('active-layer-name').textContent = t('lay'+currentLayer.charAt(0).toUpperCase()+currentLayer.slice(1));
+  ['rec','dmg','aid'].forEach(k=>{
+    const btn = document.getElementById('btn-'+k);
+    if(btn) btn.textContent = t('lay'+{rec:'Rec',dmg:'Dmg',aid:'Aid'}[k]);
+  });
+  if(document.getElementById('t-welcome'))
+    document.getElementById('t-welcome').innerHTML = t('welcome')+'<div><span class="msg-src">OCHA · UNHCR · Open data</span></div>';
+}
+
+// ── LAYERS ────────────────────────────────────────
+let currentLayer = 'recovery';
+let hidden = new Set();
+let geoLayer;
+let selectedArea = null;
+
+function setLayer(l){
+  currentLayer = l;
+  ['rec','dmg','aid'].forEach(k=>document.getElementById('btn-'+k).classList.remove('active'));
+  document.getElementById('btn-'+{recovery:'rec',damage:'dmg',aid:'aid'}[l]).classList.add('active');
+  document.getElementById('active-layer-name').textContent = t('lay'+l.charAt(0).toUpperCase()+l.slice(1));
+  document.getElementById('ctx-layer').textContent = t('lay'+l.charAt(0).toUpperCase()+l.slice(1));
+  refreshColors();
+}
+
+function toggleCat(cat){
+  const tog = document.getElementById('tog-'+cat);
+  hidden.has(cat) ? hidden.delete(cat) : hidden.add(cat);
+  tog.classList.toggle('on', !hidden.has(cat));
+  refreshColors();
+}
+
+function getColor(name){
+  const d = D[name]; if(!d) return '#1E3A5F';
+  let cat;
+  if(currentLayer==='recovery'){
+    cat = d.r>=60?'recovery':d.r>=30?'inprogress':'critical';
+  } else if(currentLayer==='damage'){
+    cat = d.d>=60?'critical':d.d>=25?'inprogress':'recovery';
+  } else {
+    const v = parseFloat(d.aid.replace(/[$BMK]/g,''));
+    cat = (d.aid.includes('B')&&v>1)?'recovery':(d.aid.includes('M')&&v>300)?'inprogress':'critical';
+  }
+  if(hidden.has(cat)) return 'rgba(30,58,95,0.4)';
+  return {recovery:'#15803D',inprogress:'#B45309',critical:'#991B1B'}[cat];
+}
+
+function refreshColors(){
+  if(!geoLayer) return;
+  geoLayer.eachLayer(l=>l.setStyle({fillColor:getColor(l.feature.properties.name)}));
+}
+
+// ── MAP ────────────────────────────────────────
+const map = L.map('map',{zoomControl:true,attributionControl:false}).setView([49,32],6);
+
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',{
+  opacity:0.55,maxZoom:18,
+  subdomains:'abcd'
+}).addTo(map);
+
+// City labels layer
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png',{
+  opacity:0.4,maxZoom:18,
+  subdomains:'abcd',
+  pane:'overlayPane'
+}).addTo(map);
+
+geoLayer = L.geoJSON(getGeoJSON(),{
+  style: f=>({
+    fillColor:getColor(f.properties.name),
+    fillOpacity:0.72,
+    color:'rgba(255,255,255,0.2)',
+    weight:1
+  }),
+  onEachFeature:(f,layer)=>{
+    const name = f.properties.name;
+    const d = D[name]; if(!d) return;
+    layer.on('mouseover',function(e){
+      this.setStyle({weight:2,color:'rgba(255,255,255,0.5)',fillOpacity:0.88});
+      this.bindTooltip(
+        `<strong>${name}</strong>
+        <div class="tt-r"><span class="tt-l">${t('ttDmg')}</span><span class="tt-v" style="color:#F87171">${d.d}%</span></div>
+        <div class="tt-r"><span class="tt-l">${t('ttRec')}</span><span class="tt-v" style="color:#4ADE80">${d.r}%</span></div>
+        <div class="tt-r"><span class="tt-l">${t('ttAid')}</span><span class="tt-v" style="color:#60A5FA">${d.aid}</span></div>`,
+        {className:'ua-tip',sticky:true}
+      ).openTooltip(e.latlng);
+    });
+    layer.on('mouseout',function(){
+      this.setStyle({weight:1,color:'rgba(255,255,255,0.2)',fillOpacity:0.72});
+      this.closeTooltip();
+    });
+    layer.on('click',()=>selectArea(name));
+  }
+}).addTo(map);
+
+// Add tooltip style
+const ts = document.createElement('style');
+ts.textContent='.ua-tip{background:rgba(11,24,41,.96)!important;border:1px solid rgba(255,255,255,.1)!important;border-radius:8px!important;padding:10px 12px!important;font-family:Inter,sans-serif!important;font-size:12px!important;color:white!important;box-shadow:0 4px 24px rgba(0,0,0,.5)!important;min-width:160px;}.ua-tip strong{display:block;font-size:13px;margin-bottom:6px;}.tt-r{display:flex;justify-content:space-between;gap:14px;margin-bottom:3px;}.tt-l{color:rgba(255,255,255,.4);font-size:11px;}.tt-v{font-weight:600;font-size:11px;}';
+document.head.appendChild(ts);
+
+function selectArea(name){
+  selectedArea = name;
+  const d = D[name]; if(!d) return;
+  document.getElementById('area-info').classList.remove('hidden');
+  document.getElementById('info-name').textContent = name;
+  document.getElementById('info-sub').textContent = lang==='ua' ? name+' · область' : name+' Oblast';
+  document.getElementById('info-dmg').textContent = d.d+'%';
+  document.getElementById('info-rec').textContent = d.r+'%';
+  document.getElementById('info-need').textContent = d.need+'%';
+  document.getElementById('info-aid').textContent = d.aid;
+  ['infra','hou','soc'].forEach((k,i)=>{
+    const ids = ['infra','housing','social'][i];
+    document.getElementById('bf-'+ids).style.width = d[k]+'%';
+    document.getElementById('bp-'+ids).textContent = d[k]+'%';
+  });
+  document.getElementById('info-hash').textContent = d.hash;
+  document.getElementById('ctx-region').textContent = name+(lang==='ua'?' · '+t('oblast'):' Oblast');
+}
+
+// ── CHAT ────────────────────────────────────────
+let apiKey = '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';
+let sending = false;
+
+// Pre-fill indicator
+document.getElementById('api-inp').placeholder = 'Groq API key (збережено ✓)';
+document.getElementById('t-api-note').textContent = '✓ Groq API ключ активовано';
+document.getElementById('t-api-note').style.color = '#4ADE80';
+
+function saveKey(){
+  const v = document.getElementById('api-inp').value.trim();
+  if(v){ apiKey=v; document.getElementById('api-inp').value=''; }
+  document.getElementById('t-api-note').textContent = '✓ '+(lang==='ua'?'Ключ збережено':'Key saved');
+  document.getElementById('t-api-note').style.color='#4ADE80';
+}
+
+const sugs = {
+  ua:['Де найбільша потреба?','Порівняй Херсон і Миколаїв','Де найменше допомоги?'],
+  en:['Where is the greatest need?','Compare Kherson and Mykolaiv','Where is the least aid?']
+};
+function useSug(i){ document.getElementById('chat-inp').value=sugs[lang][i]; sendMsg(); }
+
+function askAbout(){
+  if(!selectedArea) return;
+  const q = lang==='ua'
+    ? `Розкажи детально про відновлення ${selectedArea} — ключові проблеми, прогрес, що потрібно зробити.`
+    : `Tell me about recovery in ${selectedArea} oblast — key issues, progress, and what's needed.`;
+  document.getElementById('chat-inp').value = q;
+  document.getElementById('rpanel').classList.remove('collapsed');
+  sendMsg();
+}
+
+function toggleChat(){
+  document.getElementById('rpanel').classList.toggle('collapsed');
+}
+
+function buildSystem(){
+  const lines = [
+    'You are UA Recovery AI — an analyst for Ukraine recovery data platform.',
+    'Answer questions about Ukraine post-war recovery, damage, aid, and reconstruction.',
+    'Be concise, data-driven, and reference sources when relevant.',
+    'Data (pilot dataset based on open sources):',
+    ''
+  ];
+  Object.entries(D).forEach(([n,d])=>{
+    lines.push(`${n}: damage ${d.d}%, recovered ${d.r}%, open need ${d.need}%, aid ${d.aid}, infrastructure ${d.infra}%, housing ${d.hou}%, social ${d.soc}%`);
+  });
+  if(selectedArea && D[selectedArea]){
+    const d = D[selectedArea];
+    lines.push('','Currently selected: '+selectedArea);
+    lines.push(`Damage ${d.d}%, recovered ${d.r}%, aid ${d.aid}`);
+  }
+  lines.push('','Answer in '+(lang==='ua'?'Ukrainian':'English')+'. Keep responses under 120 words.');
+  return lines.join('\n');
+}
+
+async function sendMsg(){
+  if(sending) return;
+  const inp = document.getElementById('chat-inp');
+  const msg = inp.value.trim(); if(!msg) return;
+  appendMsg('u', msg); inp.value='';
+  const typ = addTyping(); sending=true;
+  document.getElementById('send-btn').disabled=true;
+
+  try {
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},
+      body:JSON.stringify({
+        model:'llama-3.1-8b-instant',
+        max_tokens:200,
+        messages:[
+          {role:'system',content:buildSystem()},
+          {role:'user',content:msg}
+        ]
+      })
+    });
+    const data = await res.json();
+    typ.remove();
+    if(data.choices && data.choices[0]){
+      const text = data.choices[0].message.content;
+      appendMsg('a', text.replace(/\n/g,'<br>')+'<div><span class="msg-src">UA Recovery AI · Open data ↗</span></div>');
+    } else {
+      appendMsg('a', lang==='ua'?'Помилка API. Перевірте ключ.':'API error. Check your key.');
+    }
+  } catch(e){
+    typ.remove();
+    appendMsg('a', lang==='ua'?'Помилка з\'єднання.':'Connection error.');
+  }
+  sending=false;
+  document.getElementById('send-btn').disabled=false;
+}
+
+function appendMsg(type, html){
+  const el = document.createElement('div');
+  el.className = type==='u'?'msg-u':'msg-a';
+  el.innerHTML = html;
+  document.getElementById('msgs').appendChild(el);
+  document.getElementById('msgs').scrollTop = 99999;
+}
+
+function addTyping(){
+  const el = document.createElement('div');
+  el.className='msg-typing';
+  el.innerHTML='<div class="td"></div><div class="td"></div><div class="td"></div>';
+  document.getElementById('msgs').appendChild(el);
+  document.getElementById('msgs').scrollTop=99999;
+  return el;
+}
+
+// ── GEOJSON ────────────────────────────────────────
+function getGeoJSON(){return{type:'FeatureCollection',features:[
+{type:'Feature',properties:{name:'Закарпатська'},geometry:{type:'Polygon',coordinates:[[[22.15,48.41],[22.89,48.36],[23.20,48.02],[23.58,47.98],[24.04,47.98],[24.26,48.19],[24.63,47.97],[24.87,47.74],[24.55,47.48],[24.08,47.42],[23.59,47.57],[23.11,47.48],[22.81,47.68],[22.54,47.78],[22.15,48.12],[22.15,48.41]]]}},
+{type:'Feature',properties:{name:'Львівська'},geometry:{type:'Polygon',coordinates:[[[22.15,48.41],[23.20,48.02],[23.58,47.98],[24.04,47.98],[24.26,48.19],[24.92,48.24],[25.21,48.41],[25.18,48.64],[24.89,48.83],[24.05,48.98],[23.71,48.88],[23.44,49.18],[23.02,49.30],[22.68,49.09],[22.50,48.85],[22.45,48.63],[22.15,48.41]]]}},
+{type:'Feature',properties:{name:'Івано-Франківська'},geometry:{type:'Polygon',coordinates:[[[24.04,47.98],[23.58,47.98],[23.11,47.48],[23.59,47.57],[24.08,47.42],[24.55,47.48],[24.87,47.74],[25.18,47.58],[25.34,47.90],[25.17,48.11],[25.21,48.41],[24.92,48.24],[24.26,48.19],[24.04,47.98]]]}},
+{type:'Feature',properties:{name:'Чернівецька'},geometry:{type:'Polygon',coordinates:[[[24.55,47.48],[24.87,47.74],[25.18,47.58],[25.62,47.50],[26.19,47.61],[26.36,47.89],[26.06,48.07],[25.75,48.17],[25.34,47.90],[25.18,47.58],[24.87,47.74],[24.55,47.48]]]}},
+{type:'Feature',properties:{name:'Волинська'},geometry:{type:'Polygon',coordinates:[[[23.44,49.18],[24.05,48.98],[24.89,48.83],[25.18,48.64],[25.52,49.04],[25.83,49.34],[25.98,49.64],[25.60,50.01],[25.14,50.19],[24.78,50.27],[24.46,50.49],[24.13,50.35],[23.69,50.19],[23.61,49.78],[23.60,49.57],[23.44,49.18]]]}},
+{type:'Feature',properties:{name:'Рівненська'},geometry:{type:'Polygon',coordinates:[[[25.18,48.64],[25.52,49.04],[25.83,49.34],[25.98,49.64],[26.14,49.86],[26.05,50.12],[25.67,50.31],[25.14,50.19],[25.60,50.01],[25.98,49.64],[25.83,49.34],[25.52,49.04],[25.18,48.64]]]}},
+{type:'Feature',properties:{name:'Тернопільська'},geometry:{type:'Polygon',coordinates:[[[25.21,48.41],[25.18,48.64],[24.89,48.83],[24.05,48.98],[23.71,48.88],[23.44,49.18],[24.45,49.32],[25.07,49.27],[25.57,49.18],[25.52,49.04],[25.18,48.64],[25.21,48.41]]]}},
+{type:'Feature',properties:{name:'Хмельницька'},geometry:{type:'Polygon',coordinates:[[[25.52,49.04],[25.57,49.18],[25.07,49.27],[24.45,49.32],[24.00,49.53],[24.27,49.80],[24.72,50.08],[25.14,50.19],[25.67,50.31],[26.05,50.12],[26.14,49.86],[25.98,49.64],[25.83,49.34],[25.52,49.04]]]}},
+{type:'Feature',properties:{name:'Вінницька'},geometry:{type:'Polygon',coordinates:[[[24.00,49.53],[24.45,49.32],[25.07,49.27],[25.57,49.18],[25.88,49.37],[26.40,49.52],[26.85,49.61],[27.12,49.56],[27.40,49.42],[27.25,49.08],[26.95,48.82],[26.58,48.65],[26.19,48.52],[25.75,48.17],[26.06,48.07],[26.36,47.89],[26.19,47.61],[25.62,47.50],[25.18,47.58],[25.34,47.90],[25.18,48.64],[25.21,48.41],[24.92,48.24],[24.26,48.19],[24.04,47.98],[24.00,49.53]]]}},
+{type:'Feature',properties:{name:'Житомирська'},geometry:{type:'Polygon',coordinates:[[[25.88,49.37],[25.57,49.18],[25.07,49.27],[24.45,49.32],[24.00,49.53],[24.72,50.08],[25.14,50.19],[25.67,50.31],[26.05,50.12],[26.14,49.86],[26.00,50.26],[26.38,50.48],[26.85,50.52],[27.21,50.63],[27.57,50.46],[28.00,50.54],[28.22,50.30],[28.10,50.05],[27.70,49.80],[27.40,49.42],[27.12,49.56],[26.85,49.61],[26.40,49.52],[25.88,49.37]]]}},
+{type:'Feature',properties:{name:'Київська'},geometry:{type:'Polygon',coordinates:[[[28.00,50.54],[27.57,50.46],[27.21,50.63],[26.85,50.52],[26.38,50.48],[26.00,50.26],[26.14,49.86],[26.40,49.52],[26.85,49.61],[27.12,49.56],[27.40,49.42],[27.70,49.80],[28.10,50.05],[28.22,50.30],[28.86,50.55],[29.24,50.67],[29.82,50.55],[30.04,50.67],[30.20,51.00],[30.44,51.16],[30.12,51.42],[29.62,51.38],[29.06,51.55],[28.61,51.54],[28.14,51.49],[27.72,51.46],[27.45,51.22],[27.22,51.03],[27.12,50.77],[27.35,50.64],[28.00,50.54]]]}},
+{type:'Feature',properties:{name:'Київ (місто)'},geometry:{type:'Polygon',coordinates:[[[30.20,51.00],[30.44,51.16],[30.62,50.92],[30.82,50.86],[30.64,50.67],[30.36,50.67],[30.20,51.00]]]}},
+{type:'Feature',properties:{name:'Чернігівська'},geometry:{type:'Polygon',coordinates:[[[28.61,51.54],[29.06,51.55],[29.62,51.38],[30.12,51.42],[30.44,51.16],[30.20,51.00],[30.04,50.67],[29.82,50.55],[29.24,50.67],[28.86,50.55],[28.22,50.30],[28.00,50.54],[27.35,50.64],[27.12,50.77],[27.22,51.03],[27.45,51.22],[27.72,51.46],[28.14,51.49],[28.61,51.54]]]}},
+{type:'Feature',properties:{name:'Сумська'},geometry:{type:'Polygon',coordinates:[[[30.44,51.16],[30.12,51.42],[29.62,51.38],[29.06,51.55],[28.61,51.54],[28.14,51.49],[27.72,51.46],[28.44,51.68],[29.01,51.88],[29.80,52.07],[30.15,52.06],[30.70,51.88],[31.20,51.75],[31.52,51.58],[31.35,51.27],[30.94,51.27],[30.44,51.16]]]}},
+{type:'Feature',properties:{name:'Полтавська'},geometry:{type:'Polygon',coordinates:[[[28.22,50.30],[28.86,50.55],[29.24,50.67],[29.82,50.55],[30.04,50.67],[30.36,50.67],[30.64,50.67],[31.35,51.27],[31.52,51.58],[31.95,51.52],[32.54,51.50],[32.97,51.36],[33.30,51.26],[33.10,51.00],[33.04,50.66],[32.77,50.43],[32.50,50.18],[32.00,50.04],[31.50,49.96],[31.00,49.92],[30.64,49.76],[30.27,49.66],[29.92,49.64],[29.54,49.54],[29.10,49.55],[28.82,49.67],[28.22,50.30]]]}},
+{type:'Feature',properties:{name:'Черкаська'},geometry:{type:'Polygon',coordinates:[[[28.82,49.67],[29.10,49.55],[29.54,49.54],[29.92,49.64],[30.27,49.66],[30.64,49.76],[31.00,49.92],[31.50,49.96],[32.00,50.04],[31.80,49.60],[31.47,49.40],[30.96,49.26],[30.50,49.10],[30.15,48.91],[29.86,48.87],[29.42,48.98],[29.00,49.22],[28.82,49.67]]]}},
+{type:'Feature',properties:{name:'Кіровоградська'},geometry:{type:'Polygon',coordinates:[[[29.00,49.22],[29.42,48.98],[29.86,48.87],[30.15,48.91],[30.50,49.10],[30.96,49.26],[31.47,49.40],[31.80,49.60],[32.00,50.04],[32.50,50.18],[32.77,50.43],[32.50,49.90],[32.20,49.62],[31.90,49.36],[31.50,49.00],[31.05,48.82],[30.60,48.66],[30.15,48.60],[29.72,48.64],[29.30,48.78],[29.00,49.22]]]}},
+{type:'Feature',properties:{name:'Миколаївська'},geometry:{type:'Polygon',coordinates:[[[29.00,49.22],[29.30,48.78],[29.72,48.64],[30.15,48.60],[30.60,48.66],[31.05,48.82],[31.50,49.00],[31.05,48.52],[30.60,48.20],[30.15,47.85],[29.70,47.60],[29.30,47.52],[28.80,47.50],[28.30,47.66],[28.00,47.88],[28.00,48.20],[28.30,48.52],[28.82,48.72],[29.00,49.22]]]}},
+{type:'Feature',properties:{name:'Одеська'},geometry:{type:'Polygon',coordinates:[[[28.00,47.88],[28.30,47.66],[28.80,47.50],[29.30,47.52],[29.70,47.60],[30.15,47.85],[30.00,47.40],[29.60,46.98],[29.22,46.52],[28.80,46.12],[28.30,45.78],[27.80,45.95],[27.40,46.28],[27.00,46.60],[26.60,46.92],[26.50,47.20],[26.80,47.52],[27.20,47.75],[27.60,47.95],[28.00,47.88]]]}},
+{type:'Feature',properties:{name:'Херсонська'},geometry:{type:'Polygon',coordinates:[[[30.15,47.85],[30.60,48.20],[31.05,48.52],[31.50,49.00],[31.90,49.36],[32.20,49.62],[32.50,49.90],[32.77,49.50],[33.00,49.20],[32.80,48.85],[32.50,48.50],[32.10,48.15],[31.70,47.80],[31.30,47.50],[30.90,47.25],[30.50,47.05],[30.15,47.00],[29.80,47.10],[29.60,46.98],[30.00,47.40],[30.15,47.85]]]}},
+{type:'Feature',properties:{name:'Запорізька'},geometry:{type:'Polygon',coordinates:[[[32.77,49.50],[33.00,49.20],[32.80,48.85],[32.50,48.50],[32.10,48.15],[31.70,47.80],[31.30,47.50],[31.60,47.60],[32.00,47.52],[32.50,47.44],[33.00,47.38],[33.50,47.50],[34.00,47.40],[34.50,47.20],[34.90,47.00],[35.20,47.10],[35.50,47.22],[35.80,47.50],[35.60,47.80],[35.20,48.10],[34.80,48.30],[34.40,48.50],[34.00,48.70],[33.50,49.00],[33.10,49.25],[32.77,49.50]]]}},
+{type:'Feature',properties:{name:'Дніпропетровська'},geometry:{type:'Polygon',coordinates:[[[32.50,50.18],[32.77,50.43],[33.04,50.66],[33.10,51.00],[33.30,51.26],[33.60,51.10],[34.00,50.95],[34.40,50.80],[34.80,50.60],[35.10,50.35],[35.40,50.15],[35.50,49.82],[35.20,49.55],[34.90,49.25],[34.50,48.90],[34.00,48.70],[33.50,49.00],[33.10,49.25],[32.77,49.50],[32.50,49.90],[32.77,50.43],[32.50,50.18]]]}},
+{type:'Feature',properties:{name:'Харківська'},geometry:{type:'Polygon',coordinates:[[[33.30,51.26],[33.60,51.10],[34.00,50.95],[34.40,50.80],[34.80,50.60],[35.10,50.35],[35.40,50.15],[35.80,50.10],[36.20,50.22],[36.60,50.28],[37.00,50.36],[37.40,50.10],[37.20,49.85],[36.90,49.60],[36.50,49.50],[36.00,49.40],[35.60,49.20],[35.20,49.00],[34.90,49.25],[35.20,49.55],[35.50,49.82],[35.40,50.15],[35.10,50.35],[34.80,50.60],[34.40,50.80],[34.00,50.95],[33.60,51.10],[33.30,51.26]]]}},
+{type:'Feature',properties:{name:'Донецька'},geometry:{type:'Polygon',coordinates:[[[35.40,50.15],[35.80,50.10],[36.20,50.22],[36.60,50.28],[37.00,50.36],[37.40,50.10],[38.00,49.90],[38.40,49.68],[38.70,49.42],[38.80,49.12],[38.50,48.88],[38.00,48.60],[37.50,48.38],[37.00,48.10],[36.50,47.96],[36.00,47.88],[35.50,47.96],[35.00,48.10],[34.50,48.30],[34.00,48.52],[34.50,48.90],[34.90,49.25],[35.20,49.55],[35.50,49.82],[35.40,50.15]]]}},
+{type:'Feature',properties:{name:'Луганська'},geometry:{type:'Polygon',coordinates:[[[37.00,50.36],[37.40,50.10],[38.00,49.90],[38.40,49.68],[38.70,49.42],[38.80,49.12],[39.20,49.00],[39.60,48.80],[39.90,48.55],[39.80,48.22],[39.50,48.00],[39.00,47.80],[38.60,47.70],[38.20,47.80],[37.80,47.96],[37.40,48.10],[37.00,48.10],[37.50,48.38],[38.00,48.60],[38.50,48.88],[38.80,49.12],[38.70,49.42],[38.40,49.68],[38.00,49.90],[37.40,50.10],[37.00,50.36]]]}},
+]}}
+</script>
+</body>
+</html>
