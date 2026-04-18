@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>UA Recovery Map — Моніторинг відновлення України</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --blue:#1B4FCC;
+  --blue-mid:#2563EB;
+  --blue-light:#EFF6FF;
+  --navy:#0D1B36;
+  --navy2:#162040;
+  --text:#0F172A;
+  --text2:#475569;
+  --text3:#94A3B8;
+  --border:#E2E8F0;
+  --bg:#F8FAFC;
+  --white:#FFFFFF;
+  --green:#16A34A;
+  --green-bg:#F0FDF4;
+  --amber:#B45309;
+  --amber-bg:#FFFBEB;
+  --red:#B91C1C;
+  --red-bg:#FEF2F2;
+  --yellow-ua:#FFD700;
+  --blue-ua:#005BBB;
+}
+html{font-family:'Inter',system-ui,sans-serif;color:var(--text);scroll-behavior:smooth;-webkit-font-smoothing:antialiased;}
+body{background:var(--white);}
+
+/* ─── NAV ─── */
+nav{position:sticky;top:0;z-index:200;height:58px;background:rgba(255,255,255,0.97);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 48px;gap:28px;}
+.logo{display:flex;align-items:center;gap:10px;margin-right:auto;text-decoration:none;}
+.logo-flag{width:28px;height:20px;border-radius:3px;overflow:hidden;display:flex;flex-direction:column;}
+.logo-flag-top{flex:1;background:#005BBB;}
+.logo-flag-bot{flex:1;background:#FFD700;}
+.logo-name{font-size:15px;font-weight:700;color:var(--text);letter-spacing:-.01em;}
+.logo-name span{color:var(--blue);}
+.n-link{font-size:13px;font-weight:500;color:var(--text2);text-decoration:none;transition:color .15s;}
+.n-link:hover{color:var(--blue);}
+.n-pill{background:var(--green-bg);color:var(--green);font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;display:flex;align-items:center;gap:5px;}
+.n-pill-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 2.2s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.n-btn{background:var(--blue);color:white;font-size:13px;font-weight:500;padding:8px 20px;border-radius:7px;text-decoration:none;transition:background .15s;}
+.n-btn:hover{background:var(--blue-mid);}
+
+/* ─── HERO ─── */
+.hero{position:relative;background:var(--navy);min-height:560px;display:grid;grid-template-columns:1fr 1.1fr;gap:0;overflow:hidden;}
+.hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);background-size:42px 42px;mask-image:radial-gradient(ellipse at 30% 50%,#000 30%,transparent 75%);-webkit-mask-image:radial-gradient(ellipse at 30% 50%,#000 30%,transparent 75%);pointer-events:none;z-index:1;}
+.hero-left,.hero-right{position:relative;z-index:2;}
+.hero-left{padding:64px 48px 52px;display:flex;flex-direction:column;justify-content:center;}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:5px 12px;font-size:11px;font-weight:500;color:rgba(255,255,255,.6);margin-bottom:24px;width:fit-content;}
+.hero-tag-dot{width:5px;height:5px;border-radius:50%;background:#4ADE80;}
+.hero h1{font-size:44px;font-weight:700;line-height:1.1;color:white;letter-spacing:-.025em;margin-bottom:18px;}
+.hero h1 strong{color:var(--yellow-ua);}
+.hero-sub{font-size:16px;color:rgba(255,255,255,.62);line-height:1.7;margin-bottom:36px;max-width:460px;}
+.hero-actions{display:flex;gap:12px;}
+.btn-hero-p{background:var(--yellow-ua);color:#0D1B36;font-size:14px;font-weight:600;padding:12px 24px;border-radius:8px;border:none;cursor:pointer;font-family:inherit;transition:opacity .15s;}
+.btn-hero-p:hover{opacity:.88;}
+.btn-hero-s{background:transparent;color:rgba(255,255,255,.75);font-size:14px;font-weight:400;padding:12px 24px;border-radius:8px;border:1px solid rgba(255,255,255,.18);cursor:pointer;font-family:inherit;transition:border-color .15s;}
+.btn-hero-s:hover{border-color:rgba(255,255,255,.4);}
+.hero-right{position:relative;background:var(--navy2);}
+#heroMap{width:100%;height:100%;min-height:560px;}
+.hero-right::after{content:"";position:absolute;inset:0;box-shadow:inset 60px 0 80px -40px var(--navy);pointer-events:none;z-index:500;}
+.hero-map-label{position:absolute;top:16px;left:16px;z-index:1000;background:rgba(13,27,54,.85);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:8px 14px;font-size:11px;color:rgba(255,255,255,.6);backdrop-filter:blur(4px);}
+.hero-map-label strong{color:white;display:block;font-size:13px;margin-bottom:2px;}
+
+/* ─── STATS ─── */
+.stats{background:var(--blue);padding:0 48px;}
+.stats-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);}
+.stat{padding:30px 0 30px 32px;border-right:1px solid rgba(255,255,255,.22);position:relative;}
+.stat:first-child{padding-left:0;}
+.stat:last-child{border-right:none;}
+.stat-n{font-size:36px;font-weight:700;color:white;line-height:1;margin-bottom:6px;letter-spacing:-.02em;}
+.stat-n.amber{color:#FDE68A;}
+.stat-n.red{color:#FCA5A5;}
+.stat-l{font-size:12px;color:rgba(255,255,255,.65);}
+
+/* ─── SECTIONS ─── */
+.sec{padding:56px 48px;}
+.sec-alt{padding:56px 48px;background:var(--bg);}
+.wrap{max-width:1200px;margin:0 auto;}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);margin-bottom:10px;}
+.sec-title{font-size:30px;font-weight:700;color:var(--text);letter-spacing:-.02em;margin-bottom:12px;line-height:1.15;}
+.sec-desc{font-size:14px;color:var(--text2);line-height:1.7;max-width:560px;margin-bottom:32px;}
+
+/* ─── PROBLEM ─── */
+.prob-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;}
+.prob-copy p{font-size:15px;color:var(--text2);line-height:1.75;margin-bottom:14px;}
+.prob-cards{display:flex;flex-direction:column;gap:10px;}
+.prob-card{background:white;border:1px solid var(--border);border-radius:10px;padding:16px 18px;display:flex;gap:14px;align-items:flex-start;}
+.prob-icon{width:38px;height:38px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.prob-ttl{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.prob-txt{font-size:12px;color:var(--text2);line-height:1.55;}
+
+/* ─── SOLUTION ─── */
+.sol-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.sol-card{background:white;border:1px solid var(--border);border-radius:12px;padding:28px 22px;transition:box-shadow .2s,transform .2s;}
+.sol-card:hover{box-shadow:0 4px 24px rgba(0,0,0,.08);transform:translateY(-2px);}
+.sol-icon{width:46px;height:46px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;}
+.sol-ttl{font-size:16px;font-weight:600;color:var(--text);margin-bottom:8px;}
+.sol-txt{font-size:13px;color:var(--text2);line-height:1.65;}
+
+/* ─── HOW ─── */
+.how-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;margin-top:40px;}
+.how-line{position:absolute;top:23px;left:calc(12.5% + 12px);right:calc(12.5% + 12px);height:1px;background:var(--border);}
+.how-step{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 14px;}
+.how-n{width:46px;height:46px;border-radius:50%;background:var(--blue);color:white;font-size:17px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:16px;position:relative;z-index:1;}
+.how-ttl{font-size:13px;font-weight:600;color:var(--text);margin-bottom:7px;}
+.how-txt{font-size:12px;color:var(--text2);line-height:1.6;}
+
+/* ─── LIVE MAP ─── */
+.live-grid{display:grid;grid-template-columns:1fr 380px;gap:24px;align-items:start;}
+.map-card{background:white;border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(15,23,42,.04),0 12px 40px -12px rgba(15,23,42,.12);}
+.map-card-header{padding:11px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,#fff,#fafbfc);}
+.map-card-title{font-size:13px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:7px;}
+.map-card-title::before{content:"";display:inline-flex;gap:4px;width:38px;height:8px;background-image:radial-gradient(circle,#FCA5A5 3px,transparent 3.5px),radial-gradient(circle,#FDE68A 3px,transparent 3.5px),radial-gradient(circle,#86EFAC 3px,transparent 3.5px);background-size:13px 8px;background-position:0 50%,13px 50%,26px 50%;background-repeat:no-repeat;margin-right:4px;}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:blink 2.2s infinite;}
+.map-card-meta{font-size:11px;color:var(--text3);font-variant-numeric:tabular-nums;}
+#liveMap{height:400px;}
+.map-legend-row{padding:10px 16px;border-top:1px solid var(--border);display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:#fafbfc;}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);}
+.leg-dot{width:11px;height:11px;border-radius:2px;}
+
+/* ─── RIGHT PANEL ─── */
+.right-panels{display:flex;flex-direction:column;gap:16px;}
+.community-card{background:white;border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.cc-top{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
+.cc-name{font-size:14px;font-weight:600;color:var(--text);}
+.cc-region{font-size:11px;color:var(--text3);margin-top:2px;}
+.severity-badge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:5px;white-space:nowrap;}
+.sev-crit{background:var(--red-bg);color:var(--red);}
+.sev-mod{background:var(--amber-bg);color:var(--amber);}
+.sev-ok{background:var(--green-bg);color:var(--green);}
+.cc-metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:14px 16px;}
+.cc-m{background:var(--bg);border-radius:7px;padding:10px 12px;}
+.cc-m-lbl{font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;}
+.cc-m-val{font-size:20px;font-weight:700;line-height:1;}
+.cc-bars{padding:0 16px 12px;}
+.cc-bar-row{display:flex;align-items:center;gap:9px;margin-bottom:8px;}
+.cc-bar-lbl{font-size:11px;color:var(--text2);width:96px;flex-shrink:0;}
+.cc-bar-wrap{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
+.cc-bar-fill{height:100%;border-radius:3px;transition:width .6s;}
+.cc-bar-val{font-size:11px;color:var(--text3);width:30px;text-align:right;flex-shrink:0;}
+.cc-footer{padding:10px 16px;border-top:1px solid var(--border);display:flex;align-items:center;gap:6px;}
+.cc-chain{font-size:10px;color:var(--text3);}
+.cc-hash{font-size:10px;color:var(--blue);font-family:monospace;}
+
+/* ─── AI CHAT ─── */
+.chat-card{background:white;border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.chat-top{background:var(--navy);padding:11px 14px;display:flex;align-items:center;gap:8px;}
+.chat-top-dot{width:7px;height:7px;border-radius:50%;background:#4ADE80;}
+.chat-top-title{font-size:12px;font-weight:500;color:rgba(255,255,255,.75);}
+.chat-body{padding:14px;background:var(--bg);min-height:160px;display:flex;flex-direction:column;gap:9px;max-height:200px;overflow-y:auto;}
+.chat-body::-webkit-scrollbar{width:3px;}
+.chat-body::-webkit-scrollbar-thumb{background:var(--border);}
+.msg-user{align-self:flex-end;background:var(--blue);color:white;border-radius:10px 10px 2px 10px;padding:9px 13px;font-size:12px;max-width:82%;}
+.msg-ai{align-self:flex-start;background:white;border:1px solid var(--border);border-radius:10px 10px 10px 2px;padding:11px 13px;font-size:12px;max-width:90%;color:var(--text);line-height:1.6;}
+.msg-src{display:inline-flex;align-items:center;gap:3px;background:var(--blue-light);color:var(--blue);border-radius:4px;padding:2px 7px;font-size:10px;font-weight:500;margin-top:5px;}
+.chat-input-row{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--border);}
+.chat-inp{flex:1;border:1px solid var(--border);border-radius:6px;padding:8px 11px;font-size:12px;font-family:inherit;color:var(--text);background:var(--bg);outline:none;transition:border-color .15s;}
+.chat-inp:focus{border-color:var(--blue);}
+.chat-btn{background:var(--blue);color:white;border:none;border-radius:6px;padding:8px 14px;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;}
+.chat-btn:hover{background:var(--blue-mid);}
+
+/* ─── STATUS ─── */
+.status-wrap{display:grid;grid-template-columns:1fr 1fr;gap:32px;}
+.status-list{display:flex;flex-direction:column;gap:8px;}
+.s-item{display:flex;align-items:center;gap:12px;padding:11px 14px;background:white;border:1px solid var(--border);border-radius:8px;}
+.s-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.s-txt{font-size:13px;color:var(--text);flex:1;}
+.s-badge{font-size:10px;font-weight:600;padding:2px 9px;border-radius:4px;white-space:nowrap;}
+.b-done{background:var(--green-bg);color:var(--green);}
+.b-wip{background:var(--amber-bg);color:var(--amber);}
+.b-plan{background:var(--bg);color:var(--text3);border:1px solid var(--border);}
+.roadmap{background:var(--navy);border-radius:12px;padding:28px 26px;}
+.rm-h{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:22px;}
+.rm-item{display:flex;gap:16px;margin-bottom:20px;}
+.rm-item:last-child{margin-bottom:0;}
+.rm-q{font-size:13px;font-weight:700;color:#60A5FA;flex-shrink:0;width:24px;}
+.rm-period{font-size:10px;color:rgba(255,255,255,.35);margin-bottom:3px;}
+.rm-desc{font-size:13px;color:rgba(255,255,255,.72);line-height:1.5;}
+
+/* ─── CTA ─── */
+.cta{position:relative;background:var(--blue);padding:56px 48px;text-align:center;}
+.cta::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#005BBB 0%,#005BBB 50%,#FFD700 50%,#FFD700 100%);}
+.cta-ttl{font-size:36px;font-weight:700;color:white;letter-spacing:-.02em;margin-bottom:14px;}
+.cta-sub{font-size:16px;color:rgba(255,255,255,.7);line-height:1.7;margin-bottom:32px;}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.btn-cta-w{background:white;color:var(--blue);font-size:14px;font-weight:600;padding:12px 26px;border-radius:8px;border:none;cursor:pointer;font-family:inherit;}
+.btn-cta-o{background:transparent;color:white;font-size:14px;font-weight:500;padding:12px 26px;border-radius:8px;border:1px solid rgba(255,255,255,.35);cursor:pointer;font-family:inherit;}
+.btn-cta-o:hover{background:rgba(255,255,255,.08);}
+
+/* ─── FOOTER ─── */
+footer{background:var(--navy2);padding:40px 48px 22px;}
+.ft-grid{display:grid;grid-template-columns:260px 1fr 1fr 1fr;gap:40px;max-width:1200px;margin:0 auto;padding-bottom:36px;border-bottom:1px solid rgba(255,255,255,.08);}
+.ft-logo{display:flex;align-items:center;gap:9px;margin-bottom:12px;}
+.ft-flag{width:24px;height:16px;border-radius:2px;overflow:hidden;display:flex;flex-direction:column;}
+.ft-flag-t{flex:1;background:#005BBB;}
+.ft-flag-b{flex:1;background:#FFD700;}
+.ft-logo-txt{font-size:13px;font-weight:700;color:white;}
+.ft-desc{font-size:12px;color:rgba(255,255,255,.35);line-height:1.7;max-width:210px;}
+.ft-col h4{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:14px;}
+.ft-col a{display:block;font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;margin-bottom:8px;transition:color .15s;}
+.ft-col a:hover{color:white;}
+.ft-bottom{max-width:1200px;margin:0 auto;padding-top:22px;display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,.2);}
+.ft-chain{display:flex;align-items:center;gap:7px;}
+.ft-chain-badge{background:rgba(255,255,255,.07);color:rgba(255,255,255,.4);font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;}
+
+/* ─── LEAFLET OVERRIDES ─── */
+.leaflet-container{background:#1a2744!important;}
+.leaflet-control-zoom a{background:white!important;color:var(--navy)!important;}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="#">
+    <div class="logo-flag"><div class="logo-flag-top"></div><div class="logo-flag-bot"></div></div>
+    <span class="logo-name">UA <span>Recovery</span> Map</span>
+  </a>
+  <a class="n-link" href="#problem">Проблема</a>
+  <a class="n-link" href="#solution">Рішення</a>
+  <a class="n-link" href="#live">Live-дані</a>
+  <a class="n-link" href="#status">Статус</a>
+  <div class="n-pill"><span class="n-pill-dot"></span>Пілот активний</div>
+  <a class="n-btn" href="#live">Відкрити карту</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <div class="hero-tag"><span class="hero-tag-dot"></span>Відкрита платформа · BNB Chain · AI Analytics</div>
+    <h1>Відновлення України — <strong>прозоро</strong> і в реальному часі</h1>
+    <p class="hero-sub">UA Recovery Map об'єднує дані про руйнування, допомогу та відновлення громад. Верифікація на блокчейні, AI-аналітика — щоб кожен бачив реальну картину, а не прес-реліз.</p>
+    <div class="hero-actions">
+      <button class="btn-hero-p" onclick="document.getElementById('live').scrollIntoView({behavior:'smooth'})">Відкрити карту</button>
+      <button class="btn-hero-s" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">Приєднатись до пілоту</button>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-map-label"><strong>UA Recovery Map</strong>Дані оновлено: Квітень 2026</div>
+    <div id="heroMap"></div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stats-inner">
+    <div class="stat"><div class="stat-n">$47B+</div><div class="stat-l">Задокументована міжнародна допомога</div></div>
+    <div class="stat"><div class="stat-n amber">1,400+</div><div class="stat-l">Громад потребують пріоритетної уваги</div></div>
+    <div class="stat"><div class="stat-n red">68%</div><div class="stat-l">Допомоги не відстежується публічно</div></div>
+    <div class="stat"><div class="stat-n">24 год</div><div class="stat-l">Цикл оновлення даних</div></div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="sec-alt" id="problem">
+  <div class="wrap">
+    <div class="prob-grid">
+      <div class="prob-copy">
+        <div class="eyebrow">Проблема</div>
+        <h2 class="sec-title">Які дані про відновлення ви бачите зараз?</h2>
+        <p>Допомога та відновлення фіксуються в різних системах, PDF-звітах і датасетах. Щоб зрозуміти, які громади отримують допомогу, а які залишаються без неї — треба вручну перебрати десятки джерел.</p>
+        <p>UA Recovery Map вирішує це — один публічний інтерфейс, де відновлення відстежується, а не відгадується по прес-релізах.</p>
+      </div>
+      <div class="prob-cards">
+        <div class="prob-card">
+          <div class="prob-icon" style="background:#FEF2F2;">
+            <!-- Warning triangle -->
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="#B91C1C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div><div class="prob-ttl">Дані розкидані по сотнях джерел</div><div class="prob-txt">OCHA, UNHCR, Мінреінтеграції, НГО-звіти — кожен у своєму форматі без єдиного інтерфейсу.</div></div>
+        </div>
+        <div class="prob-card">
+          <div class="prob-icon" style="background:#FFFBEB;">
+            <!-- Eye off -->
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24M1 1l22 22" stroke="#B45309" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div><div class="prob-ttl">Немає публічної верифікації</div><div class="prob-txt">Неможливо перевірити чи дійшла допомога до громади — дані можна змінити або "загубити".</div></div>
+        </div>
+        <div class="prob-card">
+          <div class="prob-icon" style="background:#EFF6FF;">
+            <!-- Chart bar -->
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6" stroke="#1B4FCC" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div><div class="prob-ttl">AI-аналітика недоступна</div><div class="prob-txt">Донори і журналісти не можуть швидко отримати відповідь на питання "де найбільша потреба прямо зараз?"</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section class="sec" id="solution">
+  <div class="wrap">
+    <div class="eyebrow">Рішення</div>
+    <h2 class="sec-title">Один інтерфейс для відновлення України</h2>
+    <p class="sec-desc">UA Recovery Map об'єднує карту, верифікацію та AI-аналітику в одній публічній платформі.</p>
+    <div class="sol-grid">
+      <div class="sol-card">
+        <div class="sol-icon" style="background:#EFF6FF;">
+          <!-- Map pin -->
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" stroke="#1B4FCC" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="10" r="3" stroke="#1B4FCC" stroke-width="1.8"/></svg>
+        </div>
+        <div class="sol-ttl">Карта громад України</div>
+        <div class="sol-txt">Інтерактивна карта на рівні громад — рівень руйнувань, отримана допомога, стан відновлення. Шари даних перемикаються в один клік.</div>
+      </div>
+      <div class="sol-card">
+        <div class="sol-icon" style="background:#F0FDF4;">
+          <!-- Shield check -->
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="sol-ttl">Блокчейн-верифікація</div>
+        <div class="sol-txt">Ключові записи фіксуються на BNB Chain. Будь-хто може перевірити що дані не змінювались — незалежно і публічно.</div>
+      </div>
+      <div class="sol-card">
+        <div class="sol-icon" style="background:#FFFBEB;">
+          <!-- Message circle -->
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#B45309" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="sol-ttl">AI-аналітика</div>
+        <div class="sol-txt">Чатбот розуміє дані карти. Запитайте "які громади Харківщини найменш охоплені?" — відповідь з джерелами за секунди.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section class="sec-alt">
+  <div class="wrap">
+    <div class="eyebrow">Як працює</div>
+    <h2 class="sec-title">Від даних до рішення</h2>
+    <div class="how-steps">
+      <div class="how-line"></div>
+      <div class="how-step"><div class="how-n">1</div><div class="how-ttl">Збір даних</div><div class="how-txt">OCHA, UNHCR, Мінреінтеграції та звіти НГО агрегуються автоматично кожні 24 години.</div></div>
+      <div class="how-step"><div class="how-n">2</div><div class="how-ttl">Карта</div><div class="how-txt">Обираєш регіон або громаду, активуєш шари — і одразу бачиш повну картину відновлення.</div></div>
+      <div class="how-step"><div class="how-n">3</div><div class="how-ttl">Верифікація</div><div class="how-txt">Ключові записи отримують хеши на BNB Chain — незмінний публічний доказ стану даних.</div></div>
+      <div class="how-step"><div class="how-n">4</div><div class="how-ttl">AI-запит</div><div class="how-txt">Задаєш питання чатботу — він аналізує структуровані дані і генерує відповідь з джерелами.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE -->
+<section class="sec" id="live">
+  <div class="wrap">
+    <div class="eyebrow">Live insights</div>
+    <h2 class="sec-title">Дані прямо зараз</h2>
+    <p class="sec-desc">Пілотна версія на основі відкритих датасетів. Оновлюється кожні 24 години.</p>
+    <div class="live-grid">
+      <div class="map-card">
+        <div class="map-card-header">
+          <div class="map-card-title"><span class="live-dot"></span>UA Recovery Map · Пілот</div>
+          <span class="map-card-meta">Оновлено: 17 квіт 2026</span>
+        </div>
+        <div id="liveMap"></div>
+        <div class="map-legend-row">
+          <div class="leg-item"><div class="leg-dot" style="background:#16A34A;"></div>Активне відновлення</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#D97706;"></div>В процесі</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#DC2626;"></div>Критична потреба</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#94A3B8;"></div>Дані оновлюються</div>
+        </div>
+      </div>
+      <div class="right-panels">
+        <div class="community-card">
+          <div class="cc-top">
+            <div><div class="cc-name">Каховська громада</div><div class="cc-region">Херсонська обл. · Бериславський р-н</div></div>
+            <span class="severity-badge sev-crit">Критична</span>
+          </div>
+          <div class="cc-metrics">
+            <div class="cc-m"><div class="cc-m-lbl">Руйнування</div><div class="cc-m-val" style="color:#B91C1C;">71%</div></div>
+            <div class="cc-m"><div class="cc-m-lbl">Відновлено</div><div class="cc-m-val" style="color:#D97706;">18%</div></div>
+            <div class="cc-m"><div class="cc-m-lbl">Потреба</div><div class="cc-m-val" style="color:#B91C1C;">53%</div></div>
+            <div class="cc-m"><div class="cc-m-lbl">Допомога</div><div class="cc-m-val" style="color:#16A34A;">$2.1M</div></div>
+          </div>
+          <div class="cc-bars">
+            <div class="cc-bar-row"><span class="cc-bar-lbl">Інфраструктура</span><div class="cc-bar-wrap"><div class="cc-bar-fill" style="width:18%;background:#DC2626;"></div></div><span class="cc-bar-val">18%</span></div>
+            <div class="cc-bar-row"><span class="cc-bar-lbl">Житло</span><div class="cc-bar-wrap"><div class="cc-bar-fill" style="width:24%;background:#D97706;"></div></div><span class="cc-bar-val">24%</span></div>
+            <div class="cc-bar-row"><span class="cc-bar-lbl">Соц. сервіси</span><div class="cc-bar-wrap"><div class="cc-bar-fill" style="width:35%;background:#2563EB;"></div></div><span class="cc-bar-val">35%</span></div>
+          </div>
+          <div class="cc-footer">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="cc-chain">BNB Chain ·</span>
+            <span class="cc-hash">0x3f4a...c8d2</span>
+          </div>
+        </div>
+        <div class="chat-card">
+          <div class="chat-top">
+            <span class="chat-top-dot"></span>
+            <span class="chat-top-title">UA Recovery AI · Аналітика</span>
+            <span style="margin-left:auto;font-size:10px;color:rgba(255,255,255,.35);font-weight:500;">Powered by Claude API</span>
+          </div>
+          <div class="chat-body" id="chatBody">
+            <div class="msg-user">Які громади Херсонщини найменш охоплені?</div>
+            <div class="msg-ai">На основі поточних даних, Каховська, Олешківська та Нова Каховка мають найбільший розрив між потребами і реально отриманою допомогою — 48–53%.<div><span class="msg-src">OCHA UA 2026-Q1 ↗</span></div></div>
+          </div>
+          <div class="chat-input-row">
+            <input class="chat-inp" id="chatInp" placeholder="Запитайте про будь-яку громаду..." onkeydown="if(event.key==='Enter')sendMsg()"/>
+            <button class="chat-btn" onclick="sendMsg()">→</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATUS -->
+<section class="sec-alt" id="status">
+  <div class="wrap">
+    <div class="eyebrow">Статус</div>
+    <h2 class="sec-title">Живий продукт на ранній стадії</h2>
+    <p class="sec-desc">UA Recovery Map в активній розробці, не дослідницький проект.</p>
+    <div class="status-wrap">
+      <div class="status-list">
+        <div class="s-item"><span class="s-dot" style="background:#16A34A;"></span><span class="s-txt">Архітектура системи</span><span class="s-badge b-done">Готово</span></div>
+        <div class="s-item"><span class="s-dot" style="background:#16A34A;"></span><span class="s-txt">Інтерактивна карта — прототип</span><span class="s-badge b-done">Готово</span></div>
+        <div class="s-item"><span class="s-dot" style="background:#16A34A;"></span><span class="s-txt">AI-аналітика — базовий Q&A</span><span class="s-badge b-done">Готово</span></div>
+        <div class="s-item"><span class="s-dot" style="background:#D97706;"></span><span class="s-txt">BNB Chain smart contracts</span><span class="s-badge b-wip">В процесі</span></div>
+        <div class="s-item"><span class="s-dot" style="background:#D97706;"></span><span class="s-txt">Інтеграція датасетів OCHA/UNHCR</span><span class="s-badge b-wip">В процесі</span></div>
+        <div class="s-item"><span class="s-dot" style="background:#94A3B8;"></span><span class="s-txt">Партнерства з НГО</span><span class="s-badge b-plan">Q3 2026</span></div>
+        <div class="s-item"><span class="s-dot" style="background:#94A3B8;"></span><span class="s-txt">Публічний запуск</span><span class="s-badge b-plan">Q3 2026</span></div>
+      </div>
+      <div class="roadmap">
+        <div class="rm-h">Дорожня карта</div>
+        <div class="rm-item"><div class="rm-q">Q2</div><div><div class="rm-period">Квітень — Червень 2026</div><div class="rm-desc">MVP: карта 50+ громад, BNB Chain testnet, AI чатбот. Перші 2–3 НГО партнери.</div></div></div>
+        <div class="rm-item"><div class="rm-q">Q3</div><div><div class="rm-period">Липень — Вересень 2026</div><div class="rm-desc">200+ громад, mainnet верифікація, автогенерація impact-звітів. 10+ організацій.</div></div></div>
+        <div class="rm-item"><div class="rm-q">Q4</div><div><div class="rm-period">Жовтень — Грудень 2026</div><div class="rm-desc">Повне покриття України, відкритий API, інтеграція з міжнародним донором.</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta" id="cta">
+  <h2 class="cta-ttl">Приєднатись до відновлення України</h2>
+  <p class="cta-sub">Відстежуйте відновлення за відкритими даними, а не по чутках з офісів донорів.</p>
+  <div class="cta-btns">
+    <button class="btn-cta-w" onclick="document.getElementById('live').scrollIntoView({behavior:'smooth'})">Відкрити карту</button>
+    <button class="btn-cta-o">Приєднатись до пілоту</button>
+    <button class="btn-cta-o">Дізнатись про підтримку</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-grid">
+    <div>
+      <div class="ft-logo"><div class="ft-flag"><div class="ft-flag-t"></div><div class="ft-flag-b"></div></div><span class="ft-logo-txt">UA Recovery Map</span></div>
+      <div class="ft-desc">Публічна платформа моніторингу відновлення України. Відкриті дані, блокчейн-верифікація, AI-аналітика.</div>
+    </div>
+    <div class="ft-col"><h4>Платформа</h4><a href="#">Карта громад</a><a href="#">AI-аналітика</a><a href="#">Верифікація</a><a href="#">API</a></div>
+    <div class="ft-col"><h4>Ресурси</h4><a href="#">Документація</a><a href="#">Відкриті дані</a><a href="#">Партнерам</a><a href="#">Контакт</a></div>
+    <div class="ft-col"><h4>Підтримка</h4><a href="#">Binance Web3 Lab</a><a href="#">Grant Program</a><a href="#">Для донорів</a><a href="#">hello@uarecoverymap.org</a></div>
+  </div>
+  <div class="ft-bottom"><span>© 2026 UA Recovery Map · <span style="color:rgba(255,255,255,.18);">Demo v0.1 · Квітень 2026</span></span><div class="ft-chain">Верифіковано на <span class="ft-chain-badge">BNB Chain</span></div></div>
+</footer>
+
+<script>
+// ── MAPS ──────────────────────────────────────────────────────
+const oblastColors = {
+  'Закарпатська':'#16A34A','Львівська':'#16A34A','Івано-Франківська':'#16A34A',
+  'Чернівецька':'#16A34A','Волинська':'#16A34A','Рівненська':'#2563EB',
+  'Тернопільська':'#2563EB','Хмельницька':'#2563EB','Вінницька':'#2563EB',
+  'Житомирська':'#2563EB','Київська':'#2563EB','Чернігівська':'#D97706',
+  'Сумська':'#D97706','Полтавська':'#D97706','Черкаська':'#2563EB',
+  'Кіровоградська':'#2563EB','Миколаївська':'#DC2626','Одеська':'#D97706',
+  'Херсонська':'#DC2626','Запорізька':'#DC2626','Дніпропетровська':'#D97706',
+  'Харківська':'#DC2626','Донецька':'#7F1D1D','Луганська':'#7F1D1D',
+  'Київ (місто)':'#2563EB'
+};
+
+const recoveryData = {
+  'Закарпатська':{d:5,r:68,aid:'$180M'},'Львівська':{d:8,r:62,aid:'$420M'},
+  'Івано-Франківська':{d:4,r:71,aid:'$95M'},'Чернівецька':{d:3,r:74,aid:'$62M'},
+  'Волинська':{d:6,r:65,aid:'$110M'},'Рівненська':{d:12,r:54,aid:'$88M'},
+  'Тернопільська':{d:9,r:58,aid:'$76M'},'Хмельницька':{d:11,r:56,aid:'$92M'},
+  'Вінницька':{d:14,r:52,aid:'$124M'},'Житомирська':{d:18,r:48,aid:'$145M'},
+  'Київська':{d:22,r:45,aid:'$890M'},'Чернігівська':{d:35,r:32,aid:'$310M'},
+  'Сумська':{d:38,r:28,aid:'$275M'},'Полтавська':{d:24,r:41,aid:'$198M'},
+  'Черкаська':{d:16,r:50,aid:'$115M'},'Кіровоградська':{d:13,r:53,aid:'$88M'},
+  'Миколаївська':{d:48,r:22,aid:'$640M'},'Одеська':{d:19,r:47,aid:'$380M'},
+  'Херсонська':{d:71,r:18,aid:'$980M'},'Запорізька':{d:62,r:14,aid:'$1.1B'},
+  'Дніпропетровська':{d:28,r:38,aid:'$720M'},'Харківська':{d:54,r:20,aid:'$1.4B'},
+  'Донецька':{d:88,r:4,aid:'$2.1B'},'Луганська':{d:92,r:2,aid:'$1.8B'},
+  'Київ (місто)':{d:6,r:70,aid:'$2.4B'}
+};
+
+function initMaps(){
+  const style = {
+    color:'rgba(255,255,255,0.5)',
+    weight:1,
+    fillOpacity:0.75
+  };
+
+  // Hero map
+  const heroMap = L.map('heroMap',{zoomControl:false,attributionControl:false,dragging:false,scrollWheelZoom:false,doubleClickZoom:false,keyboard:false}).setView([49,32],5);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',{opacity:0.4}).addTo(heroMap);
+  fetchGeoJSON(heroMap, true);
+
+  // Live map
+  const liveMap = L.map('liveMap',{zoomControl:true,attributionControl:false}).setView([49,32],5.5);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png',{opacity:0.6}).addTo(liveMap);
+  fetchGeoJSON(liveMap, false);
+}
+
+function fetchGeoJSON(map, isDark){
+  fetch('https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson')
+    .then(r=>r.json())
+    .then(data=>{
+      // fallback to inline simplified Ukraine if fetch works
+    }).catch(()=>{});
+
+  // Use inline simplified Ukraine oblasts
+  const ukraineData = getUkraineGeoJSON();
+  L.geoJSON(ukraineData,{
+    style: feature => {
+      const name = feature.properties.name;
+      const color = oblastColors[name] || '#64748B';
+      return {
+        fillColor: color,
+        color: isDark ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.8)',
+        weight: isDark ? 0.8 : 1.2,
+        fillOpacity: isDark ? 0.7 : 0.65
+      };
+    },
+    onEachFeature: (feature, layer) => {
+      const name = feature.properties.name;
+      const d = recoveryData[name];
+      if(d){
+        layer.bindTooltip(`<strong>${name}</strong><br>Руйнування: ${d.d}%<br>Відновлено: ${d.r}%<br>Допомога: ${d.aid}`,{sticky:true,className:'ua-tooltip'});
+        if(!isDark){
+          layer.on('click',()=>{
+            document.querySelector('.cc-name').textContent = name;
+            document.querySelector('.cc-region').textContent = 'Україна · Область';
+            const vals = document.querySelectorAll('.cc-m-val');
+            vals[0].textContent = d.d+'%';
+            vals[1].textContent = d.r+'%';
+            vals[2].textContent = (100-d.r-d.d > 0 ? 100-d.r-d.d : Math.abs(d.d-d.r))+'%';
+            vals[3].textContent = d.aid;
+          });
+        }
+      }
+    }
+  }).addTo(map);
+}
+
+// Simplified Ukraine GeoJSON with oblasts
+function getUkraineGeoJSON(){
+  return {type:'FeatureCollection',features:[
+    {type:'Feature',properties:{name:'Закарпатська'},geometry:{type:'Polygon',coordinates:[[[22.15,48.41],[22.89,48.36],[23.20,48.02],[23.58,47.98],[24.04,47.98],[24.26,48.19],[24.63,47.97],[24.87,47.74],[24.55,47.48],[24.08,47.42],[23.59,47.57],[23.11,47.48],[22.81,47.68],[22.54,47.78],[22.15,48.12],[22.15,48.41]]]}},
+    {type:'Feature',properties:{name:'Львівська'},geometry:{type:'Polygon',coordinates:[[[22.15,48.41],[23.20,48.02],[23.58,47.98],[24.04,47.98],[24.26,48.19],[24.92,48.24],[25.21,48.41],[25.18,48.64],[24.89,48.83],[24.05,48.98],[23.71,48.88],[23.44,49.18],[23.02,49.30],[22.68,49.09],[22.50,48.85],[22.45,48.63],[22.15,48.41]]]}},
+    {type:'Feature',properties:{name:'Івано-Франківська'},geometry:{type:'Polygon',coordinates:[[[24.04,47.98],[23.58,47.98],[23.11,47.48],[23.59,47.57],[24.08,47.42],[24.55,47.48],[24.87,47.74],[25.18,47.58],[25.34,47.90],[25.17,48.11],[25.21,48.41],[24.92,48.24],[24.26,48.19],[24.04,47.98]]]}},
+    {type:'Feature',properties:{name:'Чернівецька'},geometry:{type:'Polygon',coordinates:[[[24.55,47.48],[24.87,47.74],[25.18,47.58],[25.62,47.50],[26.19,47.61],[26.36,47.89],[26.06,48.07],[25.75,48.17],[25.34,47.90],[25.18,47.58],[24.87,47.74],[24.55,47.48]]]}},
+    {type:'Feature',properties:{name:'Волинська'},geometry:{type:'Polygon',coordinates:[[[23.44,49.18],[24.05,48.98],[24.89,48.83],[25.18,48.64],[25.52,49.04],[25.83,49.34],[25.98,49.64],[25.60,50.01],[25.14,50.19],[24.78,50.27],[24.46,50.49],[24.13,50.35],[23.69,50.19],[23.61,49.78],[23.60,49.57],[23.44,49.18]]]}},
+    {type:'Feature',properties:{name:'Рівненська'},geometry:{type:'Polygon',coordinates:[[[25.18,48.64],[25.52,49.04],[25.83,49.34],[25.98,49.64],[26.14,49.86],[26.05,50.12],[25.67,50.31],[25.14,50.19],[25.60,50.01],[25.98,49.64],[25.83,49.34],[25.52,49.04],[25.18,48.64]]]}},
+    {type:'Feature',properties:{name:'Тернопільська'},geometry:{type:'Polygon',coordinates:[[[25.21,48.41],[25.18,48.64],[24.89,48.83],[24.05,48.98],[23.71,48.88],[23.44,49.18],[24.45,49.32],[25.07,49.27],[25.57,49.18],[25.52,49.04],[25.18,48.64],[25.21,48.41]]]}},
+    {type:'Feature',properties:{name:'Хмельницька'},geometry:{type:'Polygon',coordinates:[[[25.52,49.04],[25.57,49.18],[25.07,49.27],[24.45,49.32],[24.00,49.53],[24.27,49.80],[24.72,50.08],[25.14,50.19],[25.67,50.31],[26.05,50.12],[26.14,49.86],[25.98,49.64],[25.83,49.34],[25.52,49.04]]]}},
+    {type:'Feature',properties:{name:'Вінницька'},geometry:{type:'Polygon',coordinates:[[[24.00,49.53],[24.45,49.32],[25.07,49.27],[25.57,49.18],[25.88,49.37],[26.40,49.52],[26.85,49.61],[27.12,49.56],[27.40,49.42],[27.25,49.08],[26.95,48.82],[26.58,48.65],[26.19,48.52],[25.75,48.17],[26.06,48.07],[26.36,47.89],[26.19,47.61],[25.62,47.50],[25.18,47.58],[25.34,47.90],[25.75,48.17],[25.18,48.64],[25.21,48.41],[24.92,48.24],[24.26,48.19],[24.04,47.98],[24.04,47.98],[24.00,49.53]]]}},
+    {type:'Feature',properties:{name:'Житомирська'},geometry:{type:'Polygon',coordinates:[[[25.88,49.37],[25.57,49.18],[25.07,49.27],[24.45,49.32],[24.00,49.53],[24.72,50.08],[25.14,50.19],[25.67,50.31],[26.05,50.12],[26.14,49.86],[26.00,50.26],[26.38,50.48],[26.85,50.52],[27.21,50.63],[27.57,50.46],[28.00,50.54],[28.22,50.30],[28.10,50.05],[27.70,49.80],[27.40,49.42],[27.12,49.56],[26.85,49.61],[26.40,49.52],[25.88,49.37]]]}},
+    {type:'Feature',properties:{name:'Київська'},geometry:{type:'Polygon',coordinates:[[[28.00,50.54],[27.57,50.46],[27.21,50.63],[26.85,50.52],[26.38,50.48],[26.00,50.26],[26.14,49.86],[26.40,49.52],[26.85,49.61],[27.12,49.56],[27.40,49.42],[27.70,49.80],[28.10,50.05],[28.22,50.30],[28.86,50.55],[29.24,50.67],[29.82,50.55],[30.04,50.67],[30.20,51.00],[30.44,51.16],[30.12,51.42],[29.62,51.38],[29.06,51.55],[28.61,51.54],[28.14,51.49],[27.72,51.46],[27.45,51.22],[27.22,51.03],[27.12,50.77],[27.35,50.64],[28.00,50.54]]]}},
+    {type:'Feature',properties:{name:'Київ (місто)'},geometry:{type:'Polygon',coordinates:[[[30.20,51.00],[30.44,51.16],[30.62,50.92],[30.82,50.86],[30.64,50.67],[30.36,50.67],[30.20,51.00]]]}},
+    {type:'Feature',properties:{name:'Чернігівська'},geometry:{type:'Polygon',coordinates:[[[28.61,51.54],[29.06,51.55],[29.62,51.38],[30.12,51.42],[30.44,51.16],[30.20,51.00],[30.04,50.67],[29.82,50.55],[29.24,50.67],[28.86,50.55],[28.22,50.30],[28.00,50.54],[27.35,50.64],[27.12,50.77],[27.22,51.03],[27.45,51.22],[27.72,51.46],[28.14,51.49],[28.61,51.54]]]}},
+    {type:'Feature',properties:{name:'Сумська'},geometry:{type:'Polygon',coordinates:[[[30.44,51.16],[30.12,51.42],[29.62,51.38],[29.06,51.55],[28.61,51.54],[28.14,51.49],[27.72,51.46],[28.44,51.68],[29.01,51.88],[29.80,52.07],[30.15,52.06],[30.70,51.88],[31.20,51.75],[31.52,51.58],[31.35,51.27],[30.94,51.27],[30.44,51.16]]]}},
+    {type:'Feature',properties:{name:'Полтавська'},geometry:{type:'Polygon',coordinates:[[[28.22,50.30],[28.86,50.55],[29.24,50.67],[29.82,50.55],[30.04,50.67],[30.36,50.67],[30.64,50.67],[31.35,51.27],[31.52,51.58],[31.95,51.52],[32.54,51.50],[32.97,51.36],[33.30,51.26],[33.10,51.00],[33.04,50.66],[32.77,50.43],[32.50,50.18],[32.00,50.04],[31.50,49.96],[31.00,49.92],[30.64,49.76],[30.27,49.66],[29.92,49.64],[29.54,49.54],[29.10,49.55],[28.82,49.67],[28.22,50.30]]]}},
+    {type:'Feature',properties:{name:'Черкаська'},geometry:{type:'Polygon',coordinates:[[[28.82,49.67],[29.10,49.55],[29.54,49.54],[29.92,49.64],[30.27,49.66],[30.64,49.76],[31.00,49.92],[31.50,49.96],[32.00,50.04],[31.80,49.60],[31.47,49.40],[30.96,49.26],[30.50,49.10],[30.15,48.91],[29.86,48.87],[29.42,48.98],[29.00,49.22],[28.82,49.67]]]}},
+    {type:'Feature',properties:{name:'Кіровоградська'},geometry:{type:'Polygon',coordinates:[[[29.00,49.22],[29.42,48.98],[29.86,48.87],[30.15,48.91],[30.50,49.10],[30.96,49.26],[31.47,49.40],[31.80,49.60],[32.00,50.04],[32.50,50.18],[32.77,50.43],[32.50,49.90],[32.20,49.62],[31.90,49.36],[31.50,49.00],[31.05,48.82],[30.60,48.66],[30.15,48.60],[29.72,48.64],[29.30,48.78],[29.00,49.22]]]}},
+    {type:'Feature',properties:{name:'Миколаївська'},geometry:{type:'Polygon',coordinates:[[[29.00,49.22],[29.30,48.78],[29.72,48.64],[30.15,48.60],[30.60,48.66],[31.05,48.82],[31.50,49.00],[31.05,48.52],[30.60,48.20],[30.15,47.85],[29.70,47.60],[29.30,47.52],[28.80,47.50],[28.30,47.66],[28.00,47.88],[28.00,48.20],[28.30,48.52],[28.82,48.72],[29.00,49.22]]]}},
+    {type:'Feature',properties:{name:'Одеська'},geometry:{type:'Polygon',coordinates:[[[28.00,47.88],[28.30,47.66],[28.80,47.50],[29.30,47.52],[29.70,47.60],[30.15,47.85],[30.00,47.40],[29.60,46.98],[29.22,46.52],[28.80,46.12],[28.30,45.78],[27.80,45.95],[27.40,46.28],[27.00,46.60],[26.60,46.92],[26.50,47.20],[26.80,47.52],[27.20,47.75],[27.60,47.95],[28.00,47.88]]]}},
+    {type:'Feature',properties:{name:'Херсонська'},geometry:{type:'Polygon',coordinates:[[[30.15,47.85],[30.60,48.20],[31.05,48.52],[31.50,49.00],[31.90,49.36],[32.20,49.62],[32.50,49.90],[32.77,49.50],[33.00,49.20],[32.80,48.85],[32.50,48.50],[32.10,48.15],[31.70,47.80],[31.30,47.50],[30.90,47.25],[30.50,47.05],[30.15,47.00],[29.80,47.10],[29.60,46.98],[30.00,47.40],[30.15,47.85]]]}},
+    {type:'Feature',properties:{name:'Запорізька'},geometry:{type:'Polygon',coordinates:[[[32.77,49.50],[33.00,49.20],[32.80,48.85],[32.50,48.50],[32.10,48.15],[31.70,47.80],[31.30,47.50],[31.60,47.60],[32.00,47.52],[32.50,47.44],[33.00,47.38],[33.50,47.50],[34.00,47.40],[34.50,47.20],[34.90,47.00],[35.20,47.10],[35.50,47.22],[35.80,47.50],[35.60,47.80],[35.20,48.10],[34.80,48.30],[34.40,48.50],[34.00,48.70],[33.50,49.00],[33.10,49.25],[32.77,49.50]]]}},
+    {type:'Feature',properties:{name:'Дніпропетровська'},geometry:{type:'Polygon',coordinates:[[[32.50,50.18],[32.77,50.43],[33.04,50.66],[33.10,51.00],[33.30,51.26],[33.60,51.10],[34.00,50.95],[34.40,50.80],[34.80,50.60],[35.10,50.35],[35.40,50.15],[35.50,49.82],[35.20,49.55],[34.90,49.25],[34.50,48.90],[34.00,48.70],[33.50,49.00],[33.10,49.25],[32.77,49.50],[32.50,49.90],[32.77,50.43],[32.50,50.18]]]}},
+    {type:'Feature',properties:{name:'Харківська'},geometry:{type:'Polygon',coordinates:[[[33.30,51.26],[33.60,51.10],[34.00,50.95],[34.40,50.80],[34.80,50.60],[35.10,50.35],[35.40,50.15],[35.80,50.10],[36.20,50.22],[36.60,50.28],[37.00,50.36],[37.40,50.10],[37.20,49.85],[36.90,49.60],[36.50,49.50],[36.00,49.40],[35.60,49.20],[35.20,49.00],[34.90,49.25],[35.20,49.55],[35.50,49.82],[35.40,50.15],[35.10,50.35],[34.80,50.60],[34.40,50.80],[34.00,50.95],[33.60,51.10],[33.30,51.26]]]}},
+    {type:'Feature',properties:{name:'Донецька'},geometry:{type:'Polygon',coordinates:[[[35.40,50.15],[35.80,50.10],[36.20,50.22],[36.60,50.28],[37.00,50.36],[37.40,50.10],[38.00,49.90],[38.40,49.68],[38.70,49.42],[38.80,49.12],[38.50,48.88],[38.00,48.60],[37.50,48.38],[37.00,48.10],[36.50,47.96],[36.00,47.88],[35.50,47.96],[35.00,48.10],[34.50,48.30],[34.00,48.52],[34.50,48.90],[34.90,49.25],[35.20,49.55],[35.50,49.82],[35.40,50.15]]]}},
+    {type:'Feature',properties:{name:'Луганська'},geometry:{type:'Polygon',coordinates:[[[37.00,50.36],[37.40,50.10],[38.00,49.90],[38.40,49.68],[38.70,49.42],[38.80,49.12],[39.20,49.00],[39.60,48.80],[39.90,48.55],[39.80,48.22],[39.50,48.00],[39.00,47.80],[38.60,47.70],[38.20,47.80],[37.80,47.96],[37.40,48.10],[37.00,48.10],[37.50,48.38],[38.00,48.60],[38.50,48.88],[38.80,49.12],[38.70,49.42],[38.40,49.68],[38.00,49.90],[37.40,50.10],[37.00,50.36]]]}},
+  ]};
+}
+
+// Chat
+const replies = [
+  'На основі даних OCHA та Мінреінтеграції, найбільший розрив між потребами і допомогою зафіксовано в 3 громадах регіону. Детальний звіт доступний до завантаження.<div><span class="msg-src">OCHA UA 2026-Q1 ↗</span></div>',
+  'Загальний обсяг підтвердженої допомоги в цьому регіоні — $4.2M при задокументованій потребі $8.7M. Розрив — 52%. Верифіковано на BNB Chain.<div><span class="msg-src">BNB Chain · Блок 0x3f4a ↗</span></div>',
+  'Інфраструктурне відновлення відстає від графіку на 3.2 місяці. Рекомендую переглянути пріоритети фінансування в житловому секторі.<div><span class="msg-src">Мінреінтеграції 2026 ↗</span></div>'
+];
+let rIdx = 0;
+function sendMsg(){
+  const inp = document.getElementById('chatInp');
+  const msg = inp.value.trim();
+  if(!msg) return;
+  const body = document.getElementById('chatBody');
+  const ub = document.createElement('div');
+  ub.className = 'msg-user';
+  ub.textContent = msg;
+  body.insertBefore(ub, body.querySelector('#typingEl') || null);
+  body.appendChild(ub);
+  inp.value = '';
+  const typing = document.createElement('div');
+  typing.className = 'msg-ai';
+  typing.id = 'typingEl';
+  typing.innerHTML = '<span style="color:#94A3B8">···</span>';
+  body.appendChild(typing);
+  body.scrollTop = 9999;
+  setTimeout(()=>{
+    typing.innerHTML = replies[rIdx % replies.length];
+    typing.id = '';
+    body.scrollTop = 9999;
+    rIdx++;
+  }, 1100);
+}
+
+// Add tooltip style
+const style = document.createElement('style');
+style.textContent = '.ua-tooltip{background:white;border:1px solid #E2E8F0;border-radius:7px;padding:8px 12px;font-family:Inter,sans-serif;font-size:12px;color:#0F172A;box-shadow:0 2px 12px rgba(0,0,0,.1);}';
+document.head.appendChild(style);
+
+// Init after Leaflet loads
+if(typeof L !== 'undefined'){initMaps();}
+else{window.addEventListener('load',initMaps);}
+</script>
+</body>
+</html>
