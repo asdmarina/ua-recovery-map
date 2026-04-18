@@ -221,16 +221,19 @@ footer{background:var(--navy2);padding:40px 48px 22px;}
 
 <!-- NAV -->
 <nav>
-  <a class="logo" href="#">
+  <a class="logo" href="/">
     <div class="logo-flag"><div class="logo-flag-top"></div><div class="logo-flag-bot"></div></div>
     <span class="logo-name">UA <span>Recovery</span> Map</span>
   </a>
-  <a class="n-link" href="#problem">Проблема</a>
-  <a class="n-link" href="#solution">Рішення</a>
-  <a class="n-link" href="#live">Live-дані</a>
-  <a class="n-link" href="#status">Статус</a>
-  <div class="n-pill"><span class="n-pill-dot"></span>Пілот активний</div>
-  <a class="n-btn" href="/dashboard">Відкрити карту</a>
+  <a class="n-link" href="#problem" data-i18n="navProblem">Проблема</a>
+  <a class="n-link" href="#solution" data-i18n="navSolution">Рішення</a>
+  <a class="n-link" href="#live" data-i18n="navLive">Live-дані</a>
+  <a class="n-link" href="#status" data-i18n="navStatus">Статус</a>
+  <div class="n-pill"><span class="n-pill-dot"></span><span data-i18n="navPilot">Пілот активний</span></div>
+  <div class="lang-tog">
+    <button class="lang-btn active" onclick="setLang('ua')">UA</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+  </div>
 </nav>
 
 <!-- HERO -->
