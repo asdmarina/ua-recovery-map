@@ -33,70 +33,43 @@
 html,body{height:100%;font-family:'Inter',sans-serif;overflow:hidden;background:var(--navy);}
 body{display:flex;flex-direction:column;}
 
-/* ── TOPBAR ── */
+/* ── TOPBAR (unified header) ── */
 #topbar{
   position:relative;
   height:var(--top-h);flex-shrink:0;
   background:var(--navy2);
   border-bottom:1px solid var(--border);
   display:flex;align-items:center;
-  padding:0 14px;gap:10px;
+  padding:0 24px;gap:24px;
   z-index:1000;
 }
 #topbar::before{
   content:"";position:absolute;top:0;left:0;right:0;height:2px;
   background:linear-gradient(90deg,#005BBB 0%,#005BBB 50%,#FFD700 50%,#FFD700 100%);
 }
-.logo{display:flex;align-items:center;gap:8px;margin-right:6px;text-decoration:none;}
-.logo-pin{width:14px;height:14px;color:#60A5FA;flex-shrink:0;}
-.logo-flag{width:18px;height:13px;border-radius:2px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 0 1px rgba(0,0,0,.3);}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none;margin-right:8px;}
+.logo-flag{width:22px;height:15px;border-radius:2px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 0 1px rgba(0,0,0,.3);}
 .logo-flag-t{flex:1;background:#005BBB;}
 .logo-flag-b{flex:1;background:#FFD700;}
-.logo-text{display:flex;flex-direction:column;line-height:1;}
-.logo-name{font-size:13px;letter-spacing:-.01em;color:rgba(255,255,255,.55);font-weight:400;}
-.logo-name .ua{color:#005BBB;font-weight:700;}
-.logo-name .rec{color:#fff;font-weight:700;}
-.logo-name .map{color:rgba(255,255,255,.55);font-weight:400;margin-left:2px;}
-.logo-ver{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.25);font-weight:600;margin-top:2px;}
-.tb-div{width:1px;height:18px;background:var(--border);}
-.pilot-pill{
+.logo-name{font-size:14px;font-weight:700;color:#fff;letter-spacing:-.01em;}
+.logo-name span{color:#60A5FA;}
+.n-link{font-size:12px;font-weight:500;color:rgba(255,255,255,.55);text-decoration:none;transition:color .15s;}
+.n-link:hover{color:#fff;}
+.tb-spacer{flex:1;}
+.n-pill{
   display:flex;align-items:center;gap:5px;
   background:rgba(34,197,94,0.1);
   border:1px solid rgba(34,197,94,0.25);
-  padding:3px 10px;border-radius:20px;
+  padding:4px 10px;border-radius:20px;
   font-size:11px;font-weight:600;color:#4ADE80;
 }
-.pilot-dot{width:5px;height:5px;border-radius:50%;background:#4ADE80;animation:blink 2s infinite;}
+.n-pill-dot{width:5px;height:5px;border-radius:50%;background:#4ADE80;animation:blink 2s infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.tb-ts{font-size:10px;color:rgba(255,255,255,.4);font-family:'JetBrains Mono','SF Mono',ui-monospace,monospace;letter-spacing:.01em;display:flex;align-items:center;gap:6px;}
-.tb-ts-dot{width:5px;height:5px;border-radius:50%;background:#4ADE80;animation:blink 2s infinite;}
-.layer-btns{display:flex;gap:4px;}
-.layer-btn{
-  background:rgba(255,255,255,.05);
-  border:1px solid var(--border);
-  color:var(--text-dim);
-  font-size:11px;font-weight:500;
-  padding:4px 11px 4px 9px;border-radius:5px;
-  cursor:pointer;font-family:inherit;
-  transition:all .15s;
-  display:inline-flex;align-items:center;gap:6px;
-}
-.layer-btn .lb-dot{width:7px;height:7px;border-radius:50%;display:inline-block;box-shadow:0 0 6px currentColor;}
-.layer-btn:hover{color:var(--text-mid);background:rgba(255,255,255,.08);}
-.layer-btn.active{background:rgba(29,85,232,.25);border-color:rgba(29,85,232,.5);color:#93C5FD;}
-.tb-spacer{flex:1;}
-.lang-tog{display:flex;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:5px;overflow:hidden;}
-.lang-btn{padding:4px 9px;font-size:11px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--text-dim);font-family:inherit;transition:all .15s;}
-.lang-btn.active{background:rgba(29,85,232,.4);color:white;}
-.chat-tog-btn{
-  background:var(--blue);border:none;color:white;
-  font-size:11px;font-weight:600;
-  padding:5px 13px;border-radius:6px;
-  cursor:pointer;font-family:inherit;
-  display:flex;align-items:center;gap:5px;
-  transition:background .15s;
-}
-.chat-tog-btn:hover{background:var(--blue2);}
+.lang-tog{display:flex;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.lang-btn{padding:5px 11px;font-size:11px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--text-dim);font-family:inherit;transition:all .15s;}
+.lang-btn.active{background:var(--blue);color:white;}
+/* legacy hidden */
+.layer-btns,.chat-tog-btn,.tb-ts,.tb-div{display:none!important;}
 
 /* ── LAYOUT ── */
 #main{flex:1;display:flex;overflow:hidden;position:relative;}
@@ -399,33 +372,30 @@ body{display:flex;flex-direction:column;}
 </head>
 <body>
 
-<!-- TOPBAR -->
+<!-- TOPBAR (unified header) -->
 <div id="topbar">
-  <a class="logo" href="/" title="UA Recovery Map">
-    <svg class="logo-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="2.5"/></svg>
+  <a class="logo" href="/">
     <div class="logo-flag"><div class="logo-flag-t"></div><div class="logo-flag-b"></div></div>
-    <div class="logo-text">
-      <span class="logo-name"><span class="ua">UA</span> <span class="rec">Recovery</span><span class="map">Map</span></span>
-      <span class="logo-ver">v0.1 · pilot</span>
-    </div>
+    <span class="logo-name">UA <span>Recovery</span> Map</span>
   </a>
-  <div class="tb-div"></div>
-  <div class="tb-ts"><span class="tb-ts-dot"></span><span id="t-pilot">Дані: 17 квіт 2026 · 14:32 UTC</span></div>
-  <div class="tb-div"></div>
-  <div class="layer-btns">
-    <button class="layer-btn active" id="btn-rec" onclick="setLayer('recovery')" data-ua="Відновлення" data-en="Recovery"><span class="lb-dot" style="background:#22C55E;color:#22C55E;"></span><span>Відновлення</span></button>
-    <button class="layer-btn" id="btn-dmg" onclick="setLayer('damage')" data-ua="Руйнування" data-en="Damage"><span class="lb-dot" style="background:#F59E0B;color:#F59E0B;"></span><span>Руйнування</span></button>
-    <button class="layer-btn" id="btn-aid" onclick="setLayer('aid')" data-ua="Допомога" data-en="Aid"><span class="lb-dot" style="background:#60A5FA;color:#60A5FA;"></span><span>Допомога</span></button>
-  </div>
+  <a class="n-link" href="/#problem" id="nav-problem">Проблема</a>
+  <a class="n-link" href="/#solution" id="nav-solution">Рішення</a>
+  <a class="n-link" href="/#live" id="nav-live">Live-дані</a>
+  <a class="n-link" href="/#status" id="nav-status">Статус</a>
+  <div class="n-pill"><span class="n-pill-dot"></span><span id="nav-pilot">Пілот активний</span></div>
   <div class="tb-spacer"></div>
   <div class="lang-tog">
     <button class="lang-btn active" onclick="setLang('ua')">UA</button>
     <button class="lang-btn" onclick="setLang('en')">EN</button>
   </div>
-  <button class="chat-tog-btn" onclick="toggleChat()">
-    <svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    <span id="t-ai-btn">AI Аналітика</span>
-  </button>
+  <!-- legacy controls kept for JS compatibility but hidden -->
+  <div class="layer-btns">
+    <button class="layer-btn active" id="btn-rec" onclick="setLayer('recovery')"><span class="lb-dot" style="background:#22C55E;color:#22C55E;"></span><span>Відновлення</span></button>
+    <button class="layer-btn" id="btn-dmg" onclick="setLayer('damage')"><span class="lb-dot" style="background:#F59E0B;color:#F59E0B;"></span><span>Руйнування</span></button>
+    <button class="layer-btn" id="btn-aid" onclick="setLayer('aid')"><span class="lb-dot" style="background:#60A5FA;color:#60A5FA;"></span><span>Допомога</span></button>
+  </div>
+  <span id="t-pilot" style="display:none;">Дані: 17 квіт 2026 · 14:32 UTC</span>
+  <span id="t-ai-btn" style="display:none;">AI Аналітика</span>
 </div>
 
 <!-- MAIN -->
@@ -606,6 +576,7 @@ let lang = 'ua';
 const TR = {
   ua:{
     pilot:'Пілотний доступ',
+    navProblem:'Проблема',navSolution:'Рішення',navLive:'Live-дані',navStatus:'Статус',navPilot:'Пілот активний',
     layers:'Шари даних',grp1:'Стан відновлення',grp2:'Джерела даних',
     lRec:'Активне відновлення',lInp:'В процесі',lCrit:'Критична потреба',lMin:'Мінреінтеграції',
     dmg:'Руйнування',rec:'Відновлено',need:'Потреба',aid:'Допомога',
@@ -627,6 +598,7 @@ const TR = {
   },
   en:{
     pilot:'Pilot access',
+    navProblem:'Problem',navSolution:'Solution',navLive:'Live data',navStatus:'Status',navPilot:'Pilot active',
     layers:'Data layers',grp1:'Recovery status',grp2:'Data sources',
     lRec:'Active recovery',lInp:'In progress',lCrit:'Critical need',lMin:'MinReintegration',
     dmg:'Damage',rec:'Recovered',need:'Open need',aid:'Aid tracked',
@@ -658,6 +630,7 @@ function setLang(l){
 
 function applyLang(){
   const ids = {
+    'nav-problem':'navProblem','nav-solution':'navSolution','nav-live':'navLive','nav-status':'navStatus','nav-pilot':'navPilot',
     't-layers':'layers','t-grp1':'grp1','t-grp2':'grp2',
     't-l-rec':'lRec','t-l-inp':'lInp','t-l-crit':'lCrit','t-l-min':'lMin',
     't-dmg':'dmg','t-rec':'rec','t-need':'need','t-aid':'aid',
