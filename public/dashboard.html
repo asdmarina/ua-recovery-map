@@ -618,7 +618,8 @@ const TR = {
     aiBtn:'AI Аналітика',chatSub:'Аналітика · Groq LLM · Відкриті дані',
     ctx:'Контекст',ctxAll:'Україна · всі регіони',
     welcome:'Привіт. Я аналізую дані про відновлення України.<br><br>Виберіть регіон на карті або задайте питання напряму.',
-    sug0:'Де найбільша потреба?',sug1:'Порівняй Херсон і Миколаїв',sug2:'Де найменше допомоги?',
+    sug0:'Де найбільша потреба?',sug1:'Порівняти з Харківщиною',sug2:'Показати тренд 2023–2026',sug3:'Згенерувати звіт PDF',
+    empty:'← Оберіть область на карті',
     save:'Зберегти',apiNote:'Введіть Groq API ключ для активації AI',
     placeholder:'Запитайте про будь-який регіон...',
     ttDmg:'Руйнування',ttRec:'Відновлено',ttAid:'Допомога',
@@ -656,7 +657,7 @@ function setLang(l){
 
 function applyLang(){
   const ids = {
-    't-pilot':'pilot','t-layers':'layers','t-grp1':'grp1','t-grp2':'grp2',
+    't-layers':'layers','t-grp1':'grp1','t-grp2':'grp2',
     't-l-rec':'lRec','t-l-inp':'lInp','t-l-crit':'lCrit','t-l-min':'lMin',
     't-dmg':'dmg','t-rec':'rec','t-need':'need','t-aid':'aid',
     't-infra':'infra','t-housing':'housing','t-social':'social',
@@ -664,25 +665,35 @@ function applyLang(){
     'leg1':'leg1','leg2':'leg2','leg3':'leg3','leg4':'leg4',
     't-active-layer':'activeLayer',
     't-ai-btn':'aiBtn','t-chat-sub':'chatSub','t-ctx':'ctx',
-    'sug0':'sug0','sug1':'sug1','sug2':'sug2',
-    't-save':'save','t-api-note':'apiNote',
+    'sug0':'sug0','sug1':'sug1','sug2':'sug2','sug3':'sug3',
+    't-save':'save','t-api-note':'apiNote','t-empty':'empty',
   };
   Object.entries(ids).forEach(([id,key])=>{
     const el = document.getElementById(id);
     if(el) el.textContent = t(key);
   });
   document.querySelector('.chat-inp').placeholder = t('placeholder');
-  document.getElementById('ctx-region').textContent = selectedArea
-    ? selectedArea + (lang==='ua' ? ' · '+t('oblast') : ' Oblast')
-    : t('ctxAll');
-  document.getElementById('ctx-layer').textContent = t('lay'+currentLayer.charAt(0).toUpperCase()+currentLayer.slice(1));
+  const ctxRegEl = document.getElementById('ctx-region');
+  ctxRegEl.firstChild.nodeValue = (selectedArea
+    ? selectedArea + (lang==='ua' ? ' · '+t('oblast')+' ' : ' Oblast ')
+    : t('ctxAll')+' ');
+  const ctxLayEl = document.getElementById('ctx-layer');
+  ctxLayEl.firstChild.nodeValue = t('lay'+currentLayer.charAt(0).toUpperCase()+currentLayer.slice(1))+' ';
   document.getElementById('active-layer-name').textContent = t('lay'+currentLayer.charAt(0).toUpperCase()+currentLayer.slice(1));
   ['rec','dmg','aid'].forEach(k=>{
     const btn = document.getElementById('btn-'+k);
-    if(btn) btn.textContent = t('lay'+{rec:'Rec',dmg:'Dmg',aid:'Aid'}[k]);
+    if(btn){
+      const span = btn.querySelector('span:not(.lb-dot)');
+      if(span) span.textContent = t('lay'+{rec:'Rec',dmg:'Dmg',aid:'Aid'}[k]);
+    }
   });
   if(document.getElementById('t-welcome'))
-    document.getElementById('t-welcome').innerHTML = t('welcome')+'<div><span class="msg-src">OCHA · UNHCR · Open data</span></div>';
+    document.getElementById('t-welcome').innerHTML = t('welcome')+'<div><span class="msg-src">[1] '+(lang==='ua'?'OCHA Ukraine Q1 2026':'OCHA Ukraine Q1 2026')+' <svg class="ext" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7M10 14L21 3M21 14v5a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h5"/></svg></span></div>';
+}
+
+function dismissCtx(which){
+  const el = document.getElementById('ctx-'+which);
+  if(el) el.remove();
 }
 
 // ── LAYERS ────────────────────────────────────────
