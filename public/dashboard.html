@@ -35,6 +35,7 @@ body{display:flex;flex-direction:column;}
 
 /* ── TOPBAR ── */
 #topbar{
+  position:relative;
   height:var(--top-h);flex-shrink:0;
   background:var(--navy2);
   border-bottom:1px solid var(--border);
@@ -42,12 +43,21 @@ body{display:flex;flex-direction:column;}
   padding:0 14px;gap:10px;
   z-index:1000;
 }
-.logo{display:flex;align-items:center;gap:8px;margin-right:6px;}
-.logo-flag{width:20px;height:14px;border-radius:2px;overflow:hidden;display:flex;flex-direction:column;}
+#topbar::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,#005BBB 0%,#005BBB 50%,#FFD700 50%,#FFD700 100%);
+}
+.logo{display:flex;align-items:center;gap:8px;margin-right:6px;text-decoration:none;}
+.logo-pin{width:14px;height:14px;color:#60A5FA;flex-shrink:0;}
+.logo-flag{width:18px;height:13px;border-radius:2px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 0 1px rgba(0,0,0,.3);}
 .logo-flag-t{flex:1;background:#005BBB;}
 .logo-flag-b{flex:1;background:#FFD700;}
-.logo-name{font-size:13px;font-weight:700;color:var(--text);letter-spacing:-.01em;}
-.logo-name b{color:#60A5FA;}
+.logo-text{display:flex;flex-direction:column;line-height:1;}
+.logo-name{font-size:13px;letter-spacing:-.01em;color:rgba(255,255,255,.55);font-weight:400;}
+.logo-name .ua{color:#005BBB;font-weight:700;}
+.logo-name .rec{color:#fff;font-weight:700;}
+.logo-name .map{color:rgba(255,255,255,.55);font-weight:400;margin-left:2px;}
+.logo-ver{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.25);font-weight:600;margin-top:2px;}
 .tb-div{width:1px;height:18px;background:var(--border);}
 .pilot-pill{
   display:flex;align-items:center;gap:5px;
