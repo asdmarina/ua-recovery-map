@@ -895,7 +895,7 @@ async function sendMsg(){
     typ.remove();
     if(data.choices && data.choices[0]){
       const text = data.choices[0].message.content;
-      appendMsg('a', text.replace(/\n/g,'<br>')+'<div><span class="msg-src">UA Recovery AI · Open data ↗</span></div>');
+      appendMsg('a', text.replace(/\n/g,'<br>')+'<div><span class="msg-src">[1] UA Recovery AI · Open data <svg class="ext" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7M10 14L21 3M21 14v5a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h5"/></svg></span></div>');
     } else {
       appendMsg('a', lang==='ua'?'Помилка API. Перевірте ключ.':'API error. Check your key.');
     }
@@ -918,7 +918,8 @@ function appendMsg(type, html){
 function addTyping(){
   const el = document.createElement('div');
   el.className='msg-typing';
-  el.innerHTML='<div class="td"></div><div class="td"></div><div class="td"></div>';
+  const label = lang==='ua' ? 'Аналізую дані...' : 'Analyzing data...';
+  el.innerHTML='<div class="td"></div><div class="td"></div><div class="td"></div><span class="typing-label">'+label+'</span>';
   document.getElementById('msgs').appendChild(el);
   document.getElementById('msgs').scrollTop=99999;
   return el;
