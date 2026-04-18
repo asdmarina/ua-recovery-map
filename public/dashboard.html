@@ -517,27 +517,29 @@ body{display:flex;flex-direction:column;}
   <div id="rpanel">
     <div class="rp-head">
       <div class="rp-title-row"><span class="rp-dot"></span><span class="rp-title">UA Recovery AI</span></div>
-      <div class="rp-sub" id="t-chat-sub">Аналітика · Groq LLM · Відкриті дані</div>
+      <div class="rp-sub-row"><span class="rp-sub" id="t-chat-sub">Аналітика · Groq LLM · Відкриті дані</span></div>
+      <div class="powered">Powered by Claude API</div>
     </div>
     <div class="rp-ctx">
       <div class="rp-ctx-l" id="t-ctx">Контекст</div>
       <div class="rp-ctx-tags">
-        <span class="ctx-t" id="ctx-region">Україна · всі регіони</span>
-        <span class="ctx-t" id="ctx-layer">Відновлення</span>
-        <span class="ctx-t">Open data</span>
+        <span class="ctx-t" id="ctx-region">Україна · всі регіони <span class="ctx-x" onclick="dismissCtx('region')">×</span></span>
+        <span class="ctx-t" id="ctx-layer">Відновлення <span class="ctx-x" onclick="dismissCtx('layer')">×</span></span>
+        <span class="ctx-t">Open data <span class="ctx-x" onclick="this.parentElement.remove()">×</span></span>
       </div>
     </div>
     <div class="rp-msgs" id="msgs">
       <div class="msg-a" id="t-welcome">
         Привіт. Я аналізую дані про відновлення України.<br><br>
         Виберіть регіон на карті або задайте питання напряму.
-        <div><span class="msg-src">OCHA · UNHCR · Open data</span></div>
+        <div><span class="msg-src">[1] OCHA Ukraine Q1 2026 <svg class="ext" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7M10 14L21 3M21 14v5a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h5"/></svg></span></div>
       </div>
     </div>
     <div class="rp-sugs" id="sugs-wrap">
       <button class="sug" onclick="useSug(0)" id="sug0">Де найбільша потреба?</button>
-      <button class="sug" onclick="useSug(1)" id="sug1">Порівняй Херсон і Миколаїв</button>
-      <button class="sug" onclick="useSug(2)" id="sug2">Де найменше допомоги?</button>
+      <button class="sug" onclick="useSug(1)" id="sug1">Порівняти з Харківщиною</button>
+      <button class="sug" onclick="useSug(2)" id="sug2">Показати тренд 2023–2026</button>
+      <button class="sug" onclick="useSug(3)" id="sug3">Згенерувати звіт PDF</button>
     </div>
     <div class="rp-inp">
       <div class="api-row">
@@ -545,11 +547,27 @@ body{display:flex;flex-direction:column;}
         <button class="api-save" onclick="saveKey()" id="t-save">Зберегти</button>
       </div>
       <div class="inp-row">
-        <input class="chat-inp" id="chat-inp" placeholder="Запитайте про будь-який регіон..." onkeydown="if(event.key==='Enter')sendMsg();"/>
+        <div class="chat-inp-wrap">
+          <input class="chat-inp" id="chat-inp" placeholder="Запитайте про будь-який регіон..." onkeydown="if(event.key==='Enter')sendMsg();"/>
+          <span class="kbd-hint">Enter ↵</span>
+        </div>
         <button class="send-btn" id="send-btn" onclick="sendMsg()">→</button>
       </div>
       <div class="api-note" id="t-api-note">Введіть Groq API ключ для активації AI</div>
     </div>
+  </div>
+</div>
+
+<!-- STATUS BAR -->
+<div id="statusbar">
+  <span class="sb-item"><span class="sb-dot" style="background:#22C55E;box-shadow:0 0 6px rgba(34,197,94,.7);"></span>3 шари активні</span>
+  <span class="sb-div"></span>
+  <span class="sb-item"><span class="sb-dot" style="background:#22C55E;"></span>BNB Chain: online</span>
+  <span class="sb-div"></span>
+  <span class="sb-item"><span class="sb-dot" style="background:#60A5FA;"></span>OCHA: оновлено 2г тому</span>
+  <span class="sb-spacer"></span>
+  <span class="sb-item" style="color:rgba(255,255,255,.25);">Demo v0.1 · Квітень 2026</span>
+</div>
   </div>
 </div>
 
