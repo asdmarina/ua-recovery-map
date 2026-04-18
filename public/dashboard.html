@@ -460,22 +460,22 @@ body{display:flex;flex-direction:column;}
       <div class="lr"><div class="lr-dot" style="background:#34D399;border-radius:2px;"></div><span class="lr-name" id="t-l-min">Мінреінтеграції</span><span class="src-tag">PDF</span><div class="tog"></div></div>
       <div class="lg-head" style="margin-top:6px;">Web3</div>
       <div class="lr"><div class="lr-dot" style="background:#F59E0B;border-radius:2px;"></div><span class="lr-name">BNB Chain</span><span class="src-tag">BNB</span><div class="tog on"></div></div>
-      <div class="lg-head" id="t-grp2" style="margin-top:6px;">Джерела даних</div>
-      <div class="lr"><div class="lr-dot" style="background:#60A5FA;border-radius:2px;"></div><span class="lr-name">OCHA Ukraine</span><div class="tog on"></div></div>
-      <div class="lr"><div class="lr-dot" style="background:#A78BFA;border-radius:2px;"></div><span class="lr-name">UNHCR</span><div class="tog on"></div></div>
-      <div class="lr"><div class="lr-dot" style="background:#34D399;border-radius:2px;"></div><span class="lr-name" id="t-l-min">Мінреінтеграції</span><div class="tog"></div></div>
-      <div class="lg-head" style="margin-top:6px;">Web3</div>
-      <div class="lr"><div class="lr-dot" style="background:#F59E0B;border-radius:2px;"></div><span class="lr-name">BNB Chain</span><div class="tog on"></div></div>
     </div>
 
+    <div id="empty-area">
+      <div class="empty-area">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <span id="t-empty">Оберіть область на карті</span>
+      </div>
+    </div>
     <div id="area-info" class="hidden">
       <div class="ai-name" id="info-name">—</div>
       <div class="ai-sub" id="info-sub">—</div>
       <div class="ai-grid">
-        <div class="ai-m"><div class="ai-ml" id="t-dmg">Руйнування</div><div class="ai-mv" id="info-dmg" style="color:#F87171;">—</div></div>
-        <div class="ai-m"><div class="ai-ml" id="t-rec">Відновлено</div><div class="ai-mv" id="info-rec" style="color:#4ADE80;">—</div></div>
-        <div class="ai-m"><div class="ai-ml" id="t-need">Потреба</div><div class="ai-mv" id="info-need" style="color:#FBBF24;">—</div></div>
-        <div class="ai-m"><div class="ai-ml" id="t-aid">Допомога</div><div class="ai-mv" id="info-aid" style="color:#60A5FA;font-size:13px;">—</div></div>
+        <div class="ai-m"><div class="ai-ml" id="t-dmg">Руйнування</div><div class="ai-mv" id="info-dmg" style="color:#F87171;">— <span class="ai-trend up" id="trend-dmg"></span></div></div>
+        <div class="ai-m"><div class="ai-ml" id="t-rec">Відновлено</div><div class="ai-mv" id="info-rec" style="color:#4ADE80;">— <span class="ai-trend up" id="trend-rec"></span></div></div>
+        <div class="ai-m"><div class="ai-ml" id="t-need">Потреба</div><div class="ai-mv" id="info-need" style="color:#FBBF24;">— <span class="ai-trend down" id="trend-need"></span></div></div>
+        <div class="ai-m"><div class="ai-ml" id="t-aid">Допомога</div><div class="ai-mv" id="info-aid" style="color:#60A5FA;font-size:13px;">— <span class="ai-trend up" id="trend-aid"></span></div></div>
       </div>
       <div class="ai-bars">
         <div class="ai-br"><span class="ai-bl" id="t-infra">Інфраструктура</span><div class="ai-bw"><div class="ai-bf" id="bf-infra" style="background:#60A5FA;"></div></div><span class="ai-bp" id="bp-infra">—</span></div>
@@ -486,15 +486,19 @@ body{display:flex;flex-direction:column;}
         <span class="chain-ok">✓</span>
         <span class="chain-txt">BNB Chain ·</span>
         <span class="chain-hash" id="info-hash">—</span>
+        <span class="chain-block">Блок #38,291,044 <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7M10 14L21 3M21 14v5a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h5"/></svg></span>
       </div>
-      <button class="ask-btn" onclick="askAbout()" id="t-ask">Запитати AI про цей регіон →</button>
+      <button class="ask-btn" onclick="askAbout()" id="t-ask">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-2px;margin-right:5px;"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Запитати про цю область →
+      </button>
     </div>
   </div>
 
   <!-- MAP -->
   <div id="mapwrap">
     <div id="map"></div>
-    <div id="map-ts"><span id="t-updated">Оновлено:</span> 18 квітня 2026 · Open datasets</div>
+    <div id="map-ts"><span class="map-ts-dot"></span><span><span id="t-updated">Оновлено:</span> 18 квітня 2026 · Open datasets</span></div>
     <div id="map-legend">
       <div class="leg-t" id="t-legend">Стан відновлення</div>
       <div class="leg-r"><div class="leg-d" style="background:#15803D;"></div><span id="leg1">Активне відновлення</span></div>
@@ -502,6 +506,7 @@ body{display:flex;flex-direction:column;}
       <div class="leg-r"><div class="leg-d" style="background:#991B1B;"></div><span id="leg3">Критична потреба</span></div>
       <div class="leg-r"><div class="leg-d" style="background:#1E3A5F;"></div><span id="leg4">Дані оновлюються</span></div>
     </div>
+    <div id="map-scale"><span>200 km</span><div class="scale-bar"></div></div>
     <div id="layer-badge">
       <div class="lb-l" id="t-active-layer">Активний шар</div>
       <div class="lb-v" id="active-layer-name">Відновлення</div>
