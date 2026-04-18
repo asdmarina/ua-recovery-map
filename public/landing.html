@@ -627,6 +627,230 @@ document.head.appendChild(style);
 // Init after Leaflet loads
 if(typeof L !== 'undefined'){initMaps();}
 else{window.addEventListener('load',initMaps);}
+
+// ── i18n ────────────────────────────────────────────
+const I18N_EN = {
+  // nav
+  navProblem:'Problem', navSolution:'Solution', navLive:'Live data', navStatus:'Status', navPilot:'Pilot active',
+  // hero
+  heroTag:'Open platform · BNB Chain · AI Analytics',
+  heroH1:['Ukraine recovery — ','transparent',' and in real time'],
+  heroSub:"UA Recovery Map combines data on damage, aid, and community recovery. Blockchain verification and AI analytics — so everyone can see the real picture, not a press release.",
+  heroBtn1:'Open the map', heroBtn2:'Join the pilot',
+  heroMapLabel1:'UA Recovery Map', heroMapLabel2:'Data updated: April 2026',
+  // stats
+  stat1:'Documented international aid', stat2:'Communities need priority attention',
+  stat3:'Of aid is not publicly tracked', stat4:'Data refresh cycle',
+  statN4:'24 hrs',
+  // problem
+  ebProblem:'Problem',
+  probTitle:'What recovery data do you actually see today?',
+  probP1:'Aid and recovery are recorded across different systems, PDF reports, and datasets. To understand which communities receive aid and which are left behind, you have to manually sift through dozens of sources.',
+  probP2:'UA Recovery Map solves this — one public interface where recovery is tracked, not guessed from press releases.',
+  probTtl1:'Data scattered across hundreds of sources',
+  probTxt1:'OCHA, UNHCR, MinReintegration, NGO reports — each in its own format with no unified interface.',
+  probTtl2:'No public verification',
+  probTxt2:'You cannot verify whether aid actually reached a community — data can be edited or "lost".',
+  probTtl3:'AI analytics unavailable',
+  probTxt3:'Donors and journalists cannot quickly answer "where is the greatest need right now?"',
+  // solution
+  ebSolution:'Solution',
+  solTitle:'One interface for Ukraine recovery',
+  solDesc:"UA Recovery Map combines a map, verification, and AI analytics in a single public platform.",
+  solTtl1:'Community-level map of Ukraine',
+  solTxt1:'Interactive map at the community level — damage, aid received, recovery status. Data layers switch with one click.',
+  solTtl2:'Blockchain verification',
+  solTxt2:'Key records are anchored on BNB Chain. Anyone can verify the data has not been altered — independently and publicly.',
+  solTtl3:'AI analytics',
+  solTxt3:'Chatbot understands the map data. Ask "which Kharkiv-region communities are least covered?" — answer with sources in seconds.',
+  // how
+  ebHow:'How it works', howTitle:'From data to decision',
+  howT1:'Data collection', howX1:'OCHA, UNHCR, MinReintegration and NGO reports are aggregated automatically every 24 hours.',
+  howT2:'Map', howX2:'Pick a region or community, toggle layers — and instantly see the full recovery picture.',
+  howT3:'Verification', howX3:'Key records receive hashes on BNB Chain — an immutable public proof of data state.',
+  howT4:'AI query', howX4:'Ask the chatbot a question — it analyzes structured data and generates an answer with sources.',
+  // live
+  ebLive:'Live insights', liveTitle:'Data right now',
+  liveDesc:'Pilot version based on open datasets. Updated every 24 hours.',
+  mapCardTitle:'UA Recovery Map · Pilot', mapCardMeta:'Updated: 17 Apr 2026',
+  legActiveRec:'Active recovery', legInProg:'In progress', legCritical:'Critical need', legUpdating:'Data updating',
+  ccName:'Kakhovka community', ccRegion:'Kherson Oblast · Berislav district',
+  sevCrit:'Critical',
+  ccmDmg:'Damage', ccmRec:'Recovered', ccmNeed:'Need', ccmAid:'Aid',
+  ccbInfra:'Infrastructure', ccbHou:'Housing', ccbSoc:'Social services',
+  chatTopTitle:'UA Recovery AI · Analytics',
+  chatMsgUser:'Which Kherson communities are least covered?',
+  chatMsgAI:'Based on current data, Kakhovka, Oleshky and Nova Kakhovka have the largest gap between needs and aid actually received — 48–53%.',
+  chatPh:'Ask about any community...',
+  // status
+  ebStatus:'Status', statusTitle:'A live product at an early stage',
+  statusDesc:'UA Recovery Map is in active development, not a research project.',
+  s1:'System architecture', s2:'Interactive map — prototype', s3:'AI analytics — basic Q&A',
+  s4:'BNB Chain smart contracts', s5:'OCHA/UNHCR dataset integration', s6:'NGO partnerships', s7:'Public launch',
+  bDone:'Done', bWip:'In progress', bQ3:'Q3 2026',
+  rmH:'Roadmap',
+  rmP1:'April — June 2026', rmD1:'MVP: 50+ communities map, BNB Chain testnet, AI chatbot. First 2–3 NGO partners.',
+  rmP2:'July — September 2026', rmD2:'200+ communities, mainnet verification, auto-generated impact reports. 10+ organizations.',
+  rmP3:'October — December 2026', rmD3:'Full Ukraine coverage, open API, integration with international donors.',
+  // CTA
+  ctaTitle:'Join Ukraine recovery',
+  ctaSub:'Track recovery via open data, not rumors from donor offices.',
+  ctaBtn1:'Open the map', ctaBtn2:'Join the pilot', ctaBtn3:'Learn about support',
+  // footer
+  ftDesc:'Public platform monitoring Ukraine recovery. Open data, blockchain verification, AI analytics.',
+  ftH1:'Platform', ftH2:'Resources', ftH3:'Support',
+  ftA1a:'Community map', ftA1b:'AI analytics', ftA1c:'Verification', ftA1d:'API',
+  ftA2a:'Documentation', ftA2b:'Open data', ftA2c:'For partners', ftA2d:'Contact',
+  ftA3a:'Binance Web3 Lab', ftA3b:'Grant Program', ftA3c:'For donors',
+  ftDemo:'Demo v0.1 · April 2026', ftVerified:'Verified on',
+};
+
+// Map every translatable element with original UA text (saved on first run)
+function translatePage(lang){
+  const set = (sel, txt, idx) => {
+    const els = document.querySelectorAll(sel);
+    const el = idx!==undefined ? els[idx] : els[0];
+    if(!el) return;
+    if(!el.dataset.uaText) el.dataset.uaText = el.innerHTML;
+    el.innerHTML = lang==='en' ? txt : el.dataset.uaText;
+  };
+  // nav (data-i18n)
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k = el.getAttribute('data-i18n');
+    if(!el.dataset.uaText) el.dataset.uaText = el.textContent;
+    el.textContent = lang==='en' && I18N_EN[k] ? I18N_EN[k] : el.dataset.uaText;
+  });
+  if(lang!=='en'){
+    // restore everything
+    document.querySelectorAll('[data-ua-text]').forEach(el=>{ el.innerHTML = el.dataset.uaText; });
+    document.title = 'UA Recovery Map — Моніторинг відновлення України';
+    return;
+  }
+  document.title = 'UA Recovery Map — Monitoring Ukraine Recovery';
+  // hero
+  set('.hero-tag', '<span class="hero-tag-dot"></span>'+I18N_EN.heroTag);
+  set('.hero h1', I18N_EN.heroH1[0]+'<strong>'+I18N_EN.heroH1[1]+'</strong>'+I18N_EN.heroH1[2]);
+  set('.hero-sub', I18N_EN.heroSub);
+  set('.btn-hero-p', I18N_EN.heroBtn1);
+  set('.btn-hero-s', I18N_EN.heroBtn2);
+  set('.hero-map-label', '<strong>'+I18N_EN.heroMapLabel1+'</strong>'+I18N_EN.heroMapLabel2);
+  // stats
+  const statLabels = document.querySelectorAll('.stat-l');
+  [I18N_EN.stat1,I18N_EN.stat2,I18N_EN.stat3,I18N_EN.stat4].forEach((t,i)=>{
+    if(statLabels[i]){ if(!statLabels[i].dataset.uaText) statLabels[i].dataset.uaText = statLabels[i].textContent; statLabels[i].textContent = t; }
+  });
+  const statN = document.querySelectorAll('.stat-n')[3];
+  if(statN){ if(!statN.dataset.uaText) statN.dataset.uaText=statN.textContent; statN.textContent=I18N_EN.statN4; }
+  // problem
+  const ebs = document.querySelectorAll('.eyebrow');
+  const ebVals = [I18N_EN.ebProblem,I18N_EN.ebSolution,I18N_EN.ebHow,I18N_EN.ebLive,I18N_EN.ebStatus];
+  ebs.forEach((el,i)=>{ if(ebVals[i]){ if(!el.dataset.uaText) el.dataset.uaText=el.textContent; el.textContent=ebVals[i]; } });
+  const titles = document.querySelectorAll('.sec-title');
+  const titleVals = [I18N_EN.probTitle,I18N_EN.solTitle,I18N_EN.howTitle,I18N_EN.liveTitle,I18N_EN.statusTitle];
+  titles.forEach((el,i)=>{ if(titleVals[i]){ if(!el.dataset.uaText) el.dataset.uaText=el.textContent; el.textContent=titleVals[i]; } });
+  const probPs = document.querySelectorAll('.prob-copy p');
+  [I18N_EN.probP1,I18N_EN.probP2].forEach((t,i)=>{ if(probPs[i]){ if(!probPs[i].dataset.uaText) probPs[i].dataset.uaText=probPs[i].textContent; probPs[i].textContent=t; } });
+  const probTtls = document.querySelectorAll('.prob-ttl');
+  const probTxts = document.querySelectorAll('.prob-txt');
+  [I18N_EN.probTtl1,I18N_EN.probTtl2,I18N_EN.probTtl3].forEach((t,i)=>{ if(probTtls[i]){ if(!probTtls[i].dataset.uaText) probTtls[i].dataset.uaText=probTtls[i].textContent; probTtls[i].textContent=t; } });
+  [I18N_EN.probTxt1,I18N_EN.probTxt2,I18N_EN.probTxt3].forEach((t,i)=>{ if(probTxts[i]){ if(!probTxts[i].dataset.uaText) probTxts[i].dataset.uaText=probTxts[i].textContent; probTxts[i].textContent=t; } });
+  // solution
+  const secDescs = document.querySelectorAll('.sec-desc');
+  [I18N_EN.solDesc,I18N_EN.liveDesc,I18N_EN.statusDesc].forEach((t,i)=>{ if(secDescs[i]){ if(!secDescs[i].dataset.uaText) secDescs[i].dataset.uaText=secDescs[i].textContent; secDescs[i].textContent=t; } });
+  const solTtls = document.querySelectorAll('.sol-ttl');
+  const solTxts = document.querySelectorAll('.sol-txt');
+  [I18N_EN.solTtl1,I18N_EN.solTtl2,I18N_EN.solTtl3].forEach((t,i)=>{ if(solTtls[i]){ if(!solTtls[i].dataset.uaText) solTtls[i].dataset.uaText=solTtls[i].textContent; solTtls[i].textContent=t; } });
+  [I18N_EN.solTxt1,I18N_EN.solTxt2,I18N_EN.solTxt3].forEach((t,i)=>{ if(solTxts[i]){ if(!solTxts[i].dataset.uaText) solTxts[i].dataset.uaText=solTxts[i].textContent; solTxts[i].textContent=t; } });
+  // how
+  const howTtls = document.querySelectorAll('.how-ttl');
+  const howTxts = document.querySelectorAll('.how-txt');
+  [I18N_EN.howT1,I18N_EN.howT2,I18N_EN.howT3,I18N_EN.howT4].forEach((t,i)=>{ if(howTtls[i]){ if(!howTtls[i].dataset.uaText) howTtls[i].dataset.uaText=howTtls[i].textContent; howTtls[i].textContent=t; } });
+  [I18N_EN.howX1,I18N_EN.howX2,I18N_EN.howX3,I18N_EN.howX4].forEach((t,i)=>{ if(howTxts[i]){ if(!howTxts[i].dataset.uaText) howTxts[i].dataset.uaText=howTxts[i].textContent; howTxts[i].textContent=t; } });
+  // live map card
+  set('.map-card-title', '<span class="live-dot"></span>'+I18N_EN.mapCardTitle);
+  set('.map-card-meta', I18N_EN.mapCardMeta);
+  const legItems = document.querySelectorAll('.map-legend-row .leg-item');
+  [I18N_EN.legActiveRec,I18N_EN.legInProg,I18N_EN.legCritical,I18N_EN.legUpdating].forEach((t,i)=>{
+    if(legItems[i]){
+      const dot = legItems[i].querySelector('.leg-dot').outerHTML;
+      if(!legItems[i].dataset.uaText) legItems[i].dataset.uaText = legItems[i].innerHTML;
+      legItems[i].innerHTML = dot+t;
+    }
+  });
+  set('.cc-name', I18N_EN.ccName);
+  set('.cc-region', I18N_EN.ccRegion);
+  set('.severity-badge', I18N_EN.sevCrit);
+  const ccLbls = document.querySelectorAll('.cc-m-lbl');
+  [I18N_EN.ccmDmg,I18N_EN.ccmRec,I18N_EN.ccmNeed,I18N_EN.ccmAid].forEach((t,i)=>{ if(ccLbls[i]){ if(!ccLbls[i].dataset.uaText) ccLbls[i].dataset.uaText=ccLbls[i].textContent; ccLbls[i].textContent=t; } });
+  const ccBars = document.querySelectorAll('.cc-bar-lbl');
+  [I18N_EN.ccbInfra,I18N_EN.ccbHou,I18N_EN.ccbSoc].forEach((t,i)=>{ if(ccBars[i]){ if(!ccBars[i].dataset.uaText) ccBars[i].dataset.uaText=ccBars[i].textContent; ccBars[i].textContent=t; } });
+  set('.chat-top-title', I18N_EN.chatTopTitle);
+  set('.msg-user', I18N_EN.chatMsgUser);
+  const ai = document.querySelector('.msg-ai');
+  if(ai){ if(!ai.dataset.uaText) ai.dataset.uaText = ai.innerHTML; ai.innerHTML = I18N_EN.chatMsgAI+'<div><span class="msg-src">OCHA UA 2026-Q1 ↗</span></div>'; }
+  const chatInp = document.getElementById('chatInp');
+  if(chatInp){ if(!chatInp.dataset.uaPh) chatInp.dataset.uaPh = chatInp.placeholder; chatInp.placeholder = I18N_EN.chatPh; }
+  // status list
+  const sTxts = document.querySelectorAll('.s-txt');
+  [I18N_EN.s1,I18N_EN.s2,I18N_EN.s3,I18N_EN.s4,I18N_EN.s5,I18N_EN.s6,I18N_EN.s7].forEach((t,i)=>{ if(sTxts[i]){ if(!sTxts[i].dataset.uaText) sTxts[i].dataset.uaText=sTxts[i].textContent; sTxts[i].textContent=t; } });
+  const badges = document.querySelectorAll('.s-badge');
+  const badgeVals = [I18N_EN.bDone,I18N_EN.bDone,I18N_EN.bDone,I18N_EN.bWip,I18N_EN.bWip,I18N_EN.bQ3,I18N_EN.bQ3];
+  badges.forEach((el,i)=>{ if(badgeVals[i]){ if(!el.dataset.uaText) el.dataset.uaText=el.textContent; el.textContent=badgeVals[i]; } });
+  set('.rm-h', I18N_EN.rmH);
+  const rmPs = document.querySelectorAll('.rm-period');
+  const rmDs = document.querySelectorAll('.rm-desc');
+  [I18N_EN.rmP1,I18N_EN.rmP2,I18N_EN.rmP3].forEach((t,i)=>{ if(rmPs[i]){ if(!rmPs[i].dataset.uaText) rmPs[i].dataset.uaText=rmPs[i].textContent; rmPs[i].textContent=t; } });
+  [I18N_EN.rmD1,I18N_EN.rmD2,I18N_EN.rmD3].forEach((t,i)=>{ if(rmDs[i]){ if(!rmDs[i].dataset.uaText) rmDs[i].dataset.uaText=rmDs[i].textContent; rmDs[i].textContent=t; } });
+  // CTA
+  set('.cta-ttl', I18N_EN.ctaTitle);
+  set('.cta-sub', I18N_EN.ctaSub);
+  const ctaBtns = document.querySelectorAll('.cta-btns button');
+  [I18N_EN.ctaBtn1,I18N_EN.ctaBtn2,I18N_EN.ctaBtn3].forEach((t,i)=>{ if(ctaBtns[i]){ if(!ctaBtns[i].dataset.uaText) ctaBtns[i].dataset.uaText=ctaBtns[i].textContent; ctaBtns[i].textContent=t; } });
+  // footer
+  set('.ft-desc', I18N_EN.ftDesc);
+  const ftCols = document.querySelectorAll('.ft-col');
+  const ftHs = [I18N_EN.ftH1,I18N_EN.ftH2,I18N_EN.ftH3];
+  const ftAs = [
+    [I18N_EN.ftA1a,I18N_EN.ftA1b,I18N_EN.ftA1c,I18N_EN.ftA1d],
+    [I18N_EN.ftA2a,I18N_EN.ftA2b,I18N_EN.ftA2c,I18N_EN.ftA2d],
+    [I18N_EN.ftA3a,I18N_EN.ftA3b,I18N_EN.ftA3c,'hello@uarecoverymap.org'],
+  ];
+  ftCols.forEach((col,i)=>{
+    const h = col.querySelector('h4'); if(h && ftHs[i]){ if(!h.dataset.uaText) h.dataset.uaText=h.textContent; h.textContent=ftHs[i]; }
+    col.querySelectorAll('a').forEach((a,j)=>{ if(ftAs[i] && ftAs[i][j]){ if(!a.dataset.uaText) a.dataset.uaText=a.textContent; a.textContent=ftAs[i][j]; } });
+  });
+  const ftBottomSpans = document.querySelectorAll('.ft-bottom span span');
+  if(ftBottomSpans[0]){ if(!ftBottomSpans[0].dataset.uaText) ftBottomSpans[0].dataset.uaText=ftBottomSpans[0].textContent; ftBottomSpans[0].textContent=I18N_EN.ftDemo; }
+  const ftCopy = document.querySelector('.ft-bottom > span');
+  if(ftCopy){
+    if(!ftCopy.dataset.uaInner) ftCopy.dataset.uaInner = ftCopy.innerHTML;
+    ftCopy.innerHTML = '© 2026 UA Recovery Map · <span style="color:rgba(255,255,255,.18);">'+I18N_EN.ftDemo+'</span>';
+  }
+  const ftChain = document.querySelector('.ft-chain');
+  if(ftChain){
+    if(!ftChain.dataset.uaInner) ftChain.dataset.uaInner = ftChain.innerHTML;
+    ftChain.innerHTML = I18N_EN.ftVerified+' <span class="ft-chain-badge">BNB Chain</span>';
+  }
+}
+
+function setLang(l){
+  document.documentElement.lang = l;
+  document.querySelectorAll('.lang-btn').forEach((b,i)=>b.classList.toggle('active', i===(l==='ua'?0:1)));
+  if(l==='ua'){
+    // restore
+    document.querySelectorAll('[data-ua-text]').forEach(el=>{ el.innerHTML = el.dataset.uaText; });
+    const chatInp = document.getElementById('chatInp');
+    if(chatInp && chatInp.dataset.uaPh) chatInp.placeholder = chatInp.dataset.uaPh;
+    const ftCopy = document.querySelector('.ft-bottom > span');
+    if(ftCopy && ftCopy.dataset.uaInner) ftCopy.innerHTML = ftCopy.dataset.uaInner;
+    const ftChain = document.querySelector('.ft-chain');
+    if(ftChain && ftChain.dataset.uaInner) ftChain.innerHTML = ftChain.dataset.uaInner;
+    document.querySelectorAll('[data-i18n]').forEach(el=>{ if(el.dataset.uaText) el.textContent = el.dataset.uaText; });
+    document.title = 'UA Recovery Map — Моніторинг відновлення України';
+  } else {
+    translatePage('en');
+  }
+}
 </script>
 </body>
 </html>
