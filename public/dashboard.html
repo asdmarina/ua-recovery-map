@@ -372,33 +372,30 @@ body{display:flex;flex-direction:column;}
 </head>
 <body>
 
-<!-- TOPBAR -->
+<!-- TOPBAR (unified header) -->
 <div id="topbar">
-  <a class="logo" href="/" title="UA Recovery Map">
-    <svg class="logo-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="2.5"/></svg>
+  <a class="logo" href="/">
     <div class="logo-flag"><div class="logo-flag-t"></div><div class="logo-flag-b"></div></div>
-    <div class="logo-text">
-      <span class="logo-name"><span class="ua">UA</span> <span class="rec">Recovery</span><span class="map">Map</span></span>
-      <span class="logo-ver">v0.1 · pilot</span>
-    </div>
+    <span class="logo-name">UA <span>Recovery</span> Map</span>
   </a>
-  <div class="tb-div"></div>
-  <div class="tb-ts"><span class="tb-ts-dot"></span><span id="t-pilot">Дані: 17 квіт 2026 · 14:32 UTC</span></div>
-  <div class="tb-div"></div>
-  <div class="layer-btns">
-    <button class="layer-btn active" id="btn-rec" onclick="setLayer('recovery')" data-ua="Відновлення" data-en="Recovery"><span class="lb-dot" style="background:#22C55E;color:#22C55E;"></span><span>Відновлення</span></button>
-    <button class="layer-btn" id="btn-dmg" onclick="setLayer('damage')" data-ua="Руйнування" data-en="Damage"><span class="lb-dot" style="background:#F59E0B;color:#F59E0B;"></span><span>Руйнування</span></button>
-    <button class="layer-btn" id="btn-aid" onclick="setLayer('aid')" data-ua="Допомога" data-en="Aid"><span class="lb-dot" style="background:#60A5FA;color:#60A5FA;"></span><span>Допомога</span></button>
-  </div>
+  <a class="n-link" href="/#problem" id="nav-problem">Проблема</a>
+  <a class="n-link" href="/#solution" id="nav-solution">Рішення</a>
+  <a class="n-link" href="/#live" id="nav-live">Live-дані</a>
+  <a class="n-link" href="/#status" id="nav-status">Статус</a>
+  <div class="n-pill"><span class="n-pill-dot"></span><span id="nav-pilot">Пілот активний</span></div>
   <div class="tb-spacer"></div>
   <div class="lang-tog">
     <button class="lang-btn active" onclick="setLang('ua')">UA</button>
     <button class="lang-btn" onclick="setLang('en')">EN</button>
   </div>
-  <button class="chat-tog-btn" onclick="toggleChat()">
-    <svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    <span id="t-ai-btn">AI Аналітика</span>
-  </button>
+  <!-- legacy controls kept for JS compatibility but hidden -->
+  <div class="layer-btns">
+    <button class="layer-btn active" id="btn-rec" onclick="setLayer('recovery')"><span class="lb-dot" style="background:#22C55E;color:#22C55E;"></span><span>Відновлення</span></button>
+    <button class="layer-btn" id="btn-dmg" onclick="setLayer('damage')"><span class="lb-dot" style="background:#F59E0B;color:#F59E0B;"></span><span>Руйнування</span></button>
+    <button class="layer-btn" id="btn-aid" onclick="setLayer('aid')"><span class="lb-dot" style="background:#60A5FA;color:#60A5FA;"></span><span>Допомога</span></button>
+  </div>
+  <span id="t-pilot" style="display:none;">Дані: 17 квіт 2026 · 14:32 UTC</span>
+  <span id="t-ai-btn" style="display:none;">AI Аналітика</span>
 </div>
 
 <!-- MAIN -->
