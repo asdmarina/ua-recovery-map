@@ -50,8 +50,10 @@ nav{position:sticky;top:0;z-index:200;height:58px;background:rgba(255,255,255,0.
 .n-btn:hover{background:var(--blue-mid);}
 
 /* ─── HERO ─── */
-.hero{background:var(--navy);min-height:600px;display:grid;grid-template-columns:1fr 1fr;gap:0;overflow:hidden;}
-.hero-left{padding:80px 48px 60px;display:flex;flex-direction:column;justify-content:center;}
+.hero{position:relative;background:var(--navy);min-height:560px;display:grid;grid-template-columns:1fr 1.1fr;gap:0;overflow:hidden;}
+.hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);background-size:42px 42px;mask-image:radial-gradient(ellipse at 30% 50%,#000 30%,transparent 75%);-webkit-mask-image:radial-gradient(ellipse at 30% 50%,#000 30%,transparent 75%);pointer-events:none;z-index:1;}
+.hero-left,.hero-right{position:relative;z-index:2;}
+.hero-left{padding:64px 48px 52px;display:flex;flex-direction:column;justify-content:center;}
 .hero-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:5px 12px;font-size:11px;font-weight:500;color:rgba(255,255,255,.6);margin-bottom:24px;width:fit-content;}
 .hero-tag-dot{width:5px;height:5px;border-radius:50%;background:#4ADE80;}
 .hero h1{font-size:44px;font-weight:700;line-height:1.1;color:white;letter-spacing:-.025em;margin-bottom:18px;}
