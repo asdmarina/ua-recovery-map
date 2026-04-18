@@ -187,7 +187,8 @@ nav{position:sticky;top:0;z-index:200;height:58px;background:rgba(255,255,255,0.
 .rm-desc{font-size:13px;color:rgba(255,255,255,.72);line-height:1.5;}
 
 /* ─── CTA ─── */
-.cta{background:var(--blue);padding:72px 48px;text-align:center;}
+.cta{position:relative;background:var(--blue);padding:56px 48px;text-align:center;}
+.cta::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#005BBB 0%,#005BBB 50%,#FFD700 50%,#FFD700 100%);}
 .cta-ttl{font-size:36px;font-weight:700;color:white;letter-spacing:-.02em;margin-bottom:14px;}
 .cta-sub{font-size:16px;color:rgba(255,255,255,.7);line-height:1.7;margin-bottom:32px;}
 .cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
