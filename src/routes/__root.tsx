@@ -29,14 +29,18 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "UA Recovery Map  Monitoring Platform" },
+      { name: "description", content: "Open platform for monitoring Ukraine's recovery at community level. Interactive map, AI analytics, blockchain-verified data. Real-time updates from OCHA, UNHCR," },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "UA Recovery Map  Monitoring Platform" },
+      { property: "og:description", content: "Open platform for monitoring Ukraine's recovery at community level. Interactive map, AI analytics, blockchain-verified data. Real-time updates from OCHA, UNHCR," },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "UA Recovery Map  Monitoring Platform" },
+      { name: "twitter:description", content: "Open platform for monitoring Ukraine's recovery at community level. Interactive map, AI analytics, blockchain-verified data. Real-time updates from OCHA, UNHCR," },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8dc6d8a3-9494-4fac-9e78-a0cfc4d7911d/id-preview-dc7aa885--c126d4df-3784-4e15-b48f-49c95c1191be.lovable.app-1776506855152.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8dc6d8a3-9494-4fac-9e78-a0cfc4d7911d/id-preview-dc7aa885--c126d4df-3784-4e15-b48f-49c95c1191be.lovable.app-1776506855152.png" },
     ],
     links: [
       {
