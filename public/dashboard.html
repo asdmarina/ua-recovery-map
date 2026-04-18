@@ -437,20 +437,29 @@ body{display:flex;flex-direction:column;}
     <div class="lp-body">
       <div class="lg-head" id="t-grp1">Стан відновлення</div>
       <div class="lr" onclick="toggleCat('recovery')">
-        <div class="lr-dot" style="background:#22C55E;"></div>
+        <div class="lr-dot glow-green"></div>
         <span class="lr-name" id="t-l-rec">Активне відновлення</span>
+        <span class="src-tag">CHIRPS</span>
         <div class="tog on" id="tog-recovery"></div>
       </div>
       <div class="lr" onclick="toggleCat('inprogress')">
-        <div class="lr-dot" style="background:#F59E0B;"></div>
+        <div class="lr-dot glow-amber"></div>
         <span class="lr-name" id="t-l-inp">В процесі</span>
+        <span class="src-tag">OCHA</span>
         <div class="tog on" id="tog-inprogress"></div>
       </div>
       <div class="lr" onclick="toggleCat('critical')">
-        <div class="lr-dot" style="background:#EF4444;"></div>
+        <div class="lr-dot glow-red"></div>
         <span class="lr-name" id="t-l-crit">Критична потреба</span>
+        <span class="count-pill">47 громад</span>
         <div class="tog on" id="tog-critical"></div>
       </div>
+      <div class="lg-head" id="t-grp2" style="margin-top:6px;">Джерела даних</div>
+      <div class="lr"><div class="lr-dot" style="background:#60A5FA;border-radius:2px;"></div><span class="lr-name">OCHA Ukraine</span><span class="src-tag">API</span><div class="tog on"></div></div>
+      <div class="lr"><div class="lr-dot" style="background:#A78BFA;border-radius:2px;"></div><span class="lr-name">UNHCR</span><span class="src-tag">CSV</span><div class="tog on"></div></div>
+      <div class="lr"><div class="lr-dot" style="background:#34D399;border-radius:2px;"></div><span class="lr-name" id="t-l-min">Мінреінтеграції</span><span class="src-tag">PDF</span><div class="tog"></div></div>
+      <div class="lg-head" style="margin-top:6px;">Web3</div>
+      <div class="lr"><div class="lr-dot" style="background:#F59E0B;border-radius:2px;"></div><span class="lr-name">BNB Chain</span><span class="src-tag">BNB</span><div class="tog on"></div></div>
       <div class="lg-head" id="t-grp2" style="margin-top:6px;">Джерела даних</div>
       <div class="lr"><div class="lr-dot" style="background:#60A5FA;border-radius:2px;"></div><span class="lr-name">OCHA Ukraine</span><div class="tog on"></div></div>
       <div class="lr"><div class="lr-dot" style="background:#A78BFA;border-radius:2px;"></div><span class="lr-name">UNHCR</span><div class="tog on"></div></div>
