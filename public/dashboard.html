@@ -401,17 +401,21 @@ body{display:flex;flex-direction:column;}
 
 <!-- TOPBAR -->
 <div id="topbar">
-  <div class="logo">
+  <a class="logo" href="/" title="UA Recovery Map">
+    <svg class="logo-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="2.5"/></svg>
     <div class="logo-flag"><div class="logo-flag-t"></div><div class="logo-flag-b"></div></div>
-    <span class="logo-name">UA <b>Recovery</b> Map</span>
-  </div>
+    <div class="logo-text">
+      <span class="logo-name"><span class="ua">UA</span> <span class="rec">Recovery</span><span class="map">Map</span></span>
+      <span class="logo-ver">v0.1 · pilot</span>
+    </div>
+  </a>
   <div class="tb-div"></div>
-  <div class="pilot-pill"><span class="pilot-dot"></span><span id="t-pilot">Пілотний доступ</span></div>
+  <div class="tb-ts"><span class="tb-ts-dot"></span><span id="t-pilot">Дані: 17 квіт 2026 · 14:32 UTC</span></div>
   <div class="tb-div"></div>
   <div class="layer-btns">
-    <button class="layer-btn active" id="btn-rec" onclick="setLayer('recovery')" data-ua="Відновлення" data-en="Recovery">Відновлення</button>
-    <button class="layer-btn" id="btn-dmg" onclick="setLayer('damage')" data-ua="Руйнування" data-en="Damage">Руйнування</button>
-    <button class="layer-btn" id="btn-aid" onclick="setLayer('aid')" data-ua="Допомога" data-en="Aid">Допомога</button>
+    <button class="layer-btn active" id="btn-rec" onclick="setLayer('recovery')" data-ua="Відновлення" data-en="Recovery"><span class="lb-dot" style="background:#22C55E;color:#22C55E;"></span><span>Відновлення</span></button>
+    <button class="layer-btn" id="btn-dmg" onclick="setLayer('damage')" data-ua="Руйнування" data-en="Damage"><span class="lb-dot" style="background:#F59E0B;color:#F59E0B;"></span><span>Руйнування</span></button>
+    <button class="layer-btn" id="btn-aid" onclick="setLayer('aid')" data-ua="Допомога" data-en="Aid"><span class="lb-dot" style="background:#60A5FA;color:#60A5FA;"></span><span>Допомога</span></button>
   </div>
   <div class="tb-spacer"></div>
   <div class="lang-tog">
