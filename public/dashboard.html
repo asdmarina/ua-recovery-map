@@ -790,20 +790,28 @@ document.head.appendChild(ts);
 function selectArea(name){
   selectedArea = name;
   const d = D[name]; if(!d) return;
-  document.getElementById('area-info').classList.remove('hidden');
+  const empty = document.getElementById('empty-area');
+  if(empty) empty.style.display='none';
+  const ai = document.getElementById('area-info');
+  ai.classList.remove('hidden','sev-ok','sev-mid','sev-crit');
+  const sev = d.r>=60?'sev-ok':d.r>=30?'sev-mid':'sev-crit';
+  ai.classList.add(sev);
   document.getElementById('info-name').textContent = name;
   document.getElementById('info-sub').textContent = lang==='ua' ? name+' · область' : name+' Oblast';
-  document.getElementById('info-dmg').textContent = d.d+'%';
-  document.getElementById('info-rec').textContent = d.r+'%';
-  document.getElementById('info-need').textContent = d.need+'%';
-  document.getElementById('info-aid').textContent = d.aid;
+  // values + trends (mock vs last quarter)
+  const trend = (cls, txt) => `<span class="ai-trend ${cls}">${txt}</span>`;
+  document.getElementById('info-dmg').innerHTML = d.d+'% '+trend('down','↓ 2.1%');
+  document.getElementById('info-rec').innerHTML = d.r+'% '+trend('up','↑ 4.3%');
+  document.getElementById('info-need').innerHTML = d.need+'% '+trend('down','↓ 1.8%');
+  document.getElementById('info-aid').innerHTML = d.aid+' '+trend('up','↑ 6.2%');
   ['infra','hou','soc'].forEach((k,i)=>{
     const ids = ['infra','housing','social'][i];
     document.getElementById('bf-'+ids).style.width = d[k]+'%';
     document.getElementById('bp-'+ids).textContent = d[k]+'%';
   });
   document.getElementById('info-hash').textContent = d.hash;
-  document.getElementById('ctx-region').textContent = name+(lang==='ua'?' · '+t('oblast'):' Oblast');
+  const ctxRegEl = document.getElementById('ctx-region');
+  if(ctxRegEl) ctxRegEl.firstChild.nodeValue = name+(lang==='ua'?' · '+t('oblast')+' ':' Oblast ');
 }
 
 // ── CHAT ────────────────────────────────────────
@@ -823,8 +831,8 @@ function saveKey(){
 }
 
 const sugs = {
-  ua:['Де найбільша потреба?','Порівняй Херсон і Миколаїв','Де найменше допомоги?'],
-  en:['Where is the greatest need?','Compare Kherson and Mykolaiv','Where is the least aid?']
+  ua:['Де найбільша потреба?','Порівняти з Харківщиною','Показати тренд 2023–2026','Згенерувати звіт PDF'],
+  en:['Where is the greatest need?','Compare with Kharkiv region','Show 2023–2026 trend','Generate PDF report']
 };
 function useSug(i){ document.getElementById('chat-inp').value=sugs[lang][i]; sendMsg(); }
 
