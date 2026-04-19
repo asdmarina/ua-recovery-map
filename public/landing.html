@@ -44,6 +44,14 @@ nav{position:sticky;top:0;z-index:200;height:58px;background:rgba(255,255,255,0.
 .n-link{font-size:13px;font-weight:500;color:var(--text2);text-decoration:none;transition:color .15s;}
 .n-link:hover{color:var(--blue);}
 .n-pill{background:var(--green-bg);color:var(--green);font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;display:flex;align-items:center;gap:5px;}
+.n-burger{display:none;background:transparent;border:none;cursor:pointer;padding:6px;margin-left:auto;}
+.n-burger span{display:block;width:20px;height:2px;background:var(--text);margin:4px 0;border-radius:2px;transition:all .2s;}
+.n-burger.open span:nth-child(1){transform:translateY(6px) rotate(45deg);}
+.n-burger.open span:nth-child(2){opacity:0;}
+.n-burger.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
+.n-mobile-panel{display:none;position:fixed;top:58px;left:0;right:0;background:white;border-bottom:1px solid var(--border);padding:16px 20px;flex-direction:column;gap:14px;z-index:199;box-shadow:0 6px 18px rgba(0,0,0,.06);}
+.n-mobile-panel.open{display:flex;}
+.n-mobile-panel .n-link{font-size:15px;padding:6px 0;}
 .n-pill-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 2.2s infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 .n-btn{background:var(--blue);color:white;font-size:13px;font-weight:500;padding:8px 20px;border-radius:7px;text-decoration:none;transition:background .15s;}
@@ -80,8 +88,6 @@ nav{position:sticky;top:0;z-index:200;height:58px;background:rgba(255,255,255,0.
 .stat:first-child{padding-left:0;}
 .stat:last-child{border-right:none;}
 .stat-n{font-size:36px;font-weight:700;color:white;line-height:1;margin-bottom:6px;letter-spacing:-.02em;}
-.stat-n.amber{color:#FDE68A;}
-.stat-n.red{color:#FCA5A5;}
 .stat-l{font-size:12px;color:rgba(255,255,255,.65);}
 
 /* ─── SECTIONS ─── */
@@ -105,7 +111,9 @@ nav{position:sticky;top:0;z-index:200;height:58px;background:rgba(255,255,255,0.
 .sol-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
 .sol-card{background:white;border:1px solid var(--border);border-radius:12px;padding:28px 22px;transition:box-shadow .2s,transform .2s;}
 .sol-card:hover{box-shadow:0 4px 24px rgba(0,0,0,.08);transform:translateY(-2px);}
-.sol-icon{width:46px;height:46px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;}
+.sol-icon{width:46px;height:46px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;background:#EFF6FF;}
+.sol-icon svg{width:24px;height:24px;}
+.sol-icon svg path,.sol-icon svg circle{stroke:#1B4FCC!important;}
 .sol-ttl{font-size:16px;font-weight:600;color:var(--text);margin-bottom:8px;}
 .sol-txt{font-size:13px;color:var(--text2);line-height:1.65;}
 
@@ -218,6 +226,87 @@ footer{background:var(--navy2);padding:40px 48px 22px;}
 /* ─── LEAFLET OVERRIDES ─── */
 .leaflet-container{background:#1a2744!important;}
 .leaflet-control-zoom a{background:white!important;color:var(--navy)!important;}
+/* Hero map: stronger outline so it reads as a map */
+#heroMap .leaflet-interactive{stroke:rgba(255,255,255,0.55)!important;stroke-width:1.2!important;}
+
+/* ─── MODAL ─── */
+.modal-back{position:fixed;inset:0;background:rgba(8,15,30,.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-back.open{display:flex;}
+.modal{background:var(--navy);border:1px solid rgba(255,255,255,.1);border-radius:14px;width:100%;max-width:480px;color:white;padding:28px 28px 24px;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.5);max-height:calc(100vh - 40px);overflow-y:auto;}
+.modal-close{position:absolute;top:14px;right:14px;background:transparent;border:none;color:rgba(255,255,255,.55);cursor:pointer;width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;font-family:inherit;transition:background .15s;}
+.modal-close:hover{background:rgba(255,255,255,.08);color:white;}
+.modal-ttl{font-size:20px;font-weight:700;color:white;margin-bottom:6px;letter-spacing:-.01em;}
+.modal-sub{font-size:13px;color:rgba(255,255,255,.55);margin-bottom:22px;}
+.f-row{margin-bottom:14px;}
+.f-lbl{display:block;font-size:11px;font-weight:600;letter-spacing:.04em;color:rgba(255,255,255,.7);margin-bottom:6px;text-transform:uppercase;}
+.f-lbl .req{color:#FCA5A5;margin-left:3px;}
+.f-inp,.f-sel{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:10px 12px;color:white;font-size:14px;font-family:inherit;outline:none;transition:border-color .15s;}
+.f-inp:focus,.f-sel:focus{border-color:var(--blue-mid);}
+.f-sel{appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2'><polyline points='6 9 12 15 18 9'/></svg>");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px;}
+.f-sel option{background:var(--navy);color:white;}
+.f-submit{width:100%;background:var(--yellow-ua);color:#0D1B36;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:8px;transition:opacity .15s;}
+.f-submit:hover{opacity:.88;}
+.f-success{display:none;text-align:center;padding:30px 10px 10px;}
+.f-success.show{display:block;}
+.f-success-icon{width:54px;height:54px;border-radius:50%;background:rgba(74,222,128,.15);color:#4ADE80;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
+.f-success-msg{font-size:15px;color:rgba(255,255,255,.85);line-height:1.55;}
+
+/* ─── MOBILE (≤768px) ─── */
+@media (max-width:768px){
+  nav{padding:0 16px;gap:12px;}
+  .n-link, .n-pill, .n-btn{display:none;}
+  .lang-tog{margin-left:auto;}
+  .n-burger{display:block;margin-left:0;order:99;}
+  .logo-name{font-size:14px;}
+
+  .hero{grid-template-columns:1fr;min-height:auto;}
+  .hero-left{padding:36px 20px 28px;order:1;}
+  .hero h1{font-size:32px;line-height:1.15;margin-bottom:14px;}
+  .hero-sub{font-size:14px;line-height:1.6;margin-bottom:24px;}
+  .hero-actions{flex-direction:column;gap:10px;}
+  .hero-actions button{width:100%;}
+  .hero-right{order:2;min-height:300px;}
+  #heroMap{min-height:300px;height:300px;}
+  .hero-right::after{box-shadow:inset 0 60px 80px -40px var(--navy);}
+
+  .stats{padding:0 16px;}
+  .stats-inner{grid-template-columns:1fr 1fr;}
+  .stat{padding:20px 12px;border-right:1px solid rgba(255,255,255,.22);border-bottom:1px solid rgba(255,255,255,.22);}
+  .stat:nth-child(2n){border-right:none;}
+  .stat:nth-child(n+3){border-bottom:none;}
+  .stat:first-child{padding-left:12px;}
+  .stat-n{font-size:26px;}
+  .stat-l{font-size:11px;}
+
+  .sec, .sec-alt, .cta{padding:36px 20px;}
+  .sec-title{font-size:22px;}
+  .sec-desc{font-size:13px;}
+
+  .prob-grid{grid-template-columns:1fr;gap:24px;}
+  .sol-grid{grid-template-columns:1fr;gap:14px;}
+  .how-steps{grid-template-columns:1fr 1fr;gap:24px 12px;}
+  .how-line{display:none;}
+
+  .live-grid{grid-template-columns:1fr;gap:16px;}
+  #liveMap{height:280px;}
+
+  .status-wrap{grid-template-columns:1fr;gap:24px;}
+
+  .cta-ttl{font-size:24px;}
+  .cta-sub{font-size:14px;}
+  .cta-btns{flex-direction:column;}
+  .cta-btns button{width:100%;}
+
+  footer{padding:30px 20px 18px;}
+  .ft-grid{grid-template-columns:1fr;gap:24px;padding-bottom:24px;}
+  .ft-bottom{flex-direction:column;gap:8px;}
+
+  .modal-back{padding:0;align-items:stretch;}
+  .modal{max-width:100%;border-radius:0;max-height:100vh;padding:60px 22px 24px;}
+  .modal-close{top:16px;right:16px;}
+
+  body, html{font-size:14px;}
+}
 </style>
 </head>
 <body>
@@ -232,12 +321,19 @@ footer{background:var(--navy2);padding:40px 48px 22px;}
   <a class="n-link" href="#solution" data-i18n="navSolution">Рішення</a>
   <a class="n-link" href="#live" data-i18n="navLive">Live-дані</a>
   <a class="n-link" href="#status" data-i18n="navStatus">Статус</a>
-  <div class="n-pill"><span class="n-pill-dot"></span><span data-i18n="navPilot">Пілот активний</span></div>
+  <div class="n-pill"><span class="n-pill-dot"></span><span data-i18n="navPilot">Пілотний доступ</span></div>
   <div class="lang-tog">
     <button class="lang-btn active" onclick="setLang('ua')">UA</button>
     <button class="lang-btn" onclick="setLang('en')">EN</button>
   </div>
+  <button class="n-burger" id="nBurger" aria-label="Menu" onclick="toggleMobileNav()"><span></span><span></span><span></span></button>
 </nav>
+<div class="n-mobile-panel" id="nMobilePanel">
+  <a class="n-link" href="#problem" data-i18n="navProblem" onclick="closeMobileNav()">Проблема</a>
+  <a class="n-link" href="#solution" data-i18n="navSolution" onclick="closeMobileNav()">Рішення</a>
+  <a class="n-link" href="#live" data-i18n="navLive" onclick="closeMobileNav()">Live-дані</a>
+  <a class="n-link" href="#status" data-i18n="navStatus" onclick="closeMobileNav()">Статус</a>
+</div>
 
 <!-- HERO -->
 <div class="hero">
@@ -247,7 +343,7 @@ footer{background:var(--navy2);padding:40px 48px 22px;}
     <p class="hero-sub">UA Recovery Map об'єднує дані про руйнування, допомогу та відновлення громад. Верифікація на блокчейні, AI-аналітика — щоб кожен бачив реальну картину, а не прес-реліз.</p>
     <div class="hero-actions">
       <button class="btn-hero-p" onclick="window.location.href='/dashboard'">Відкрити карту</button>
-      <button class="btn-hero-s" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">Приєднатись до пілоту</button>
+      <button class="btn-hero-s" onclick="openPilotModal()">Приєднатись до пілоту</button>
     </div>
   </div>
   <div class="hero-right">
@@ -260,8 +356,8 @@ footer{background:var(--navy2);padding:40px 48px 22px;}
 <div class="stats">
   <div class="stats-inner">
     <div class="stat"><div class="stat-n">$47B+</div><div class="stat-l">Задокументована міжнародна допомога</div></div>
-    <div class="stat"><div class="stat-n amber">1,400+</div><div class="stat-l">Громад потребують пріоритетної уваги</div></div>
-    <div class="stat"><div class="stat-n red">68%</div><div class="stat-l">Допомоги не відстежується публічно</div></div>
+    <div class="stat"><div class="stat-n">1,400+</div><div class="stat-l">Громад потребують пріоритетної уваги</div></div>
+    <div class="stat"><div class="stat-n">68%</div><div class="stat-l">Допомоги не відстежується публічно</div></div>
     <div class="stat"><div class="stat-n">24 год</div><div class="stat-l">Цикл оновлення даних</div></div>
   </div>
 </div>
@@ -448,8 +544,49 @@ footer{background:var(--navy2);padding:40px 48px 22px;}
   <p class="cta-sub">Відстежуйте відновлення за відкритими даними, а не по чутках з офісів донорів.</p>
   <div class="cta-btns">
     <button class="btn-cta-w" onclick="window.location.href='/dashboard'">Відкрити карту</button>
-    <button class="btn-cta-o">Приєднатись до пілоту</button>
-    <button class="btn-cta-o">Дізнатись про підтримку</button>
+    <button class="btn-cta-o" onclick="openPilotModal()">Приєднатись до пілоту</button>
+  </div>
+</div>
+
+<!-- PILOT MODAL -->
+<div class="modal-back" id="pilotModal" onclick="if(event.target===this)closePilotModal()">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="pilotModalTtl">
+    <button class="modal-close" onclick="closePilotModal()" aria-label="Close">✕</button>
+    <div id="pilotForm">
+      <h3 class="modal-ttl" id="pilotModalTtl" data-i18n="pmTitle">Приєднатись до пілоту</h3>
+      <p class="modal-sub" data-i18n="pmSub">Заповніть форму — ми зв'яжемося з вами протягом тижня.</p>
+      <form onsubmit="submitPilot(event)">
+        <div class="f-row">
+          <label class="f-lbl"><span data-i18n="pmName">Ім'я</span><span class="req">*</span></label>
+          <input class="f-inp" type="text" name="name" required maxlength="100"/>
+        </div>
+        <div class="f-row">
+          <label class="f-lbl" data-i18n="pmOrg">Організація</label>
+          <input class="f-inp" type="text" name="org" maxlength="120"/>
+        </div>
+        <div class="f-row">
+          <label class="f-lbl">Email<span class="req">*</span></label>
+          <input class="f-inp" type="email" name="email" required maxlength="160"/>
+        </div>
+        <div class="f-row">
+          <label class="f-lbl" data-i18n="pmUse">Як плануєте використовувати?</label>
+          <select class="f-sel" name="use" id="pilotUseSel">
+            <option value="donor" data-i18n="pmUseDonor">Донор</option>
+            <option value="ngo" data-i18n="pmUseNgo">НГО</option>
+            <option value="gov" data-i18n="pmUseGov">Держструктура</option>
+            <option value="journalist" data-i18n="pmUseJrn">Журналіст</option>
+            <option value="other" data-i18n="pmUseOther">Інше</option>
+          </select>
+        </div>
+        <button type="submit" class="f-submit" data-i18n="pmSubmit">Надіслати заявку</button>
+      </form>
+    </div>
+    <div class="f-success" id="pilotSuccess">
+      <div class="f-success-icon">
+        <svg width="26" height="26" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="f-success-msg" data-i18n="pmThanks">Дякуємо! Ми зв'яжемося з вами найближчим часом.</div>
+    </div>
   </div>
 </div>
 
@@ -631,7 +768,12 @@ else{window.addEventListener('load',initMaps);}
 // ── i18n ────────────────────────────────────────────
 const I18N_EN = {
   // nav
-  navProblem:'Problem', navSolution:'Solution', navLive:'Live data', navStatus:'Status', navPilot:'Pilot active',
+  navProblem:'Problem', navSolution:'Solution', navLive:'Live data', navStatus:'Status', navPilot:'Pilot access',
+  // pilot modal
+  pmTitle:'Join the pilot', pmSub:'Fill in the form — we will be in touch within a week.',
+  pmName:'Name', pmOrg:'Organization', pmUse:'How will you use it?',
+  pmUseDonor:'Donor', pmUseNgo:'NGO', pmUseGov:'Government', pmUseJrn:'Journalist', pmUseOther:'Other',
+  pmSubmit:'Submit request', pmThanks:'Thank you! We will be in touch shortly.',
   // hero
   heroTag:'Open platform · BNB Chain · AI Analytics',
   heroH1:['Ukraine recovery — ','transparent',' and in real time'],
@@ -851,6 +993,41 @@ function setLang(l){
     translatePage('en');
   }
 }
+
+// ── Mobile nav ──
+function toggleMobileNav(){
+  document.getElementById('nBurger').classList.toggle('open');
+  document.getElementById('nMobilePanel').classList.toggle('open');
+}
+function closeMobileNav(){
+  document.getElementById('nBurger').classList.remove('open');
+  document.getElementById('nMobilePanel').classList.remove('open');
+}
+
+// ── Pilot modal ──
+function openPilotModal(){
+  const m = document.getElementById('pilotModal');
+  m.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  // reset
+  document.getElementById('pilotForm').style.display = '';
+  document.getElementById('pilotSuccess').classList.remove('show');
+  const f = document.querySelector('#pilotForm form');
+  if(f) f.reset();
+}
+function closePilotModal(){
+  document.getElementById('pilotModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function submitPilot(e){
+  e.preventDefault();
+  document.getElementById('pilotForm').style.display = 'none';
+  document.getElementById('pilotSuccess').classList.add('show');
+  return false;
+}
+document.addEventListener('keydown', function(e){
+  if(e.key==='Escape') closePilotModal();
+});
 </script>
 </body>
 </html>
