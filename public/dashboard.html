@@ -470,13 +470,6 @@ body{display:flex;flex-direction:column;}
   <div id="mapwrap">
     <div id="map"></div>
     <div id="map-ts"><span class="map-ts-dot"></span><span><span id="t-updated">Оновлено:</span> 18 квітня 2026 · Open datasets</span></div>
-    <div id="map-legend">
-      <div class="leg-t" id="t-legend">Стан відновлення</div>
-      <div class="leg-r"><div class="leg-d" style="background:#15803D;"></div><span id="leg1">Активне відновлення</span></div>
-      <div class="leg-r"><div class="leg-d" style="background:#B45309;"></div><span id="leg2">В процесі</span></div>
-      <div class="leg-r"><div class="leg-d" style="background:#991B1B;"></div><span id="leg3">Критична потреба</span></div>
-      <div class="leg-r"><div class="leg-d" style="background:#1E3A5F;"></div><span id="leg4">Дані оновлюються</span></div>
-    </div>
     <div id="map-scale"><span>200 km</span><div class="scale-bar"></div></div>
     <div id="layer-badge">
       <div class="lb-l" id="t-active-layer">Активний шар</div>
@@ -727,7 +720,7 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png'
 
 // City labels layer
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png',{
-  opacity:0.4,maxZoom:18,
+  opacity:0.2,maxZoom:18,
   subdomains:'abcd',
   pane:'overlayPane'
 }).addTo(map);
