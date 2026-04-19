@@ -766,8 +766,8 @@ geoLayer = L.geoJSON(getGeoJSON(),{
   }
 }).addTo(map);
 
-// Fit Ukraine with padding
-try { map.fitBounds(geoLayer.getBounds(), {padding:[24,24]}); } catch(e){}
+// Center on Ukraine at zoom 6 (set in L.map setView above)
+map.setView([49,32],6);
 
 // Oblast name labels for major regions
 const OBLAST_LABELS = [
