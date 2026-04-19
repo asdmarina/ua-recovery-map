@@ -343,7 +343,7 @@ footer{background:var(--navy2);padding:40px 48px 22px;}
     <p class="hero-sub">UA Recovery Map об'єднує дані про руйнування, допомогу та відновлення громад. Верифікація на блокчейні, AI-аналітика — щоб кожен бачив реальну картину, а не прес-реліз.</p>
     <div class="hero-actions">
       <button class="btn-hero-p" onclick="window.location.href='/dashboard'">Відкрити карту</button>
-      <button class="btn-hero-s" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">Приєднатись до пілоту</button>
+      <button class="btn-hero-s" onclick="openPilotModal()">Приєднатись до пілоту</button>
     </div>
   </div>
   <div class="hero-right">
@@ -356,8 +356,8 @@ footer{background:var(--navy2);padding:40px 48px 22px;}
 <div class="stats">
   <div class="stats-inner">
     <div class="stat"><div class="stat-n">$47B+</div><div class="stat-l">Задокументована міжнародна допомога</div></div>
-    <div class="stat"><div class="stat-n amber">1,400+</div><div class="stat-l">Громад потребують пріоритетної уваги</div></div>
-    <div class="stat"><div class="stat-n red">68%</div><div class="stat-l">Допомоги не відстежується публічно</div></div>
+    <div class="stat"><div class="stat-n">1,400+</div><div class="stat-l">Громад потребують пріоритетної уваги</div></div>
+    <div class="stat"><div class="stat-n">68%</div><div class="stat-l">Допомоги не відстежується публічно</div></div>
     <div class="stat"><div class="stat-n">24 год</div><div class="stat-l">Цикл оновлення даних</div></div>
   </div>
 </div>
@@ -544,8 +544,49 @@ footer{background:var(--navy2);padding:40px 48px 22px;}
   <p class="cta-sub">Відстежуйте відновлення за відкритими даними, а не по чутках з офісів донорів.</p>
   <div class="cta-btns">
     <button class="btn-cta-w" onclick="window.location.href='/dashboard'">Відкрити карту</button>
-    <button class="btn-cta-o">Приєднатись до пілоту</button>
-    <button class="btn-cta-o">Дізнатись про підтримку</button>
+    <button class="btn-cta-o" onclick="openPilotModal()">Приєднатись до пілоту</button>
+  </div>
+</div>
+
+<!-- PILOT MODAL -->
+<div class="modal-back" id="pilotModal" onclick="if(event.target===this)closePilotModal()">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="pilotModalTtl">
+    <button class="modal-close" onclick="closePilotModal()" aria-label="Close">✕</button>
+    <div id="pilotForm">
+      <h3 class="modal-ttl" id="pilotModalTtl" data-i18n="pmTitle">Приєднатись до пілоту</h3>
+      <p class="modal-sub" data-i18n="pmSub">Заповніть форму — ми зв'яжемося з вами протягом тижня.</p>
+      <form onsubmit="submitPilot(event)">
+        <div class="f-row">
+          <label class="f-lbl"><span data-i18n="pmName">Ім'я</span><span class="req">*</span></label>
+          <input class="f-inp" type="text" name="name" required maxlength="100"/>
+        </div>
+        <div class="f-row">
+          <label class="f-lbl" data-i18n="pmOrg">Організація</label>
+          <input class="f-inp" type="text" name="org" maxlength="120"/>
+        </div>
+        <div class="f-row">
+          <label class="f-lbl">Email<span class="req">*</span></label>
+          <input class="f-inp" type="email" name="email" required maxlength="160"/>
+        </div>
+        <div class="f-row">
+          <label class="f-lbl" data-i18n="pmUse">Як плануєте використовувати?</label>
+          <select class="f-sel" name="use" id="pilotUseSel">
+            <option value="donor" data-i18n="pmUseDonor">Донор</option>
+            <option value="ngo" data-i18n="pmUseNgo">НГО</option>
+            <option value="gov" data-i18n="pmUseGov">Держструктура</option>
+            <option value="journalist" data-i18n="pmUseJrn">Журналіст</option>
+            <option value="other" data-i18n="pmUseOther">Інше</option>
+          </select>
+        </div>
+        <button type="submit" class="f-submit" data-i18n="pmSubmit">Надіслати заявку</button>
+      </form>
+    </div>
+    <div class="f-success" id="pilotSuccess">
+      <div class="f-success-icon">
+        <svg width="26" height="26" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="f-success-msg" data-i18n="pmThanks">Дякуємо! Ми зв'яжемося з вами найближчим часом.</div>
+    </div>
   </div>
 </div>
 
