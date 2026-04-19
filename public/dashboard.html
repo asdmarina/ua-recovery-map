@@ -788,19 +788,41 @@ function selectArea(name){
 }
 
 // ── CHAT ────────────────────────────────────────
-let apiKey = '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';
 let sending = false;
+const _pending = new Map();
 
-// Pre-fill indicator
-document.getElementById('api-inp').placeholder = 'Groq API key (збережено ✓)';
-document.getElementById('t-api-note').textContent = '✓ Groq API ключ активовано';
-document.getElementById('t-api-note').style.color = '#4ADE80';
+// API key UI is no longer needed (server-side proxy)
+(function(){
+  const inp = document.getElementById('api-inp');
+  const note = document.getElementById('t-api-note');
+  if(inp){ inp.style.display='none'; }
+  if(note){
+    note.textContent = '✓ AI ready';
+    note.style.color = '#4ADE80';
+  }
+  const saveBtn = document.querySelector('[onclick="saveKey()"]');
+  if(saveBtn) saveBtn.style.display='none';
+})();
 
-function saveKey(){
-  const v = document.getElementById('api-inp').value.trim();
-  if(v){ apiKey=v; document.getElementById('api-inp').value=''; }
-  document.getElementById('t-api-note').textContent = '✓ '+(lang==='ua'?'Ключ збережено':'Key saved');
-  document.getElementById('t-api-note').style.color='#4ADE80';
+function saveKey(){ /* no-op: key managed server-side */ }
+
+window.addEventListener('message', function(e){
+  if(e.origin !== window.location.origin) return;
+  const d = e.data;
+  if(!d || d.type !== 'chat-response' || !d.id) return;
+  const cb = _pending.get(d.id);
+  if(cb){ _pending.delete(d.id); cb(d); }
+});
+
+function callChat(system, message){
+  return new Promise(function(resolve){
+    const id = Math.random().toString(36).slice(2);
+    _pending.set(id, resolve);
+    setTimeout(function(){
+      if(_pending.has(id)){ _pending.delete(id); resolve({error:'Timeout'}); }
+    }, 30000);
+    window.parent.postMessage({type:'chat-request', id:id, system:system, message:message}, window.location.origin);
+  });
 }
 
 const sugs = {
@@ -843,56 +865,61 @@ function buildSystem(){
   return lines.join('\n');
 }
 
+function escapeHtml(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
 async function sendMsg(){
   if(sending) return;
   const inp = document.getElementById('chat-inp');
   const msg = inp.value.trim(); if(!msg) return;
-  appendMsg('u', msg); inp.value='';
+  appendUserMsg(msg); inp.value='';
   const typ = addTyping(); sending=true;
   document.getElementById('send-btn').disabled=true;
 
   try {
-    const res = await fetch('https://api.groq.com/openai/v1/chat/completions',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},
-      body:JSON.stringify({
-        model:'llama-3.1-8b-instant',
-        max_tokens:200,
-        messages:[
-          {role:'system',content:buildSystem()},
-          {role:'user',content:msg}
-        ]
-      })
-    });
-    const data = await res.json();
+    const result = await callChat(buildSystem(), msg);
     typ.remove();
-    if(data.choices && data.choices[0]){
-      const text = data.choices[0].message.content;
-      appendMsg('a', text.replace(/\n/g,'<br>')+'<div><span class="msg-src">[1] UA Recovery AI · Open data <svg class="ext" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7M10 14L21 3M21 14v5a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h5"/></svg></span></div>');
+    if(result && result.text){
+      const safe = escapeHtml(result.text).replace(/\n/g,'<br>');
+      appendAiMsg(safe + '<div><span class="msg-src">[1] UA Recovery AI · Open data <svg class="ext" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7M10 14L21 3M21 14v5a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h5"/></svg></span></div>');
     } else {
-      appendMsg('a', lang==='ua'?'Помилка API. Перевірте ключ.':'API error. Check your key.');
+      appendAiMsg(escapeHtml(lang==='ua'?'Помилка з\'єднання з AI.':'AI connection error.'));
     }
   } catch(e){
     typ.remove();
-    appendMsg('a', lang==='ua'?'Помилка з\'єднання.':'Connection error.');
+    appendAiMsg(escapeHtml(lang==='ua'?'Помилка з\'єднання.':'Connection error.'));
   }
   sending=false;
   document.getElementById('send-btn').disabled=false;
 }
 
-function appendMsg(type, html){
+function appendUserMsg(text){
   const el = document.createElement('div');
-  el.className = type==='u'?'msg-u':'msg-a';
-  el.innerHTML = html;
+  el.className = 'msg-u';
+  el.textContent = text;
   document.getElementById('msgs').appendChild(el);
   document.getElementById('msgs').scrollTop = 99999;
+}
+
+function appendAiMsg(safeHtml){
+  const el = document.createElement('div');
+  el.className = 'msg-a';
+  el.innerHTML = safeHtml;
+  document.getElementById('msgs').appendChild(el);
+  document.getElementById('msgs').scrollTop = 99999;
+}
+
+function appendMsg(type, content){
+  if(type === 'u') appendUserMsg(content);
+  else appendAiMsg(escapeHtml(content));
 }
 
 function addTyping(){
   const el = document.createElement('div');
   el.className='msg-typing';
   const label = lang==='ua' ? 'Аналізую дані...' : 'Analyzing data...';
-  el.innerHTML='<div class="td"></div><div class="td"></div><div class="td"></div><span class="typing-label">'+label+'</span>';
+  el.innerHTML='<div class="td"></div><div class="td"></div><div class="td"></div><span class="typing-label">'+escapeHtml(label)+'</span>';
   document.getElementById('msgs').appendChild(el);
   document.getElementById('msgs').scrollTop=99999;
   return el;
