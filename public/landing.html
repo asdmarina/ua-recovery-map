@@ -44,6 +44,14 @@ nav{position:sticky;top:0;z-index:200;height:58px;background:rgba(255,255,255,0.
 .n-link{font-size:13px;font-weight:500;color:var(--text2);text-decoration:none;transition:color .15s;}
 .n-link:hover{color:var(--blue);}
 .n-pill{background:var(--green-bg);color:var(--green);font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;display:flex;align-items:center;gap:5px;}
+.n-burger{display:none;background:transparent;border:none;cursor:pointer;padding:6px;margin-left:auto;}
+.n-burger span{display:block;width:20px;height:2px;background:var(--text);margin:4px 0;border-radius:2px;transition:all .2s;}
+.n-burger.open span:nth-child(1){transform:translateY(6px) rotate(45deg);}
+.n-burger.open span:nth-child(2){opacity:0;}
+.n-burger.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
+.n-mobile-panel{display:none;position:fixed;top:58px;left:0;right:0;background:white;border-bottom:1px solid var(--border);padding:16px 20px;flex-direction:column;gap:14px;z-index:199;box-shadow:0 6px 18px rgba(0,0,0,.06);}
+.n-mobile-panel.open{display:flex;}
+.n-mobile-panel .n-link{font-size:15px;padding:6px 0;}
 .n-pill-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 2.2s infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 .n-btn{background:var(--blue);color:white;font-size:13px;font-weight:500;padding:8px 20px;border-radius:7px;text-decoration:none;transition:background .15s;}
