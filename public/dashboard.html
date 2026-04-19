@@ -99,7 +99,7 @@ body{display:flex;flex-direction:column;}
 .tog.on::after{transform:translateX(12px);}
 
 /* area info */
-#area-info{border-top:1px solid var(--border);flex-shrink:0;padding:12px 14px;}
+#area-info{border-top:2px solid #1B4FCC;flex-shrink:0;padding:12px 14px;}
 #area-info.hidden{display:none;}
 .ai-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px;}
 .ai-sub{font-size:10px;color:var(--text-dim);margin-bottom:11px;}
@@ -374,7 +374,7 @@ body{display:flex;flex-direction:column;}
 
 <!-- TOPBAR (unified header) -->
 <div id="topbar">
-  <a class="n-link" href="/" id="nav-back" style="margin-right:4px;">← UA Recovery Map</a>
+  <a class="n-link" href="/" id="nav-back" aria-label="Back to landing" style="margin-right:6px;padding:6px 8px;font-size:18px;line-height:1;display:inline-flex;align-items:center;">‹</a>
   <a class="logo" href="/">
     <div class="logo-flag"><div class="logo-flag-t"></div><div class="logo-flag-b"></div></div>
     <span class="logo-name">UA <span>Recovery</span> Map</span>
@@ -648,6 +648,10 @@ function applyLang(){
     if(el) el.textContent = t(key);
   });
   document.querySelector('.chat-inp').placeholder = t('placeholder');
+  document.querySelectorAll('.ua-oblast-label span').forEach(s=>{
+    const v = s.getAttribute(lang==='en'?'data-en':'data-ua');
+    if(v) s.textContent = v;
+  });
   const ctxRegEl = document.getElementById('ctx-region');
   ctxRegEl.firstChild.nodeValue = (selectedArea
     ? selectedArea + (lang==='ua' ? ' · '+t('oblast')+' ' : ' Oblast ')
@@ -728,18 +732,23 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.p
   pane:'overlayPane'
 }).addTo(map);
 
+const DEFAULT_STROKE = {color:'rgba(255,255,255,0.2)',weight:1};
+const HOVER_STROKE = {color:'rgba(255,255,255,0.5)',weight:2};
+const SELECTED_STROKE = {color:'#FFFFFF',weight:2.5};
+let selectedLayer = null;
+
 geoLayer = L.geoJSON(getGeoJSON(),{
   style: f=>({
     fillColor:getColor(f.properties.name),
     fillOpacity:0.72,
-    color:'rgba(255,255,255,0.2)',
-    weight:1
+    color:DEFAULT_STROKE.color,
+    weight:DEFAULT_STROKE.weight
   }),
   onEachFeature:(f,layer)=>{
     const name = f.properties.name;
     const d = D[name]; if(!d) return;
     layer.on('mouseover',function(e){
-      this.setStyle({weight:2,color:'rgba(255,255,255,0.5)',fillOpacity:0.88});
+      if(this!==selectedLayer) this.setStyle({weight:HOVER_STROKE.weight,color:HOVER_STROKE.color,fillOpacity:0.88});
       this.bindTooltip(
         `<strong>${name}</strong>
         <div class="tt-r"><span class="tt-l">${t('ttDmg')}</span><span class="tt-v" style="color:#F87171">${d.d}%</span></div>
@@ -749,16 +758,51 @@ geoLayer = L.geoJSON(getGeoJSON(),{
       ).openTooltip(e.latlng);
     });
     layer.on('mouseout',function(){
-      this.setStyle({weight:1,color:'rgba(255,255,255,0.2)',fillOpacity:0.72});
+      if(this!==selectedLayer) this.setStyle({weight:DEFAULT_STROKE.weight,color:DEFAULT_STROKE.color,fillOpacity:0.72});
       this.closeTooltip();
     });
-    layer.on('click',()=>selectArea(name));
+    layer.on('click',()=>{
+      if(selectedLayer && selectedLayer!==layer){
+        selectedLayer.setStyle({weight:DEFAULT_STROKE.weight,color:DEFAULT_STROKE.color,fillOpacity:0.72});
+      }
+      selectedLayer = layer;
+      layer.setStyle({weight:SELECTED_STROKE.weight,color:SELECTED_STROKE.color,fillOpacity:0.9});
+      layer.bringToFront();
+      selectArea(name);
+    });
   }
 }).addTo(map);
 
+// Fit Ukraine with padding
+try { map.fitBounds(geoLayer.getBounds(), {padding:[24,24]}); } catch(e){}
+
+// Oblast name labels for major regions
+const OBLAST_LABELS = [
+  {name:'Київ', lat:50.45, lng:30.52},
+  {name:'Харків', lat:49.99, lng:36.23},
+  {name:'Одеса', lat:46.48, lng:30.73},
+  {name:'Львів', lat:49.84, lng:24.03},
+  {name:'Донецьк', lat:48.02, lng:37.80},
+  {name:'Херсон', lat:46.66, lng:32.61}
+];
+const OBLAST_LABELS_EN = {
+  'Київ':'Kyiv','Харків':'Kharkiv','Одеса':'Odesa','Львів':'Lviv','Донецьк':'Donetsk','Херсон':'Kherson'
+};
+OBLAST_LABELS.forEach(o=>{
+  L.marker([o.lat,o.lng],{
+    interactive:false,
+    icon:L.divIcon({
+      className:'ua-oblast-label',
+      html:`<span data-ua="${o.name}" data-en="${OBLAST_LABELS_EN[o.name]}">${o.name}</span>`,
+      iconSize:[80,14],
+      iconAnchor:[40,7]
+    })
+  }).addTo(map);
+});
+
 // Add tooltip style
 const ts = document.createElement('style');
-ts.textContent='.ua-tip{background:rgba(11,24,41,.96)!important;border:1px solid rgba(255,255,255,.1)!important;border-radius:8px!important;padding:10px 12px!important;font-family:Inter,sans-serif!important;font-size:12px!important;color:white!important;box-shadow:0 4px 24px rgba(0,0,0,.5)!important;min-width:160px;}.ua-tip strong{display:block;font-size:13px;margin-bottom:6px;}.tt-r{display:flex;justify-content:space-between;gap:14px;margin-bottom:3px;}.tt-l{color:rgba(255,255,255,.4);font-size:11px;}.tt-v{font-weight:600;font-size:11px;}';
+ts.textContent='.ua-tip{background:rgba(11,24,41,.96)!important;border:1px solid rgba(255,255,255,.1)!important;border-radius:8px!important;padding:10px 12px!important;font-family:Inter,sans-serif!important;font-size:12px!important;color:white!important;box-shadow:0 4px 24px rgba(0,0,0,.5)!important;min-width:160px;}.ua-tip strong{display:block;font-size:13px;margin-bottom:6px;}.tt-r{display:flex;justify-content:space-between;gap:14px;margin-bottom:3px;}.tt-l{color:rgba(255,255,255,.4);font-size:11px;}.tt-v{font-weight:600;font-size:11px;}.ua-oblast-label{background:transparent!important;border:0!important;pointer-events:none;}.ua-oblast-label span{font-family:Inter,sans-serif;font-size:10px;font-weight:600;color:rgba(255,255,255,.5);text-shadow:0 1px 3px rgba(0,0,0,.85),0 0 2px rgba(0,0,0,.85);letter-spacing:.3px;text-transform:uppercase;white-space:nowrap;}';
 document.head.appendChild(ts);
 
 function selectArea(name){
