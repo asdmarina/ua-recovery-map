@@ -768,7 +768,12 @@ else{window.addEventListener('load',initMaps);}
 // ── i18n ────────────────────────────────────────────
 const I18N_EN = {
   // nav
-  navProblem:'Problem', navSolution:'Solution', navLive:'Live data', navStatus:'Status', navPilot:'Pilot active',
+  navProblem:'Problem', navSolution:'Solution', navLive:'Live data', navStatus:'Status', navPilot:'Pilot access',
+  // pilot modal
+  pmTitle:'Join the pilot', pmSub:'Fill in the form — we will be in touch within a week.',
+  pmName:'Name', pmOrg:'Organization', pmUse:'How will you use it?',
+  pmUseDonor:'Donor', pmUseNgo:'NGO', pmUseGov:'Government', pmUseJrn:'Journalist', pmUseOther:'Other',
+  pmSubmit:'Submit request', pmThanks:'Thank you! We will be in touch shortly.',
   // hero
   heroTag:'Open platform · BNB Chain · AI Analytics',
   heroH1:['Ukraine recovery — ','transparent',' and in real time'],
@@ -988,6 +993,41 @@ function setLang(l){
     translatePage('en');
   }
 }
+
+// ── Mobile nav ──
+function toggleMobileNav(){
+  document.getElementById('nBurger').classList.toggle('open');
+  document.getElementById('nMobilePanel').classList.toggle('open');
+}
+function closeMobileNav(){
+  document.getElementById('nBurger').classList.remove('open');
+  document.getElementById('nMobilePanel').classList.remove('open');
+}
+
+// ── Pilot modal ──
+function openPilotModal(){
+  const m = document.getElementById('pilotModal');
+  m.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  // reset
+  document.getElementById('pilotForm').style.display = '';
+  document.getElementById('pilotSuccess').classList.remove('show');
+  const f = document.querySelector('#pilotForm form');
+  if(f) f.reset();
+}
+function closePilotModal(){
+  document.getElementById('pilotModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function submitPilot(e){
+  e.preventDefault();
+  document.getElementById('pilotForm').style.display = 'none';
+  document.getElementById('pilotSuccess').classList.add('show');
+  return false;
+}
+document.addEventListener('keydown', function(e){
+  if(e.key==='Escape') closePilotModal();
+});
 </script>
 </body>
 </html>
