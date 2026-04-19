@@ -648,6 +648,10 @@ function applyLang(){
     if(el) el.textContent = t(key);
   });
   document.querySelector('.chat-inp').placeholder = t('placeholder');
+  document.querySelectorAll('.ua-oblast-label span').forEach(s=>{
+    const v = s.getAttribute(lang==='en'?'data-en':'data-ua');
+    if(v) s.textContent = v;
+  });
   const ctxRegEl = document.getElementById('ctx-region');
   ctxRegEl.firstChild.nodeValue = (selectedArea
     ? selectedArea + (lang==='ua' ? ' · '+t('oblast')+' ' : ' Oblast ')
