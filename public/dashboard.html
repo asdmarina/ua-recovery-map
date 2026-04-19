@@ -374,6 +374,7 @@ body{display:flex;flex-direction:column;}
 
 <!-- TOPBAR (unified header) -->
 <div id="topbar">
+  <a class="n-link" href="/" id="nav-back" style="margin-right:4px;">← UA Recovery Map</a>
   <a class="logo" href="/">
     <div class="logo-flag"><div class="logo-flag-t"></div><div class="logo-flag-b"></div></div>
     <span class="logo-name">UA <span>Recovery</span> Map</span>
@@ -382,7 +383,7 @@ body{display:flex;flex-direction:column;}
   <a class="n-link" href="/#solution" id="nav-solution">Рішення</a>
   <a class="n-link" href="/#live" id="nav-live">Live-дані</a>
   <a class="n-link" href="/#status" id="nav-status">Статус</a>
-  <div class="n-pill"><span class="n-pill-dot"></span><span id="nav-pilot">Пілот активний</span></div>
+  <div class="n-pill"><span class="n-pill-dot"></span><span id="nav-pilot">Пілотний доступ</span></div>
   <div class="tb-spacer"></div>
   <div class="lang-tog">
     <button class="lang-btn active" onclick="setLang('ua')">UA</button>
@@ -576,7 +577,7 @@ let lang = 'ua';
 const TR = {
   ua:{
     pilot:'Пілотний доступ',
-    navProblem:'Проблема',navSolution:'Рішення',navLive:'Live-дані',navStatus:'Статус',navPilot:'Пілот активний',
+    navProblem:'Проблема',navSolution:'Рішення',navLive:'Live-дані',navStatus:'Статус',navPilot:'Пілотний доступ',
     layers:'Шари даних',grp1:'Стан відновлення',grp2:'Джерела даних',
     lRec:'Активне відновлення',lInp:'В процесі',lCrit:'Критична потреба',lMin:'Мінреінтеграції',
     dmg:'Руйнування',rec:'Відновлено',need:'Потреба',aid:'Допомога',
@@ -598,7 +599,7 @@ const TR = {
   },
   en:{
     pilot:'Pilot access',
-    navProblem:'Problem',navSolution:'Solution',navLive:'Live data',navStatus:'Status',navPilot:'Pilot active',
+    navProblem:'Problem',navSolution:'Solution',navLive:'Live data',navStatus:'Status',navPilot:'Pilot access',
     layers:'Data layers',grp1:'Recovery status',grp2:'Data sources',
     lRec:'Active recovery',lInp:'In progress',lCrit:'Critical need',lMin:'MinReintegration',
     dmg:'Damage',rec:'Recovered',need:'Open need',aid:'Aid tracked',

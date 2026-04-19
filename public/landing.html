@@ -1019,10 +1019,33 @@ function closePilotModal(){
   document.getElementById('pilotModal').classList.remove('open');
   document.body.style.overflow = '';
 }
-function submitPilot(e){
+async function submitPilot(e){
   e.preventDefault();
-  document.getElementById('pilotForm').style.display = 'none';
-  document.getElementById('pilotSuccess').classList.add('show');
+  const form = e.target;
+  const btn = form.querySelector('.f-submit');
+  const fd = new FormData(form);
+  const payload = {
+    name: fd.get('name'),
+    organization: fd.get('org'),
+    email: fd.get('email'),
+    usage_type: fd.get('use'),
+  };
+  const origBtn = btn.textContent;
+  btn.disabled = true;
+  try {
+    const res = await fetch('https://formspree.io/f/xkokbpjy', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if(!res.ok) throw new Error('bad');
+    document.getElementById('pilotForm').style.display = 'none';
+    document.getElementById('pilotSuccess').classList.add('show');
+  } catch(err) {
+    alert('Помилка. Спробуйте ще раз.');
+    btn.disabled = false;
+    btn.textContent = origBtn;
+  }
   return false;
 }
 document.addEventListener('keydown', function(e){
