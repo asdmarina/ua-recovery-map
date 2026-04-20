@@ -1,6 +1,48 @@
 import { createServerFn } from "@tanstack/react-start";
+import { getRequestHeader } from "@tanstack/react-start/server";
 
 type ChatInput = { system: string; message: string };
+
+// Sliding-window in-memory rate limiter: max N requests per window per IP.
+const RATE_LIMIT_MAX = 10;
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const GLOBAL_MAX = 300; // soft cap across all clients per window
+const ipHits = new Map<string, number[]>();
+let globalHits: number[] = [];
+
+function getClientIp(): string {
+  const fwd =
+    getRequestHeader("cf-connecting-ip") ||
+    getRequestHeader("x-real-ip") ||
+    getRequestHeader("x-forwarded-for") ||
+    "";
+  const ip = fwd.split(",")[0]?.trim();
+  return ip || "unknown";
+}
+
+function rateLimit(ip: string): boolean {
+  const now = Date.now();
+  const cutoff = now - RATE_LIMIT_WINDOW_MS;
+  globalHits = globalHits.filter((t) => t > cutoff);
+  if (globalHits.length >= GLOBAL_MAX) return false;
+  const arr = (ipHits.get(ip) ?? []).filter((t) => t > cutoff);
+  if (arr.length >= RATE_LIMIT_MAX) {
+    ipHits.set(ip, arr);
+    return false;
+  }
+  arr.push(now);
+  globalHits.push(now);
+  ipHits.set(ip, arr);
+  // Opportunistic cleanup
+  if (ipHits.size > 5000) {
+    for (const [k, v] of ipHits) {
+      const filtered = v.filter((t) => t > cutoff);
+      if (filtered.length === 0) ipHits.delete(k);
+      else ipHits.set(k, filtered);
+    }
+  }
+  return true;
+}
 
 function validate(input: unknown): ChatInput {
   if (!input || typeof input !== "object") throw new Error("Invalid input");
@@ -16,6 +58,10 @@ function validate(input: unknown): ChatInput {
 export const chatFn = createServerFn({ method: "POST" })
   .inputValidator(validate)
   .handler(async ({ data }) => {
+    const ip = getClientIp();
+    if (!rateLimit(ip)) {
+      return { text: "", error: "Too many requests. Please try again shortly." };
+    }
     const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) {
       return { text: "", error: "AI service not configured" };
