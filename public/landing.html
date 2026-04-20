@@ -513,17 +513,31 @@ footer{background:var(--navy2);padding:40px 48px 22px;}
         </div>
         <div class="chat-card">
           <div class="chat-top">
-            <span class="chat-top-dot"></span>
-            <span class="chat-top-title">UA Recovery AI · Аналітика</span>
-            <span style="margin-left:auto;font-size:10px;color:rgba(255,255,255,.35);font-weight:500;">Powered by Claude API</span>
+            <div class="chat-top-row">
+              <span class="chat-top-dot"></span>
+              <span class="chat-top-title">UA Recovery AI · Аналітика</span>
+              <span style="margin-left:auto;font-size:10px;color:rgba(255,255,255,.45);font-weight:500;">Powered by Claude API</span>
+            </div>
+            <div class="chat-top-sub">Запитайте дані українською або англійською — відповідь з джерелами OCHA, UNHCR та BNB Chain.</div>
           </div>
           <div class="chat-body" id="chatBody">
             <div class="msg-user">Які громади Херсонщини найменш охоплені?</div>
             <div class="msg-ai">На основі поточних даних, Каховська, Олешківська та Нова Каховка мають найбільший розрив між потребами і реально отриманою допомогою — 48–53%.<div><span class="msg-src">OCHA UA 2026-Q1 ↗</span></div></div>
           </div>
+          <div class="chat-suggest" id="chatSuggest">
+            <button class="chat-chip" type="button" onclick="askChip(this)">Регіони з найбільшим розривом потреб</button>
+            <button class="chat-chip" type="button" onclick="askChip(this)">Скільки допомоги верифіковано на BNB Chain?</button>
+            <button class="chat-chip" type="button" onclick="askChip(this)">Стан відновлення житла на Харківщині</button>
+          </div>
           <div class="chat-input-row">
             <input class="chat-inp" id="chatInp" placeholder="Запитайте про будь-яку громаду..." onkeydown="if(event.key==='Enter')sendMsg()"/>
-            <button class="chat-btn" onclick="sendMsg()">→</button>
+            <button class="chat-btn" onclick="sendMsg()" aria-label="Send">→</button>
+          </div>
+          <div class="chat-foot">
+            <span class="chat-foot-dot"></span>
+            <span>Online · відповіді з посиланнями на джерела</span>
+            <span class="chat-foot-sep">·</span>
+            <span>Перевірено OCHA + BNB Chain</span>
           </div>
         </div>
       </div>
