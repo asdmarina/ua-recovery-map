@@ -976,6 +976,11 @@ function translatePage(lang){
   const ccBars = document.querySelectorAll('.cc-bar-lbl');
   [I18N_EN.ccbInfra,I18N_EN.ccbHou,I18N_EN.ccbSoc].forEach((t,i)=>{ if(ccBars[i]){ if(!ccBars[i].dataset.uaText) ccBars[i].dataset.uaText=ccBars[i].textContent; ccBars[i].textContent=t; } });
   set('.chat-top-title', I18N_EN.chatTopTitle);
+  set('.chat-top-sub', I18N_EN.chatTopSub);
+  const chips = document.querySelectorAll('.chat-chip');
+  [I18N_EN.chatChip1,I18N_EN.chatChip2,I18N_EN.chatChip3].forEach((t,i)=>{ if(chips[i]){ if(!chips[i].dataset.uaText) chips[i].dataset.uaText=chips[i].textContent; chips[i].textContent=t; } });
+  const footSpans = document.querySelectorAll('.chat-foot span:not(.chat-foot-dot):not(.chat-foot-sep)');
+  [I18N_EN.chatFoot1,I18N_EN.chatFoot2].forEach((t,i)=>{ if(footSpans[i]){ if(!footSpans[i].dataset.uaText) footSpans[i].dataset.uaText=footSpans[i].textContent; footSpans[i].textContent=t; } });
   set('.msg-user', I18N_EN.chatMsgUser);
   const ai = document.querySelector('.msg-ai');
   if(ai){ if(!ai.dataset.uaText) ai.dataset.uaText = ai.innerHTML; ai.innerHTML = I18N_EN.chatMsgAI+'<div><span class="msg-src">OCHA UA 2026-Q1 ↗</span></div>'; }
