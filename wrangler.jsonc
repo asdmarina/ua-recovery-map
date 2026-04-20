@@ -3,8 +3,5 @@
   "name": "tanstack-start-app",
   "compatibility_date": "2025-09-24",
   "compatibility_flags": ["nodejs_compat"],
-  "main": "@tanstack/react-start/server-entry",
-  "build": {
-    "command": "bun install --no-frozen-lockfile && bun run build"
-  }
+  "main": "@tanstack/react-start/server-entry"
 }
