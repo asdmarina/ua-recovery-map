@@ -769,16 +769,17 @@ function sendMsg(){
   const msg = inp.value.trim();
   if(!msg) return;
   const body = document.getElementById('chatBody');
+  const sug = document.getElementById('chatSuggest');
+  if(sug) sug.style.display = 'none';
   const ub = document.createElement('div');
   ub.className = 'msg-user';
   ub.textContent = msg;
-  body.insertBefore(ub, body.querySelector('#typingEl') || null);
   body.appendChild(ub);
   inp.value = '';
   const typing = document.createElement('div');
   typing.className = 'msg-ai';
   typing.id = 'typingEl';
-  typing.innerHTML = '<span style="color:#94A3B8">···</span>';
+  typing.innerHTML = '<span class="typing-dots"><span></span><span></span><span></span></span>';
   body.appendChild(typing);
   body.scrollTop = 9999;
   setTimeout(()=>{
@@ -787,6 +788,11 @@ function sendMsg(){
     body.scrollTop = 9999;
     rIdx++;
   }, 1100);
+}
+function askChip(btn){
+  const inp = document.getElementById('chatInp');
+  inp.value = btn.textContent;
+  sendMsg();
 }
 
 // Add tooltip style
