@@ -10,17 +10,19 @@ export const Route = createFileRoute("/dashboard")({
   }),
 });
 
-export default function Dashboard() {
+function Dashboard() {
+  const src = `https://ua-recovery-map.uamap.workers.dev/map.html?v=${Date.now()}`;
   return (
     <iframe
-      src="https://ua-recovery-map.uamap.workers.dev/map.html"
+      src={src}
+      title="UA Recovery Map"
       style={{
         width: '100vw',
         height: '100vh',
         border: 'none',
         display: 'block',
         margin: 0,
-        padding: 0
+        padding: 0,
       }}
     />
   );
