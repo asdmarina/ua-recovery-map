@@ -68,7 +68,7 @@ export const chatFn = createServerFn({ method: "POST" })
     }
     try {
       const res = await fetch(
-        "https://api.groq.com/openai/v1/chat/completions",
+        "https://ua-recovery-chat.uamap.workers.dev",
         {
           method: "POST",
           headers: {
