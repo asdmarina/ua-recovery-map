@@ -71,16 +71,22 @@ export const chatFn = createServerFn({ method: "POST" })
       };
     }
 
+    const apiKey = process.env.LOVABLE_API_KEY;
+    if (!apiKey) {
+      return { text: "", error: "AI service not configured" };
+    }
+
     try {
       const res = await fetch(
-        "https://ua-recovery-chat.uamap.workers.dev/",
+        "https://ai.gateway.lovable.dev/v1/chat/completions",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${apiKey}`,
           },
           body: JSON.stringify({
-            model: "llama-3.1-8b-instant",
+            model: "google/gemini-3-flash-preview",
             messages: [
               {
                 role: "system",
