@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UA Recovery Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Unbounded:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --border: rgba(255,255,255,0.08);
+    --text: #e8edf5;
+    --muted: #6b7a99;
+    --accent: #3b82f6;
+    --accent2: #60a5fa;
+
+    /* destruction scale */
+    --d-none:     #1a3a2e;
+    --d-low:      #2d6a4f;
+    --d-moderate: #f59e0b;
+    --d-high:     #ef4444;
+    --d-critical: #7f1d1d;
+    --d-occupied: #374151;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* HEADER */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    height: 52px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo-flag {
+    width: 28px;
+    height: 20px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .logo-flag span { flex: 1; }
+  .logo-flag span:first-child { background: #005BBB; }
+  .logo-flag span:last-child { background: #FFD500; }
+
+  .logo-text {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+  }
+  .logo-text em { color: var(--accent2); font-style: normal; }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .lang-toggle {
+    display: flex;
+    background: var(--surface2);
+    border-radius: 6px;
+    padding: 2px;
+    gap: 2px;
+  }
+  .lang-toggle button {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.15s;
+  }
+  .lang-toggle button.active {
+    background: var(--accent);
+    color: white;
+  }
+
+  .updated-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .updated-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #22c55e;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* MAIN LAYOUT */
+  .main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* LEFT PANEL */
+  .left-panel {
+    width: 320px;
+    flex-shrink: 0;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .panel-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    padding: 0 4px;
+    flex-shrink: 0;
+  }
+  .panel-tab {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 12px 8px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.15s;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+  .panel-tab.active {
+    color: var(--accent2);
+    border-bottom-color: var(--accent2);
+  }
+
+  .panel-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+  }
+  .panel-content::-webkit-scrollbar { width: 4px; }
+  .panel-content::-webkit-scrollbar-track { background: transparent; }
+  .panel-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  /* LAYER CONTROLS */
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .layer-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
+
+  .layer-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    background: var(--surface2);
+    border-radius: 8px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.15s;
+  }
+  .layer-item:hover { border-color: var(--border); }
+  .layer-item.active { border-color: var(--accent); background: rgba(59,130,246,0.08); }
+
+  .layer-item-left { display: flex; align-items: center; gap: 10px; }
+  .layer-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .layer-name { font-size: 13px; font-weight: 500; }
+  .layer-check {
+    width: 18px; height: 18px;
+    border-radius: 4px;
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .layer-item.active .layer-check {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .layer-item.active .layer-check::after {
+    content: '✓';
+    font-size: 11px;
+    color: white;
+    font-weight: 700;
+  }
+
+  /* LEGEND */
+  .legend { margin-bottom: 20px; }
+  .legend-scale { display: flex; flex-direction: column; gap: 5px; }
+  .legend-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+  .legend-row:hover { background: var(--surface2); }
+  .legend-color {
+    width: 14px; height: 14px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .legend-label { font-size: 12px; color: var(--text); }
+  .legend-count {
+    margin-left: auto;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  /* STATS WIDGET */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .stat-card {
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 12px;
+    border: 1px solid var(--border);
+  }
+  .stat-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px;
+  }
+  .stat-value {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1;
+  }
+  .stat-value.red { color: #ef4444; }
+  .stat-value.amber { color: #f59e0b; }
+  .stat-value.green { color: #22c55e; }
+  .stat-value.blue { color: var(--accent2); }
+  .stat-sub {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+
+  /* MAP CONTAINER */
+  .map-wrapper {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #map {
+    width: 100%;
+    height: 100%;
+    background: var(--bg) !important;
+  }
+
+  .leaflet-container {
+    background: #0d1420 !important;
+    font-family: 'Inter', sans-serif !important;
+  }
+
+  /* MAP OVERLAY CONTROLS */
+  .map-controls {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .map-search {
+    display: flex;
+    align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    gap: 8px;
+    width: 260px;
+    backdrop-filter: blur(10px);
+  }
+  .map-search input {
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    flex: 1;
+  }
+  .map-search input::placeholder { color: var(--muted); }
+  .search-icon { color: var(--muted); font-size: 14px; }
+
+  .zoom-hint {
+    background: rgba(17,24,39,0.85);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    backdrop-filter: blur(8px);
+    width: fit-content;
+  }
+
+  /* BREADCRUMB */
+  .map-breadcrumb {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(17,24,39,0.9);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 12px;
+    backdrop-filter: blur(10px);
+  }
+  .breadcrumb-item { color: var(--muted); cursor: pointer; }
+  .breadcrumb-item:hover { color: var(--accent2); }
+  .breadcrumb-item.current { color: var(--text); font-weight: 500; }
+  .breadcrumb-sep { color: var(--border); }
+
+  /* RIGHT PANEL - DETAIL */
+  .right-panel {
+    width: 300px;
+    flex-shrink: 0;
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: transform 0.25s ease;
+  }
+  .right-panel.hidden { transform: translateX(300px); display: none; }
+
+  .detail-header {
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .detail-region {
+    font-size: 10px;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .detail-name {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .status-badge.critical { background: rgba(127,29,29,0.4); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
+  .status-badge.high { background: rgba(180,60,0,0.3); color: #fdba74; border: 1px solid rgba(245,158,11,0.3); }
+  .status-badge.moderate { background: rgba(161,98,7,0.25); color: #fcd34d; border: 1px solid rgba(245,158,11,0.2); }
+  .status-badge.low { background: rgba(20,83,45,0.3); color: #86efac; border: 1px solid rgba(34,197,94,0.2); }
+  .status-badge.occupied { background: rgba(55,65,81,0.5); color: #9ca3af; border: 1px solid rgba(107,114,128,0.3); }
+
+  .detail-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+  }
+  .detail-scroll::-webkit-scrollbar { width: 3px; }
+  .detail-scroll::-webkit-scrollbar-thumb { background: var(--border); }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .metric-card {
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 12px;
+    border: 1px solid var(--border);
+  }
+  .metric-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 5px;
+  }
+  .metric-value {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1;
+  }
+  .metric-value.danger { color: #ef4444; }
+  .metric-value.warning { color: #f59e0b; }
+  .metric-value.success { color: #22c55e; }
+  .metric-value.info { color: var(--accent2); }
+
+  .progress-section { margin-bottom: 16px; }
+  .progress-section .section-label { margin-bottom: 8px; }
+
+  .progress-item {
+    margin-bottom: 10px;
+  }
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+  .progress-name { font-size: 12px; color: var(--text); }
+  .progress-pct { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted); }
+
+  .progress-bar {
+    height: 5px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.6s ease;
+  }
+
+  .blockchain-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: rgba(59,130,246,0.06);
+    border: 1px solid rgba(59,130,246,0.15);
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+  .chain-icon { font-size: 14px; }
+  .chain-label {
+    font-size: 10px;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .chain-hash {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent2);
+    margin-top: 1px;
+  }
+
+  /* AI CHAT */
+  .ai-panel {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    z-index: 1000;
+    width: 300px;
+  }
+
+  .ai-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent);
+    border: none;
+    border-radius: 10px;
+    padding: 10px 14px;
+    cursor: pointer;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    width: 100%;
+    justify-content: space-between;
+    transition: background 0.15s;
+    box-shadow: 0 4px 20px rgba(59,130,246,0.35);
+  }
+  .ai-toggle:hover { background: #2563eb; }
+
+  .ai-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .ai-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #86efac;
+    animation: pulse 2s infinite;
+  }
+
+  .ai-chat-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    overflow: hidden;
+    display: none;
+    flex-direction: column;
+    max-height: 320px;
+  }
+  .ai-chat-box.open { display: flex; }
+
+  .ai-chat-header {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .ai-chat-title {
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .ai-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 120px;
+    max-height: 200px;
+  }
+  .ai-messages::-webkit-scrollbar { width: 3px; }
+  .ai-messages::-webkit-scrollbar-thumb { background: var(--border); }
+
+  .ai-msg {
+    font-size: 12px;
+    line-height: 1.5;
+    padding: 8px 10px;
+    border-radius: 8px;
+    max-width: 90%;
+    animation: fadeUp 0.2s ease;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .ai-msg.user {
+    background: var(--accent);
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 2px;
+  }
+  .ai-msg.assistant {
+    background: var(--surface2);
+    color: var(--text);
+    align-self: flex-start;
+    border-bottom-left-radius: 2px;
+  }
+
+  .ai-quick-prompts {
+    padding: 8px 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    border-top: 1px solid var(--border);
+  }
+  .quick-prompt {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 10px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Inter', sans-serif;
+  }
+  .quick-prompt:hover {
+    color: var(--accent2);
+    border-color: var(--accent2);
+    background: rgba(59,130,246,0.08);
+  }
+
+  .ai-input-row {
+    display: flex;
+    gap: 6px;
+    padding: 10px 12px;
+    border-top: 1px solid var(--border);
+  }
+  .ai-input {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 10px;
+    color: var(--text);
+    font-size: 12px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .ai-input:focus { border-color: var(--accent); }
+  .ai-input::placeholder { color: var(--muted); }
+
+  .ai-send {
+    background: var(--accent);
+    border: none;
+    border-radius: 6px;
+    padding: 7px 10px;
+    color: white;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.15s;
+  }
+  .ai-send:hover { background: #2563eb; }
+
+  /* LOADING */
+  .typing-indicator {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding: 8px 12px;
+  }
+  .typing-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--muted);
+    animation: typingBounce 1.2s infinite;
+  }
+  .typing-dot:nth-child(2) { animation-delay: 0.15s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes typingBounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-5px); }
+  }
+
+  /* TOOLTIP */
+  .leaflet-tooltip {
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 8px !important;
+    color: var(--text) !important;
+    font-family: 'Inter', sans-serif !important;
+    padding: 0 !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5) !important;
+  }
+  .leaflet-tooltip::before { display: none !important; }
+
+  .tooltip-inner {
+    padding: 10px 12px;
+    min-width: 160px;
+  }
+  .tooltip-name {
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+  .tooltip-region {
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .tooltip-metrics {
+    display: flex;
+    gap: 12px;
+  }
+  .tooltip-metric { text-align: center; }
+  .tooltip-metric-val {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1;
+  }
+  .tooltip-metric-lbl {
+    font-size: 9px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+  }
+
+  /* BOTTOM STATUS BAR */
+  .statusbar {
+    height: 28px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 20px;
+    flex-shrink: 0;
+  }
+  .statusbar-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .statusbar-item strong { color: var(--text); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-flag"><span></span><span></span></div>
+    <div class="logo-text">UA <em>Recovery</em> Map</div>
+  </div>
+  <div class="header-right">
+    <div class="updated-badge">Оновлено: 20 квіт 2026</div>
+    <div class="lang-toggle">
+      <button class="active" onclick="setLang('uk')">UA</button>
+      <button onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div class="panel-tabs">
+      <button class="panel-tab active" onclick="switchTab('layers')">Шари</button>
+      <button class="panel-tab" onclick="switchTab('stats')">Статистика</button>
+      <button class="panel-tab" onclick="switchTab('alerts')">Сповіщення</button>
+    </div>
+
+    <div class="panel-content" id="tab-layers">
+      <div class="section-label">Режим відображення</div>
+      <div class="layer-list">
+        <div class="layer-item active" onclick="setLayer('destruction')">
+          <div class="layer-item-left">
+            <div class="layer-dot" style="background:#ef4444"></div>
+            <div class="layer-name">Рівень руйнувань</div>
+          </div>
+          <div class="layer-check"></div>
+        </div>
+        <div class="layer-item" onclick="setLayer('recovery')">
+          <div class="layer-item-left">
+            <div class="layer-dot" style="background:#22c55e"></div>
+            <div class="layer-name">Прогрес відновлення</div>
+          </div>
+          <div class="layer-check"></div>
+        </div>
+        <div class="layer-item" onclick="setLayer('funding')">
+          <div class="layer-item-left">
+            <div class="layer-dot" style="background:#3b82f6"></div>
+            <div class="layer-name">Отримана допомога</div>
+          </div>
+          <div class="layer-check"></div>
+        </div>
+        <div class="layer-item" onclick="setLayer('needs')">
+          <div class="layer-item-left">
+            <div class="layer-dot" style="background:#a855f7"></div>
+            <div class="layer-name">Потреби громад</div>
+          </div>
+          <div class="layer-check"></div>
+        </div>
+      </div>
+
+      <div class="legend">
+        <div class="section-label">Легенда — Руйнування</div>
+        <div class="legend-scale">
+          <div class="legend-row" onclick="filterByLevel('critical')">
+            <div class="legend-color" style="background:var(--d-critical)"></div>
+            <div class="legend-label">Критичні (>70%)</div>
+            <div class="legend-count">47</div>
+          </div>
+          <div class="legend-row" onclick="filterByLevel('high')">
+            <div class="legend-color" style="background:var(--d-high)"></div>
+            <div class="legend-label">Високі (50–70%)</div>
+            <div class="legend-count">89</div>
+          </div>
+          <div class="legend-row" onclick="filterByLevel('moderate')">
+            <div class="legend-color" style="background:var(--d-moderate)"></div>
+            <div class="legend-label">Помірні (20–50%)</div>
+            <div class="legend-count">214</div>
+          </div>
+          <div class="legend-row" onclick="filterByLevel('low')">
+            <div class="legend-color" style="background:var(--d-low)"></div>
+            <div class="legend-label">Низькі (<20%)</div>
+            <div class="legend-count">612</div>
+          </div>
+          <div class="legend-row">
+            <div class="legend-color" style="background:var(--d-none)"></div>
+            <div class="legend-label">Немає даних / безпечна</div>
+            <div class="legend-count">711</div>
+          </div>
+          <div class="legend-row">
+            <div class="legend-color" style="background:var(--d-occupied)"></div>
+            <div class="legend-label">Окуповані</div>
+            <div class="legend-count">—</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-label">Зведена статистика</div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Громад</div>
+          <div class="stat-value blue">1 673</div>
+          <div class="stat-sub">всього</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Постраждало</div>
+          <div class="stat-value red">962</div>
+          <div class="stat-sub">потребують допомоги</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Відновлено</div>
+          <div class="stat-value green">23%</div>
+          <div class="stat-sub">від потреби</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Допомога</div>
+          <div class="stat-value amber">$4.2B</div>
+          <div class="stat-sub">розподілено</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-content" id="tab-stats" style="display:none">
+      <div class="section-label">Топ-5 областей за руйнуваннями</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
+        <div id="top-regions"></div>
+      </div>
+    </div>
+
+    <div class="panel-content" id="tab-alerts" style="display:none">
+      <div class="section-label">Останні оновлення</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="background:var(--surface2);border-radius:8px;padding:12px;border-left:3px solid #ef4444">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">18 квіт 2026 · Критично</div>
+          <div style="font-size:12px">Авдіївська громада — новий удар по інфраструктурі, потреба $12M</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:8px;padding:12px;border-left:3px solid #f59e0b">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">17 квіт 2026 · Оновлення</div>
+          <div style="font-size:12px">Херсон — завершено 3 об'єкти відновлення житла (240 родин)</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:8px;padding:12px;border-left:3px solid #22c55e">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">16 квіт 2026 · Фінансування</div>
+          <div style="font-size:12px">ЄС виділив €180M для Харківської обл. — 67 громад</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAP -->
+  <div class="map-wrapper">
+    <div class="map-controls">
+      <div class="map-search">
+        <span class="search-icon">⌕</span>
+        <input type="text" placeholder="Знайти громаду або область..." id="searchInput" oninput="handleSearch(this.value)">
+      </div>
+      <div class="zoom-hint" id="zoomHint">Масштабуйте для перегляду громад</div>
+    </div>
+
+    <div class="map-breadcrumb" id="breadcrumb" style="display:none">
+      <span class="breadcrumb-item" onclick="resetView()">Україна</span>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-item current" id="breadcrumb-region"></span>
+    </div>
+
+    <div id="map"></div>
+
+    <!-- AI Panel -->
+    <div class="ai-panel">
+      <div class="ai-chat-box" id="aiChatBox">
+        <div class="ai-chat-header">
+          <div class="ai-chat-title">
+            <span>🤖</span> UA Recovery AI
+          </div>
+          <button onclick="toggleAI()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px">×</button>
+        </div>
+        <div class="ai-messages" id="aiMessages">
+          <div class="ai-msg assistant">Привіт. Я можу проаналізувати дані по громадах, знайти недофінансування або порівняти регіони. Що цікавить?</div>
+        </div>
+        <div class="ai-quick-prompts">
+          <div class="quick-prompt" onclick="sendQuick('Де найбільше недофінансування?')">Недофінансування?</div>
+          <div class="quick-prompt" onclick="sendQuick('Топ-3 найвразливіших громади')">Найвразливіші</div>
+          <div class="quick-prompt" onclick="sendQuick('Прогрес відновлення за регіонами')">Прогрес</div>
+        </div>
+        <div class="ai-input-row">
+          <input class="ai-input" id="aiInput" placeholder="Задай питання..." onkeydown="if(event.key==='Enter')sendAI()">
+          <button class="ai-send" onclick="sendAI()">→</button>
+        </div>
+      </div>
+      <button class="ai-toggle" onclick="toggleAI()">
+        <div class="ai-status"><div class="ai-dot"></div> UA Recovery AI</div>
+        <span style="font-size:10px;opacity:0.7">Аналітика ↑</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- RIGHT DETAIL PANEL -->
+  <div class="right-panel hidden" id="detailPanel">
+    <div class="detail-header">
+      <div class="detail-region" id="detail-region">Область · Район</div>
+      <div class="detail-name" id="detail-name">Громада</div>
+      <span class="status-badge critical" id="detail-badge">Критична</span>
+    </div>
+    <div class="detail-scroll">
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-label">Руйнування</div>
+          <div class="metric-value danger" id="detail-destruction">—</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Відновлено</div>
+          <div class="metric-value success" id="detail-recovery">—</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Потреба</div>
+          <div class="metric-value warning" id="detail-need">—</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Допомога</div>
+          <div class="metric-value info" id="detail-aid">—</div>
+        </div>
+      </div>
+
+      <div class="progress-section">
+        <div class="section-label">Секторальний прогрес</div>
+        <div class="progress-item">
+          <div class="progress-header">
+            <span class="progress-name">Інфраструктура</span>
+            <span class="progress-pct" id="prog-infra">—%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="fill-infra" style="background:#ef4444;width:0%"></div>
+          </div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-header">
+            <span class="progress-name">Житло</span>
+            <span class="progress-pct" id="prog-housing">—%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="fill-housing" style="background:#f59e0b;width:0%"></div>
+          </div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-header">
+            <span class="progress-name">Соц. сервіси</span>
+            <span class="progress-pct" id="prog-social">—%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="fill-social" style="background:#3b82f6;width:0%"></div>
+          </div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-header">
+            <span class="progress-name">Освіта</span>
+            <span class="progress-pct" id="prog-edu">—%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="fill-edu" style="background:#a855f7;width:0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="blockchain-badge">
+        <span class="chain-icon">🔗</span>
+        <div>
+          <div class="chain-label">BNB Chain · Верифіковано</div>
+          <div class="chain-hash" id="detail-hash">0x3f4a...c8d2</div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:12px">
+        <div class="section-label" style="margin-bottom:8px">Джерела даних</div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px">
+          <span style="background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:3px 7px;font-size:10px;color:var(--muted)">OCHA</span>
+          <span style="background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:3px 7px;font-size:10px;color:var(--muted)">UNDP</span>
+          <span style="background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:3px 7px;font-size:10px;color:var(--muted)">DREAM</span>
+          <span style="background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:3px 7px;font-size:10px;color:var(--muted)">World Bank</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <div class="statusbar-item">Громад на карті: <strong>1 673</strong></div>
+  <div class="statusbar-item">Активний шар: <strong id="activeLayerName">Руйнування</strong></div>
+  <div class="statusbar-item">Масштаб: <strong id="zoomLevel">6</strong></div>
+  <div class="statusbar-item" style="margin-left:auto">Пілот v0.1 · Дані умовні</div>
+</div>
+
+<script>
+// ============================================================
+// DATA: Ukraine oblasts with mock hromada data
+// ============================================================
+
+const OBLASTS = [
+  { id: "kherson",    name: "Херсонська обл.",   color: "#7f1d1d", level: "critical", cx: 34.0, cy: 46.5 },
+  { id: "zaporizhia", name: "Запорізька обл.",    color: "#b45309", level: "high",     cx: 35.5, cy: 47.5 },
+  { id: "donetsk",    name: "Донецька обл.",      color: "#7f1d1d", level: "critical", cx: 37.8, cy: 48.0 },
+  { id: "luhansk",    name: "Луганська обл.",     color: "#374151", level: "occupied", cx: 39.3, cy: 48.8 },
+  { id: "kharkiv",    name: "Харківська обл.",    color: "#b45309", level: "high",     cx: 36.2, cy: 49.8 },
+  { id: "mykolaiv",   name: "Миколаївська обл.",  color: "#b45309", level: "high",     cx: 32.0, cy: 47.1 },
+  { id: "odesa",      name: "Одеська обл.",       color: "#d97706", level: "moderate", cx: 30.7, cy: 46.5 },
+  { id: "dnipro",     name: "Дніпропетровська",   color: "#d97706", level: "moderate", cx: 34.9, cy: 48.5 },
+  { id: "poltava",    name: "Полтавська обл.",    color: "#2d6a4f", level: "low",      cx: 33.8, cy: 49.6 },
+  { id: "sumy",       name: "Сумська обл.",       color: "#d97706", level: "moderate", cx: 34.2, cy: 50.9 },
+  { id: "chernihiv",  name: "Чернігівська обл.",  color: "#d97706", level: "moderate", cx: 31.5, cy: 51.5 },
+  { id: "kyiv",       name: "Київська обл.",      color: "#2d6a4f", level: "low",      cx: 30.9, cy: 50.4 },
+  { id: "zhytomyr",   name: "Житомирська обл.",   color: "#1a3a2e", level: "none",     cx: 28.5, cy: 50.3 },
+  { id: "vinnytsia",  name: "Вінницька обл.",     color: "#1a3a2e", level: "none",     cx: 28.3, cy: 49.2 },
+  { id: "khmelnytsk", name: "Хмельницька обл.",   color: "#1a3a2e", level: "none",     cx: 26.9, cy: 49.4 },
+  { id: "cherkasy",   name: "Черкаська обл.",     color: "#2d6a4f", level: "low",      cx: 31.5, cy: 49.4 },
+  { id: "kirovohrad", name: "Кіровоградська",     color: "#2d6a4f", level: "low",      cx: 32.3, cy: 48.5 },
+  { id: "lviv",       name: "Львівська обл.",     color: "#1a3a2e", level: "none",     cx: 24.0, cy: 49.8 },
+  { id: "ivanofrankiv",name: "Івано-Франківська", color: "#1a3a2e", level: "none",     cx: 24.7, cy: 48.9 },
+  { id: "ternopil",   name: "Тернопільська обл.", color: "#1a3a2e", level: "none",     cx: 25.6, cy: 49.5 },
+  { id: "rivne",      name: "Рівненська обл.",    color: "#1a3a2e", level: "none",     cx: 26.3, cy: 50.6 },
+  { id: "volyn",      name: "Волинська обл.",     color: "#1a3a2e", level: "none",     cx: 25.3, cy: 51.0 },
+  { id: "zakarpattia",name: "Закарпатська обл.",  color: "#1a3a2e", level: "none",     cx: 23.3, cy: 48.4 },
+  { id: "chernivtsi", name: "Чернівецька обл.",   color: "#1a3a2e", level: "none",     cx: 25.9, cy: 48.3 },
+];
+
+// Mock hromadas per oblast
+function generateHromadas(oblast) {
+  const destructionByLevel = {
+    critical: [72, 78, 81, 65, 88, 74, 69, 77, 83, 71],
+    high:     [52, 58, 61, 55, 64, 57, 53, 59, 62, 56],
+    moderate: [25, 32, 38, 28, 42, 35, 29, 41, 33, 27],
+    low:      [8, 12, 15, 9, 18, 11, 7, 14, 16, 10],
+    none:     [2, 4, 3, 1, 5, 2, 3, 4, 1, 2],
+    occupied: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  };
+
+  const names = {
+    kherson:     ["Каховська", "Херсонська", "Скадовська", "Бериславська", "Нова Каховка"],
+    zaporizhia:  ["Мелітопольська", "Запорізька", "Енергодарська", "Василівська", "Пологівська"],
+    donetsk:     ["Авдіївська", "Маріупольська", "Краматорська", "Слов'янська", "Бахмутська"],
+    kharkiv:     ["Харківська", "Ізюмська", "Куп'янська", "Балаклійська", "Вовчанська"],
+    mykolaiv:    ["Миколаївська", "Вознесенська", "Первомайська", "Очаківська", "Баштанська"],
+    luhansk:     ["Сєвєродонецька", "Лисичанська", "Рубіжанська", "Стаханівська", "Луганська"],
+    default:     ["Центральна", "Північна", "Південна", "Східна", "Західна"]
+  };
+
+  const oblastNames = names[oblast.id] || names.default;
+  const destVals = destructionByLevel[oblast.level];
+
+  return oblastNames.map((n, i) => {
+    const dest = destVals[i % destVals.length];
+    const recovery = Math.round(dest * (0.1 + Math.random() * 0.3));
+    const need = Math.round(dest * 0.6 + Math.random() * 20);
+    const aid = (Math.random() * 5 + 0.5).toFixed(1);
+    const infra = Math.round(recovery * (0.5 + Math.random() * 0.5));
+    const housing = Math.round(recovery * (0.6 + Math.random() * 0.4));
+    const social = Math.round(recovery * (0.7 + Math.random() * 0.3));
+    const edu = Math.round(recovery * (0.4 + Math.random() * 0.6));
+
+    const lvl = dest >= 70 ? 'critical' : dest >= 50 ? 'high' : dest >= 20 ? 'moderate' : 'low';
+    const colors = { critical:'#7f1d1d', high:'#b45309', moderate:'#d97706', low:'#2d6a4f', occupied:'#374151' };
+
+    return {
+      name: n + " громада",
+      oblast: oblast.name,
+      level: oblast.level === 'occupied' ? 'occupied' : lvl,
+      color: oblast.level === 'occupied' ? '#374151' : colors[lvl],
+      destruction: dest,
+      recovery,
+      need,
+      aid: `$${aid}M`,
+      infra, housing, social, edu,
+      hash: '0x' + Math.random().toString(16).substr(2,4) + '...' + Math.random().toString(16).substr(2,4),
+      lat: oblast.cy + (Math.random() - 0.5) * 1.5,
+      lng: oblast.cx + (Math.random() - 0.5) * 1.5,
+    };
+  });
+}
+
+const HROMADAS = {};
+OBLASTS.forEach(o => { HROMADAS[o.id] = generateHromadas(o); });
+
+// ============================================================
+// MAP INIT
+// ============================================================
+
+const map = L.map('map', {
+  center: [48.5, 31.5],
+  zoom: 6,
+  zoomControl: false,
+  attributionControl: false,
+  minZoom: 5,
+  maxZoom: 12
+});
+
+L.control.zoom({ position: 'bottomleft' }).addTo(map);
+
+// Dark tile layer
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
+  attribution: '',
+  subdomains: 'abcd',
+  maxZoom: 19
+}).addTo(map);
+
+// Ukraine boundary highlight
+const ukrBounds = [[44.2, 22.0], [52.4, 40.2]];
+L.rectangle(ukrBounds, {
+  color: 'rgba(59,130,246,0.3)',
+  weight: 1,
+  fillColor: 'transparent',
+  fillOpacity: 0,
+  dashArray: '4,4'
+}).addTo(map);
+
+// ============================================================
+// OBLAST CIRCLES (zoom 5-7)
+// ============================================================
+
+let oblastLayers = [];
+let hromadaLayers = [];
+let currentOblast = null;
+
+function getDestructionLabel(level) {
+  const labels = { critical:'Критичний', high:'Високий', moderate:'Помірний', low:'Низький', none:'Безпечна', occupied:'Окупована' };
+  return labels[level] || level;
+}
+
+OBLASTS.forEach(oblast => {
+  const circle = L.circleMarker([oblast.cy, oblast.cx], {
+    radius: 18,
+    fillColor: oblast.color,
+    color: 'rgba(255,255,255,0.15)',
+    weight: 1.5,
+    fillOpacity: 0.8,
+  });
+
+  const hromadas = HROMADAS[oblast.id];
+  const avgDest = Math.round(hromadas.reduce((a,h) => a + h.destruction, 0) / hromadas.length);
+
+  circle.bindTooltip(`
+    <div class="tooltip-inner">
+      <div class="tooltip-name">${oblast.name}</div>
+      <div class="tooltip-region">${getDestructionLabel(oblast.level).toUpperCase()}</div>
+      <div class="tooltip-metrics">
+        <div class="tooltip-metric">
+          <div class="tooltip-metric-val" style="color:#ef4444">${avgDest}%</div>
+          <div class="tooltip-metric-lbl">Руйн.</div>
+        </div>
+        <div class="tooltip-metric">
+          <div class="tooltip-metric-val" style="color:#22c55e">${Math.round(avgDest*0.2)}%</div>
+          <div class="tooltip-metric-lbl">Відн.</div>
+        </div>
+        <div class="tooltip-metric">
+          <div class="tooltip-metric-val" style="color:#3b82f6">${hromadas.length}</div>
+          <div class="tooltip-metric-lbl">Громад</div>
+        </div>
+      </div>
+    </div>
+  `, { permanent: false, direction: 'top', opacity: 1 });
+
+  circle.on('click', () => drillIntoOblast(oblast));
+  circle.on('mouseover', function() {
+    this.setStyle({ radius: 22, fillOpacity: 1 });
+  });
+  circle.on('mouseout', function() {
+    this.setStyle({ radius: 18, fillOpacity: 0.8 });
+  });
+
+  circle.addTo(map);
+  oblastLayers.push(circle);
+});
+
+// ============================================================
+// DRILL INTO OBLAST
+// ============================================================
+
+function drillIntoOblast(oblast) {
+  currentOblast = oblast;
+
+  // Hide oblast circles
+  oblastLayers.forEach(l => map.removeLayer(l));
+
+  // Clear old hromada layers
+  hromadaLayers.forEach(l => map.removeLayer(l));
+  hromadaLayers = [];
+
+  // Zoom to oblast region
+  const bounds = [
+    [oblast.cy - 1.2, oblast.cx - 1.8],
+    [oblast.cy + 1.2, oblast.cx + 1.8]
+  ];
+  map.fitBounds(bounds, { padding: [40, 40] });
+
+  // Show hromada circles
+  HROMADAS[oblast.id].forEach(h => {
+    const circle = L.circleMarker([h.lat, h.lng], {
+      radius: 14,
+      fillColor: h.color,
+      color: 'rgba(255,255,255,0.2)',
+      weight: 1.5,
+      fillOpacity: 0.85,
+    });
+
+    circle.bindTooltip(`
+      <div class="tooltip-inner">
+        <div class="tooltip-name">${h.name}</div>
+        <div class="tooltip-region">${h.oblast}</div>
+        <div class="tooltip-metrics">
+          <div class="tooltip-metric">
+            <div class="tooltip-metric-val" style="color:#ef4444">${h.destruction}%</div>
+            <div class="tooltip-metric-lbl">Руйн.</div>
+          </div>
+          <div class="tooltip-metric">
+            <div class="tooltip-metric-val" style="color:#22c55e">${h.recovery}%</div>
+            <div class="tooltip-metric-lbl">Відн.</div>
+          </div>
+          <div class="tooltip-metric">
+            <div class="tooltip-metric-val" style="color:#3b82f6">${h.aid}</div>
+            <div class="tooltip-metric-lbl">Допом.</div>
+          </div>
+        </div>
+      </div>
+    `, { permanent: false, direction: 'top', opacity: 1 });
+
+    circle.on('click', () => showHromadaDetail(h));
+    circle.on('mouseover', function() { this.setStyle({ radius: 18, fillOpacity: 1 }); });
+    circle.on('mouseout', function() { this.setStyle({ radius: 14, fillOpacity: 0.85 }); });
+
+    circle.addTo(map);
+    hromadaLayers.push(circle);
+  });
+
+  // Show breadcrumb
+  document.getElementById('breadcrumb').style.display = 'flex';
+  document.getElementById('breadcrumb-region').textContent = oblast.name;
+  document.getElementById('zoomHint').textContent = 'Клікніть на громаду для деталей';
+}
+
+function resetView() {
+  currentOblast = null;
+  hromadaLayers.forEach(l => map.removeLayer(l));
+  hromadaLayers = [];
+  oblastLayers.forEach(l => l.addTo(map));
+  map.setView([48.5, 31.5], 6);
+  document.getElementById('breadcrumb').style.display = 'none';
+  document.getElementById('detailPanel').classList.add('hidden');
+  document.getElementById('zoomHint').textContent = 'Клікніть на область для перегляду громад';
+}
+
+// ============================================================
+// HROMADA DETAIL PANEL
+// ============================================================
+
+const statusLabels = { critical:'Критична', high:'Високий ризик', moderate:'Помірна', low:'Стабілізується', occupied:'Окупована' };
+const statusClasses = { critical:'critical', high:'high', moderate:'moderate', low:'low', occupied:'occupied' };
+
+function showHromadaDetail(h) {
+  const panel = document.getElementById('detailPanel');
+  panel.classList.remove('hidden');
+
+  document.getElementById('detail-region').textContent = h.oblast;
+  document.getElementById('detail-name').textContent = h.name;
+
+  const badge = document.getElementById('detail-badge');
+  badge.textContent = statusLabels[h.level] || h.level;
+  badge.className = 'status-badge ' + (statusClasses[h.level] || 'moderate');
+
+  document.getElementById('detail-destruction').textContent = h.destruction + '%';
+  document.getElementById('detail-recovery').textContent = h.recovery + '%';
+  document.getElementById('detail-need').textContent = h.need + '%';
+  document.getElementById('detail-aid').textContent = h.aid;
+  document.getElementById('detail-hash').textContent = h.hash;
+
+  const setProgress = (id, fillId, val, color) => {
+    document.getElementById(id).textContent = val + '%';
+    const el = document.getElementById(fillId);
+    el.style.background = color;
+    setTimeout(() => el.style.width = val + '%', 50);
+  };
+
+  // Reset widths first
+  ['fill-infra','fill-housing','fill-social','fill-edu'].forEach(id => {
+    document.getElementById(id).style.width = '0%';
+  });
+
+  setTimeout(() => {
+    setProgress('prog-infra',    'fill-infra',    h.infra,    '#ef4444');
+    setProgress('prog-housing',  'fill-housing',  h.housing,  '#f59e0b');
+    setProgress('prog-social',   'fill-social',   h.social,   '#3b82f6');
+    setProgress('prog-edu',      'fill-edu',      h.edu,      '#a855f7');
+  }, 100);
+}
+
+// ============================================================
+// MAP EVENTS
+// ============================================================
+
+map.on('zoomend', () => {
+  const z = map.getZoom();
+  document.getElementById('zoomLevel').textContent = z;
+});
+
+map.on('click', (e) => {
+  // close detail if clicked on empty map
+  if (!currentOblast) return;
+});
+
+// ============================================================
+// LAYER SWITCHING
+// ============================================================
+
+const layerNames = { destruction:'Руйнування', recovery:'Відновлення', funding:'Фінансування', needs:'Потреби' };
+
+function setLayer(type) {
+  document.querySelectorAll('.layer-item').forEach((el, i) => {
+    const types = ['destruction','recovery','funding','needs'];
+    el.classList.toggle('active', types[i] === type);
+  });
+  document.getElementById('activeLayerName').textContent = layerNames[type] || type;
+
+  // Recolor circles based on layer
+  const colorMaps = {
+    recovery: (h) => {
+      const v = h.recovery;
+      return v < 10 ? '#7f1d1d' : v < 25 ? '#b45309' : v < 50 ? '#2d6a4f' : '#166534';
+    },
+    funding: (h) => {
+      const v = parseFloat(h.aid);
+      return v < 1 ? '#374151' : v < 2 ? '#1e3a5f' : v < 4 ? '#1d4ed8' : '#3b82f6';
+    },
+    needs: (h) => {
+      const v = h.need;
+      return v < 20 ? '#1a3a2e' : v < 40 ? '#d97706' : '#ef4444';
+    },
+    destruction: (h) => h.color,
+  };
+
+  if (currentOblast) {
+    hromadaLayers.forEach((layer, i) => {
+      const hromada = HROMADAS[currentOblast.id][i];
+      if (hromada) {
+        const newColor = colorMaps[type] ? colorMaps[type](hromada) : hromada.color;
+        layer.setStyle({ fillColor: newColor });
+      }
+    });
+  }
+}
+
+// ============================================================
+// SEARCH
+// ============================================================
+
+function handleSearch(val) {
+  if (!val || val.length < 2) return;
+  // Find matching oblast
+  const match = OBLASTS.find(o => o.name.toLowerCase().includes(val.toLowerCase()));
+  if (match) drillIntoOblast(match);
+}
+
+// ============================================================
+// TAB SWITCHING
+// ============================================================
+
+function switchTab(tab) {
+  ['layers','stats','alerts'].forEach(t => {
+    const el = document.getElementById('tab-' + t);
+    if (el) el.style.display = t === tab ? 'block' : 'none';
+  });
+  document.querySelectorAll('.panel-tab').forEach((btn, i) => {
+    const tabs = ['layers','stats','alerts'];
+    btn.classList.toggle('active', tabs[i] === tab);
+  });
+
+  if (tab === 'stats') renderStatsTab();
+}
+
+function renderStatsTab() {
+  const data = OBLASTS
+    .filter(o => o.level !== 'none')
+    .sort((a, b) => {
+      const lvlOrder = { critical:4, occupied:3, high:2, moderate:1, low:0 };
+      return (lvlOrder[b.level]||0) - (lvlOrder[a.level]||0);
+    })
+    .slice(0, 7);
+
+  document.getElementById('top-regions').innerHTML = data.map(o => {
+    const hromadas = HROMADAS[o.id];
+    const avg = Math.round(hromadas.reduce((a,h) => a + h.destruction, 0) / hromadas.length);
+    return `
+      <div style="background:var(--surface2);border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:10px;margin-bottom:6px;cursor:pointer" onclick="drillIntoOblast(${JSON.stringify(o).replace(/"/g,'&quot;')})">
+        <div style="width:10px;height:10px;border-radius:50%;background:${o.color};flex-shrink:0"></div>
+        <div style="flex:1">
+          <div style="font-size:12px;font-weight:500">${o.name}</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px">${hromadas.length} громад</div>
+        </div>
+        <div style="font-family:'Unbounded',sans-serif;font-size:14px;color:${o.color}">${avg}%</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ============================================================
+// LANG TOGGLE
+// ============================================================
+
+function setLang(lang) {
+  document.querySelectorAll('.lang-toggle button').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent === lang.toUpperCase());
+  });
+}
+
+// ============================================================
+// AI CHAT (mock responses)
+// ============================================================
+
+let aiOpen = false;
+
+function toggleAI() {
+  aiOpen = !aiOpen;
+  const box = document.getElementById('aiChatBox');
+  box.classList.toggle('open', aiOpen);
+}
+
+const aiResponses = {
+  'Де найбільше недофінансування?': 'Найбільший розрив між потребами та отриманою допомогою — у Херсонській (82% gap) та Запорізькій (74% gap) областях. Разом потребують ще ~$1.8B непокритих коштів.',
+  'Топ-3 найвразливіших громади': 'На основі composite score (руйнування + відновлення + доступ):\n1. Авдіївська — 88% руйнувань, відновлено 9%\n2. Маріупольська — 83%, відн. 6%\n3. Каховська — 78%, відн. 12%',
+  'Прогрес відновлення за регіонами': 'Найкращий прогрес: Полтавська (38%), Київська (31%), Чернігівська (27%).\nНайгірший: Луганська (окупована), Херсонська (8%), Запорізька (11%).',
+};
+
+function sendQuick(text) {
+  addMessage(text, 'user');
+  const response = aiResponses[text] || 'Аналізую дані по ' + text.toLowerCase() + '... (mock response — реальний AI потребує підключення API)';
+  setTimeout(() => addMessage(response, 'assistant'), 700);
+}
+
+function sendAI() {
+  const input = document.getElementById('aiInput');
+  const text = input.value.trim();
+  if (!text) return;
+  addMessage(text, 'user');
+  input.value = '';
+
+  // Show typing
+  const typingEl = document.createElement('div');
+  typingEl.className = 'typing-indicator';
+  typingEl.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+  document.getElementById('aiMessages').appendChild(typingEl);
+  scrollAI();
+
+  setTimeout(() => {
+    typingEl.remove();
+    const response = aiResponses[text] || `Запит "${text}" отримано. У повній версії тут буде відповідь AI з аналізом даних по громадах, регіонах і джерелах фінансування.`;
+    addMessage(response, 'assistant');
+  }, 1200);
+}
+
+function addMessage(text, role) {
+  const msgs = document.getElementById('aiMessages');
+  const el = document.createElement('div');
+  el.className = 'ai-msg ' + role;
+  el.textContent = text;
+  msgs.appendChild(el);
+  scrollAI();
+}
+
+function scrollAI() {
+  const msgs = document.getElementById('aiMessages');
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+// ============================================================
+// FILTER BY LEVEL
+// ============================================================
+
+function filterByLevel(level) {
+  if (!currentOblast) {
+    // Highlight oblasts of that level
+    oblastLayers.forEach((layer, i) => {
+      const o = OBLASTS[i];
+      const match = o.level === level;
+      layer.setStyle({ fillOpacity: match ? 1 : 0.2 });
+    });
+    setTimeout(() => {
+      oblastLayers.forEach(l => l.setStyle({ fillOpacity: 0.8 }));
+    }, 2000);
+  }
+}
+
+// Init zoom hint
+document.getElementById('zoomHint').textContent = 'Клікніть на область для перегляду громад';
+</script>
+
+</body>
+</html>
