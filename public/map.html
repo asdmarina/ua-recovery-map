@@ -1692,6 +1692,25 @@ function filterByLevel(level) {
 
 // Init zoom hint
 document.getElementById('zoomHint').textContent = 'Клікніть на область для перегляду громад';
+
+// Mobile bottom-sheet panel toggle
+(function () {
+  var btn = document.getElementById('mobilePanelToggle');
+  var panel = document.querySelector('.left-panel');
+  if (!btn || !panel) return;
+  btn.addEventListener('click', function () {
+    panel.classList.toggle('mobile-open');
+    btn.textContent = panel.classList.contains('mobile-open') ? '⌄' : '⌃';
+  });
+  panel.addEventListener('click', function (e) {
+    if (window.innerWidth > 768) return;
+    var rect = panel.getBoundingClientRect();
+    if (e.clientY - rect.top < 24) {
+      panel.classList.toggle('mobile-open');
+      btn.textContent = panel.classList.contains('mobile-open') ? '⌄' : '⌃';
+    }
+  });
+})();
 </script>
 
 </body>
