@@ -13,7 +13,7 @@ export const Route = createFileRoute("/dashboard")({
 export default function Dashboard() {
   return (
     <iframe
-      src="/map.html"
+      src="https://ua-recovery-map.uamap.workers.dev/map.html"
       style={{
         width: '100vw',
         height: '100vh',
