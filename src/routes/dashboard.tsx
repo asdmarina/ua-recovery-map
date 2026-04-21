@@ -42,7 +42,7 @@ function Dashboard() {
   return (
     <iframe
       ref={ref}
-      src="/dashboard.html"
+      src="/map.html"
       title="UA Recovery Map Dashboard"
       style={{ position: "fixed", inset: 0, width: "100%", height: "100%", border: 0 }}
     />
