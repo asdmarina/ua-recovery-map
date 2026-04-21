@@ -102,10 +102,13 @@ export const chatFn = createServerFn({ method: "POST" })
       );
 
       if (!res.ok) {
-        return {
-          text: "",
-          error: "AI server error",
-        };
+        if (res.status === 429) {
+          return { text: "", error: "Rate limit exceeded. Please try again shortly." };
+        }
+        if (res.status === 402) {
+          return { text: "", error: "AI credits exhausted. Please add credits in Lovable workspace settings." };
+        }
+        return { text: "", error: "AI server error" };
       }
 
       const json = await res.json();
