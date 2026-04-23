@@ -71,14 +71,14 @@ export const chatFn = createServerFn({ method: "POST" })
       };
     }
 
-    const apiKey = process.env.LOVABLE_API_KEY;
+    const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) {
       return { text: "", error: "AI service not configured" };
     }
 
     try {
       const res = await fetch(
-        "https://ai.gateway.lovable.dev/v1/chat/completions",
+        "https://api.groq.com/openai/v1/chat/completions",
         {
           method: "POST",
           headers: {
@@ -86,7 +86,7 @@ export const chatFn = createServerFn({ method: "POST" })
             Authorization: `Bearer ${apiKey}`,
           },
           body: JSON.stringify({
-            model: "google/gemini-3-flash-preview",
+            model: "llama-3.3-70b-versatile",
             messages: [
               {
                 role: "system",
