@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UA Recovery Map</title>
+<title>UA Rebuild — Карта відновлення України</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Unbounded:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -40,7 +40,7 @@
     overflow: hidden;
   }
 
-  /* HEADER */
+  /* HEADER - unified with landing */
   header {
     display: flex;
     align-items: center;
@@ -50,39 +50,76 @@
     background: var(--surface);
     border-bottom: 1px solid var(--border);
     flex-shrink: 0;
-    z-index: 100;
+    z-index: 200;
+    gap: 12px;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .back-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    text-decoration: none;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .back-btn:hover {
+    background: rgba(255,255,255,0.09);
+    color: var(--text);
+    border-color: rgba(255,255,255,0.15);
+  }
+
+  .header-divider {
+    width: 1px;
+    height: 20px;
+    background: var(--border);
+    flex-shrink: 0;
   }
 
   .logo {
     display: flex;
     align-items: center;
-    gap: 10px;
+    text-decoration: none;
   }
-
-  .logo-flag {
-    width: 28px;
-    height: 20px;
-    display: flex;
-    flex-direction: column;
-    border-radius: 3px;
-    overflow: hidden;
-  }
-  .logo-flag span { flex: 1; }
-  .logo-flag span:first-child { background: #005BBB; }
-  .logo-flag span:last-child { background: #FFD500; }
-
-  .logo-text {
-    font-family: 'Unbounded', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: -0.3px;
-  }
-  .logo-text em { color: var(--accent2); font-style: normal; }
 
   .header-right {
     display: flex;
     align-items: center;
     gap: 12px;
+  }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    width: 36px;
+    height: 36px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 0;
+  }
+  .hamburger span {
+    display: block;
+    width: 16px;
+    height: 1.5px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: all 0.2s;
   }
 
   .lang-toggle {
@@ -770,23 +807,115 @@
     color: var(--muted);
   }
   .statusbar-item strong { color: var(--text); }
+
+  /* MOBILE OVERLAY */
+  .panel-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 299;
+    backdrop-filter: blur(2px);
+  }
+  .panel-overlay.open { display: block; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .hamburger { display: flex; }
+    .updated-badge { display: none; }
+
+    /* left panel becomes a slide-in drawer */
+    .left-panel {
+      position: fixed;
+      top: 52px;
+      left: 0;
+      bottom: 0;
+      width: 280px;
+      z-index: 300;
+      transform: translateX(-100%);
+      transition: transform 0.25s ease;
+      box-shadow: 4px 0 24px rgba(0,0,0,0.4);
+    }
+    .left-panel.open {
+      transform: translateX(0);
+    }
+
+    /* right panel - slides up from bottom as a sheet */
+    .right-panel {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100% !important;
+      max-height: 55vh;
+      border-left: none;
+      border-top: 1px solid var(--border);
+      border-radius: 16px 16px 0 0;
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+      z-index: 301;
+    }
+    .right-panel:not(.hidden) {
+      transform: translateY(0);
+      display: flex;
+    }
+
+    /* AI panel repositioned */
+    .ai-panel {
+      bottom: 12px;
+      right: 12px;
+      left: 12px;
+      width: auto;
+    }
+    .ai-chat-box { max-height: 260px; }
+
+    /* map controls narrower */
+    .map-search { width: 200px; }
+
+    /* breadcrumb shorter */
+    .map-breadcrumb { font-size: 11px; padding: 6px 10px; }
+
+    /* status bar horizontal scroll */
+    .statusbar { overflow-x: auto; }
+    .statusbar::-webkit-scrollbar { display: none; }
+
+    /* header back btn label hidden */
+    .back-btn-label { display: none; }
+  }
+
+  @media (max-width: 480px) {
+    header { padding: 0 14px; }
+    .map-search { width: 160px; }
+    .map-breadcrumb { display: none; }
+    .ai-panel { right: 8px; left: 8px; bottom: 8px; }
+  }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">
-    <div class="logo-flag"><span></span><span></span></div>
-    <div class="logo-text">UA <em>Recovery</em> Map</div>
+  <div class="header-left">
+    <a href="/" class="back-btn" title="На головну">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <div class="header-divider"></div>
+    <a href="/" class="logo">
+      <img src="/logo.svg" alt="UA Rebuild" height="22" style="display:block;"/>
+    </a>
   </div>
   <div class="header-right">
-    <div class="updated-badge">Оновлено: 20 квіт 2026</div>
+    <div class="updated-badge">Оновлено: 2 трав 2026</div>
     <div class="lang-toggle">
       <button class="active" onclick="setLang('uk')">UA</button>
       <button onclick="setLang('en')">EN</button>
     </div>
+    <button class="hamburger" onclick="toggleMobilePanel()" aria-label="Меню">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </header>
+
+<div class="panel-overlay" id="panelOverlay" onclick="closeMobilePanel()"></div>
 
 <div class="main">
 
@@ -941,7 +1070,7 @@
       <div class="ai-chat-box" id="aiChatBox">
         <div class="ai-chat-header">
           <div class="ai-chat-title">
-            <span>🤖</span> UA Recovery AI
+            <span>🤖</span> UA Rebuild AI
           </div>
           <button onclick="toggleAI()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px">×</button>
         </div>
@@ -959,7 +1088,7 @@
         </div>
       </div>
       <button class="ai-toggle" onclick="toggleAI()">
-        <div class="ai-status"><div class="ai-dot"></div> UA Recovery AI</div>
+        <div class="ai-status"><div class="ai-dot"></div> UA Rebuild AI</div>
         <span style="font-size:10px;opacity:0.7">Аналітика ↑</span>
       </button>
     </div>
@@ -1557,7 +1686,29 @@ function filterByLevel(level) {
 
 // Init zoom hint
 document.getElementById('zoomHint').textContent = 'Клікніть на область для перегляду громад';
-</script>
+// Mobile panel
+function toggleMobilePanel() {
+  const panel = document.querySelector('.left-panel');
+  const overlay = document.getElementById('panelOverlay');
+  const isOpen = panel.classList.contains('open');
+  if (isOpen) {
+    panel.classList.remove('open');
+    overlay.classList.remove('open');
+  } else {
+    panel.classList.add('open');
+    overlay.classList.add('open');
+  }
+}
+function closeMobilePanel() {
+  document.querySelector('.left-panel').classList.remove('open');
+  document.getElementById('panelOverlay').classList.remove('open');
+}
+// Close panel on map click (mobile)
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('map').addEventListener('click', closeMobilePanel);
+});
+
+
 
 </body>
 </html>
