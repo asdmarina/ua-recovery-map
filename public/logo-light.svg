@@ -1,13 +1,13 @@
-<svg width="160" height="28" viewBox="0 0 160 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="14" cy="14" r="12.5" fill="rgba(0,91,187,0.08)"/>
-  <circle cx="14" cy="14" r="12" fill="#005BBB"/>
+<svg width="180" height="32" viewBox="0 0 180 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="16" cy="16" r="14.5" fill="rgba(0,91,187,0.09)"/>
+  <circle cx="16" cy="16" r="14" fill="#005BBB"/>
   <clipPath id="lc2">
-    <circle cx="14" cy="14" r="12"/>
+    <circle cx="16" cy="16" r="14"/>
   </clipPath>
-  <rect x="2" y="14" width="24" height="12" fill="#FFD700" clip-path="url(#lc2)"/>
-  <circle cx="23" cy="5" r="4" fill="rgba(0,0,0,0.15)"/>
-  <circle cx="23" cy="5" r="3.2" fill="#16A34A"/>
-  <circle cx="23.5" cy="4.5" r="0.9" fill="rgba(255,255,255,0.45)"/>
-  <text x="32" y="19" font-family="Inter,system-ui,sans-serif" font-weight="700" font-size="14" fill="#FFD700" letter-spacing="-0.2">ua</text>
-  <text x="49" y="19" font-family="Inter,system-ui,sans-serif" font-weight="900" font-size="14" fill="#0F172A" letter-spacing="-0.4">rebuild</text>
+  <rect x="2" y="16" width="28" height="14" fill="#FFD700" clip-path="url(#lc2)"/>
+  <circle cx="27" cy="6" r="5" fill="rgba(0,0,0,0.15)"/>
+  <circle cx="27" cy="6" r="3.8" fill="#16A34A"/>
+  <circle cx="27.8" cy="5.2" r="1.1" fill="rgba(255,255,255,0.45)"/>
+  <text x="36" y="22" font-family="Inter,system-ui,sans-serif" font-weight="700" font-size="16" fill="#E6A800" letter-spacing="-0.3">ua</text>
+  <text x="57" y="22" font-family="Inter,system-ui,sans-serif" font-weight="900" font-size="16" fill="#0F172A" letter-spacing="-0.5">rebuild</text>
 </svg>

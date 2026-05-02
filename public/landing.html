@@ -4,6 +4,11 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+<link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+<link rel="apple-touch-icon" sizes="180x180" href="/favicon-32.png"/>
+
 <!-- Primary SEO -->
 <title>UA Rebuild — Моніторинг відновлення України | Відкрита платформа</title>
 <meta name="description" content="UA Rebuild — відкрита платформа моніторингу відновлення України. Інтерактивна карта громад, блокчейн-верифікація допомоги, AI-аналітика даних OCHA та UNHCR в реальному часі."/>
@@ -90,7 +95,11 @@ html{font-family:'Inter',system-ui,sans-serif;color:var(--text);scroll-behavior:
 body{background:var(--white);}
 
 /* ─── NAV ─── */
-nav{position:sticky;top:0;z-index:200;height:58px;background:rgba(255,255,255,0.97);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 48px;gap:28px;}
+nav{position:sticky;top:0;z-index:200;height:52px;background:rgba(255,255,255,0.97);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 32px;gap:24px;}
+.nav-spacer{flex:1;}
+.nav-map-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#1B4FCC;color:white;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;transition:background 0.15s;white-space:nowrap;}
+.nav-map-btn:hover{background:#1741b0;}
+.nav-map-btn svg{flex-shrink:0;}
 .logo{display:flex;align-items:center;gap:10px;margin-right:auto;text-decoration:none;}
 .logo-flag{width:28px;height:20px;border-radius:3px;overflow:hidden;display:flex;flex-direction:column;}
 .logo-flag-top{flex:1;background:#005BBB;}
@@ -388,13 +397,18 @@ footer{background:var(--navy2);padding:40px 48px 22px;}
 <!-- NAV -->
 <nav>
   <a class="logo" href="/">
-    <img src="/logo-light.svg" alt="UA Rebuild" height="22" style="display:block;"/>
+    <img src="/logo-light.svg" alt="UA Rebuild" height="28" style="display:block;"/>
   </a>
   <a class="n-link" href="#problem" data-i18n="navProblem">Проблема</a>
   <a class="n-link" href="#solution" data-i18n="navSolution">Рішення</a>
   <a class="n-link" href="#live" data-i18n="navLive">Live-дані</a>
   <a class="n-link" href="#status" data-i18n="navStatus">Статус</a>
   <div class="n-pill"><span class="n-pill-dot"></span><span data-i18n="navPilot">Пілотний доступ</span></div>
+  <div class="nav-spacer"></div>
+  <a class="nav-map-btn" href="/map" data-i18n="navMap">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6-3V7m6 16l4.553 2.276A1 1 0 0021 24.382V8.618a1 1 0 00-.553-.894L15 5m0 18V5M9 7l6-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Карта
+  </a>
   <div class="lang-tog">
     <button class="lang-btn active" onclick="setLang('ua')">UA</button>
     <button class="lang-btn" onclick="setLang('en')">EN</button>
@@ -682,7 +696,7 @@ footer{background:var(--navy2);padding:40px 48px 22px;}
 <footer>
   <div class="ft-grid">
     <div>
-      <div class="ft-logo"><img src="/logo.svg" alt="UA Rebuild" height="20" style="display:block;"/></div>
+      <div class="ft-logo"><img src="/logo.svg" alt="UA Rebuild" height="28" style="display:block;"/></div>
       <div class="ft-desc">Публічна платформа моніторингу відновлення України. Відкриті дані, блокчейн-верифікація, AI-аналітика.</div>
     </div>
     <div class="ft-col"><h4>Платформа</h4><a href="#">Карта громад</a><a href="#">AI-аналітика</a><a href="#">Верифікація</a><a href="#">API</a></div>
@@ -862,7 +876,7 @@ else{window.addEventListener('load',initMaps);}
 // ── i18n ────────────────────────────────────────────
 const I18N_EN = {
   // nav
-  navProblem:'Problem', navSolution:'Solution', navLive:'Live data', navStatus:'Status', navPilot:'Pilot access',
+  navProblem:'Problem', navSolution:'Solution', navLive:'Live data', navStatus:'Status', navPilot:'Pilot access', navMap:'Map',
   // pilot modal
   pmTitle:'Join the pilot', pmSub:'Fill in the form — we will be in touch within a week.',
   pmName:'Name', pmOrg:'Organization', pmUse:'How will you use it?',
