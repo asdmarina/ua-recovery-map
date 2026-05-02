@@ -1,0 +1,11 @@
+<svg width="200" height="28" viewBox="0 0 200 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="14" cy="14" r="12" fill="#005BBB"/>
+  <clipPath id="logo-clip">
+    <circle cx="14" cy="14" r="12"/>
+  </clipPath>
+  <rect x="2" y="14" width="24" height="12" fill="#FFD700" clip-path="url(#logo-clip)"/>
+  <circle cx="23" cy="5" r="4" fill="#0B1829"/>
+  <circle cx="23" cy="5" r="3" fill="#22C55E"/>
+  <text x="34" y="20" font-family="Inter,sans-serif" font-weight="600" font-size="15" fill="#FFD700" letter-spacing="-0.3">ua</text>
+  <text x="52" y="20" font-family="Inter,sans-serif" font-weight="800" font-size="15" fill="white" letter-spacing="-0.5">rebuild</text>
+</svg>
