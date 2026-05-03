@@ -334,6 +334,27 @@ footer{background:var(--navy2);padding:40px 48px 22px;}
 .f-success-icon{width:54px;height:54px;border-radius:50%;background:rgba(74,222,128,.15);color:#4ADE80;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
 .f-success-msg{font-size:15px;color:rgba(255,255,255,.85);line-height:1.55;}
 
+/* VERIFICATION SECTION */
+.vrf-layout{display:grid;grid-template-columns:1fr 320px;gap:48px;align-items:start;}
+.vrf-item{display:flex;gap:20px;padding:20px 0;border-bottom:1px solid var(--border);}
+.vrf-item:last-child{border-bottom:none;}
+.vrf-num{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:#1B4FCC;opacity:.5;padding-top:2px;flex-shrink:0;width:24px;}
+.vrf-ttl{font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.vrf-txt{font-size:13px;color:var(--text2);line-height:1.7;}
+.vrf-card{background:var(--navy);border:1px solid rgba(22,163,74,.25);border-radius:14px;padding:22px;position:sticky;top:62px;}
+.vrf-card-head{display:flex;align-items:center;gap:8px;margin-bottom:18px;font-size:13px;font-weight:600;color:#4ade80;}
+.vrf-badge-live{margin-left:auto;background:rgba(22,163,74,.15);color:#4ade80;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;border:1px solid rgba(22,163,74,.25);letter-spacing:.5px;}
+.vrf-card-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);}
+.vrf-card-label{font-size:10px;color:rgba(255,255,255,.35);font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.5px;}
+.vrf-card-val{font-size:12px;font-weight:500;color:rgba(255,255,255,.85);}
+.vrf-green{color:#4ade80!important;font-weight:700!important;font-size:14px!important;}
+.vrf-chain-pill{background:rgba(234,179,8,.1);color:#fbbf24;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;border:1px solid rgba(234,179,8,.2);}
+.vrf-card-hash{padding:10px 0 4px;}
+.vrf-hash-val{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#60a5fa;margin-top:4px;word-break:break-all;}
+.vrf-scan-btn{display:flex;align-items:center;gap:6px;margin-top:14px;padding:9px 14px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2);border-radius:8px;color:#60a5fa;font-size:12px;font-weight:600;text-decoration:none;transition:background .15s;justify-content:center;}
+.vrf-scan-btn:hover{background:rgba(59,130,246,.2);}
+.vrf-card-footer{margin-top:12px;font-size:10px;color:rgba(255,255,255,.2);text-align:center;line-height:1.5;}
+
 /* ─── MOBILE (≤768px) ─── */
 @media (max-width:768px){
   nav{padding:0 16px;gap:12px;}
@@ -368,6 +389,8 @@ footer{background:var(--navy2);padding:40px 48px 22px;}
   .prob-grid{grid-template-columns:1fr;gap:24px;}
   .sol-grid{grid-template-columns:1fr;gap:14px;}
   .how-steps{grid-template-columns:1fr 1fr;gap:24px 12px;}
+  .vrf-layout{grid-template-columns:1fr;}
+  .vrf-card{position:static;}
   .how-line{display:none;}
 
   .live-grid{grid-template-columns:1fr;gap:16px;}
@@ -533,6 +556,85 @@ footer{background:var(--navy2);padding:40px 48px 22px;}
       <div class="how-step"><div class="how-n">2</div><div class="how-ttl">Карта</div><div class="how-txt">Обираєш регіон або громаду, активуєш шари — і одразу бачиш повну картину відновлення.</div></div>
       <div class="how-step"><div class="how-n">3</div><div class="how-ttl">Верифікація</div><div class="how-txt">Ключові записи отримують хеши на BNB Chain — незмінний публічний доказ стану даних.</div></div>
       <div class="how-step"><div class="how-n">4</div><div class="how-ttl">AI-запит</div><div class="how-txt">Задаєш питання чатботу — він аналізує структуровані дані і генерує відповідь з джерелами.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- VERIFICATION -->
+<section class="sec" id="verification">
+  <div class="wrap">
+    <div class="eyebrow">Прозорість</div>
+    <h2 class="sec-title">Як працює верифікація на BNB Chain</h2>
+    <p class="sec-desc">Публічний блокчейн як незалежний нотаріус — кожен запис перевіряється без посередників.</p>
+
+    <div class="vrf-layout">
+      <!-- Left: explanation -->
+      <div class="vrf-explain">
+        <div class="vrf-item">
+          <div class="vrf-num">01</div>
+          <div class="vrf-body">
+            <div class="vrf-ttl">Чому блокчейн, а не звичайна база даних?</div>
+            <div class="vrf-txt">У звичайній базі адміністратор може змінити або видалити запис — і ніхто цього не помітить. Блокчейн — це публічний реєстр де кожен запис отримує унікальний хеш. Змінити дані заднім числом неможливо: хеш зміниться і невідповідність стане видимою всім.</div>
+          </div>
+        </div>
+        <div class="vrf-item">
+          <div class="vrf-num">02</div>
+          <div class="vrf-body">
+            <div class="vrf-ttl">Що саме фіксується?</div>
+            <div class="vrf-txt">Не самі дані — а їх цифровий відбиток (хеш). Ми записуємо: стан даних по громаді на конкретну дату, суму отриманої допомоги, джерело та підтверджуючий документ. Хеш займає кілька байт, сам документ залишається у відкритому доступі.</div>
+          </div>
+        </div>
+        <div class="vrf-item">
+          <div class="vrf-num">03</div>
+          <div class="vrf-body">
+            <div class="vrf-ttl">Чому BNB Chain?</div>
+            <div class="vrf-txt">Низька вартість транзакцій (менше $0.01), висока швидкість, і сумісність з Ethereum-інструментами. Для гуманітарного проекту де кожна транзакція — запис про громаду, це критично. Ethereum mainnet коштував би в 100 разів дорожче.</div>
+          </div>
+        </div>
+        <div class="vrf-item">
+          <div class="vrf-num">04</div>
+          <div class="vrf-body">
+            <div class="vrf-ttl">Як перевірити самостійно?</div>
+            <div class="vrf-txt">Клікніть на хеш у правій панелі карти — відкриється BscScan, публічний Explorer BNB Chain. Там видно транзакцію, дату, адресу контракту. Нічого довіряти нам на слово не потрібно.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: visual chain card -->
+      <div class="vrf-card">
+        <div class="vrf-card-head">
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Верифікований запис</span>
+          <span class="vrf-badge-live">Live</span>
+        </div>
+        <div class="vrf-card-row">
+          <div class="vrf-card-label">Громада</div>
+          <div class="vrf-card-val">Каховська громада</div>
+        </div>
+        <div class="vrf-card-row">
+          <div class="vrf-card-label">Допомога зафіксована</div>
+          <div class="vrf-card-val vrf-green">$2.4M</div>
+        </div>
+        <div class="vrf-card-row">
+          <div class="vrf-card-label">Дата запису</div>
+          <div class="vrf-card-val">02.05.2026 · 09:14 UTC</div>
+        </div>
+        <div class="vrf-card-row">
+          <div class="vrf-card-label">Мережа</div>
+          <div class="vrf-card-val">
+            <span class="vrf-chain-pill">BNB Chain</span>
+          </div>
+        </div>
+        <div class="vrf-card-hash">
+          <div class="vrf-card-label">Tx Hash</div>
+          <div class="vrf-hash-val">0x6455a3...be93f1</div>
+        </div>
+        <a class="vrf-scan-btn" href="https://bscscan.com" target="_blank" rel="noopener">
+          <svg width="13" height="13" fill="none" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Перевірити на BscScan
+        </a>
+        <div class="vrf-card-footer">Дані не змінювались з моменту запису · Перевірено публічно</div>
+      </div>
     </div>
   </div>
 </section>

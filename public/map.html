@@ -539,25 +539,56 @@
 
   .blockchain-badge {
     display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 12px;
-    background: rgba(59,130,246,0.06);
-    border: 1px solid rgba(59,130,246,0.15);
+    align-items: flex-start;
+    gap: 10px;
+    padding: 11px 12px;
+    background: rgba(22,163,74,0.06);
+    border: 1px solid rgba(22,163,74,0.2);
     border-radius: 8px;
     margin-bottom: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s;
   }
-  .chain-icon { font-size: 14px; }
+  .blockchain-badge:hover { background: rgba(22,163,74,0.11); }
+  .chain-icon {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    background: rgba(22,163,74,0.12);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    color: #4ade80;
+  }
+  .chain-meta { flex: 1; min-width: 0; }
   .chain-label {
     font-size: 10px;
-    color: var(--muted);
+    color: #4ade80;
     font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .chain-verified-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: #4ade80;
+    animation: pulse 2s infinite;
+    flex-shrink: 0;
   }
   .chain-hash {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 11px;
     color: var(--accent2);
-    margin-top: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .chain-hint {
+    font-size: 9px;
+    color: var(--muted);
+    margin-top: 3px;
   }
 
   /* AI CHAT */
@@ -1164,13 +1195,19 @@
         </div>
       </div>
 
-      <div class="blockchain-badge">
-        <span class="chain-icon">🔗</span>
-        <div>
-          <div class="chain-label">BNB Chain · Верифіковано</div>
-          <div class="chain-hash" id="detail-hash">0x3f4a...c8d2</div>
+      <a class="blockchain-badge" id="chain-badge-link" href="https://bscscan.com/tx/" target="_blank" rel="noopener" title="Перевірити на BscScan">
+        <div class="chain-icon">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
-      </div>
+        <div class="chain-meta">
+          <div class="chain-label">
+            <span class="chain-verified-dot"></span>
+            BNB Chain · Верифіковано
+          </div>
+          <div class="chain-hash" id="detail-hash">0x3f4a...c8d2</div>
+          <div class="chain-hint">Клікніть щоб перевірити на BscScan →</div>
+        </div>
+      </a>
 
       <div style="margin-bottom:12px">
         <div class="section-label" style="margin-bottom:8px">Джерела даних</div>
