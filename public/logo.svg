@@ -7,6 +7,6 @@
   <circle cx="27" cy="6" r="5" fill="rgba(0,0,0,0.2)"/>
   <circle cx="27" cy="6" r="3.8" fill="#16A34A"/>
   <circle cx="27.8" cy="5.2" r="1.1" fill="rgba(255,255,255,0.45)"/>
-  <text x="36" y="22" font-family="Inter,system-ui,sans-serif" font-weight="700" font-size="16" fill="#FFD700" letter-spacing="-0.3">ua</text>
-  <text x="57" y="22" font-family="Inter,system-ui,sans-serif" font-weight="900" font-size="16" fill="#FFFFFF" letter-spacing="-0.5">rebuild</text>
+  <text x="36" y="22" font-family="Inter,system-ui,sans-serif" font-weight="800" font-size="16" fill="#FFD700" letter-spacing="-0.3">ua</text>
+  <text x="57" y="22" font-family="Inter,system-ui,sans-serif" font-weight="500" font-size="16" fill="#FFFFFF" letter-spacing="-0.3">rebuild</text>
 </svg>
