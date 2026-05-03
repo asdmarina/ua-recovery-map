@@ -964,28 +964,28 @@
     <div class="panel-content" id="tab-layers">
       <div class="section-label">Режим відображення</div>
       <div class="layer-list">
-        <div class="layer-item active" onclick="setLayer('destruction')">
+        <div class="layer-item active" data-layer="destruction" onclick="setLayer('destruction')">
           <div class="layer-item-left">
             <div class="layer-dot" style="background:#ef4444"></div>
             <div class="layer-name">Рівень руйнувань</div>
           </div>
           <div class="layer-check"></div>
         </div>
-        <div class="layer-item" onclick="setLayer('recovery')">
+        <div class="layer-item" data-layer="recovery" onclick="setLayer('recovery')">
           <div class="layer-item-left">
             <div class="layer-dot" style="background:#22c55e"></div>
             <div class="layer-name">Прогрес відновлення</div>
           </div>
           <div class="layer-check"></div>
         </div>
-        <div class="layer-item" onclick="setLayer('funding')">
+        <div class="layer-item" data-layer="funding" onclick="setLayer('funding')">
           <div class="layer-item-left">
             <div class="layer-dot" style="background:#3b82f6"></div>
             <div class="layer-name">Отримана допомога</div>
           </div>
           <div class="layer-check"></div>
         </div>
-        <div class="layer-item" onclick="setLayer('needs')">
+        <div class="layer-item" data-layer="needs" onclick="setLayer('needs')">
           <div class="layer-item-left">
             <div class="layer-dot" style="background:#a855f7"></div>
             <div class="layer-name">Потреби громад</div>
@@ -1429,11 +1429,29 @@ function drillIntoOblast(oblast) {
   ];
   map.fitBounds(bounds, { padding: [40, 40] });
 
-  // Show hromada circles
+  // Show hromada circles using current active layer color
+  const colorMaps = {
+    recovery: (h) => {
+      const v = h.recovery;
+      return v < 10 ? '#7f1d1d' : v < 25 ? '#b45309' : v < 50 ? '#2d6a4f' : '#166534';
+    },
+    funding: (h) => {
+      const v = parseFloat(h.aid);
+      return v < 1 ? '#374151' : v < 2 ? '#1e3a5f' : v < 4 ? '#1d4ed8' : '#3b82f6';
+    },
+    needs: (h) => {
+      const v = h.need;
+      return v < 20 ? '#1a3a2e' : v < 40 ? '#d97706' : '#ef4444';
+    },
+    destruction: (h) => h.color,
+  };
+  const activeLayerType = document.querySelector('.layer-item.active')?.dataset?.layer || 'destruction';
+  const getColor = colorMaps[activeLayerType] || colorMaps.destruction;
+
   HROMADAS[oblast.id].forEach(h => {
     const circle = L.circleMarker([h.lat, h.lng], {
       radius: 14,
-      fillColor: h.color,
+      fillColor: getColor(h),
       color: 'rgba(255,255,255,0.2)',
       weight: 1.5,
       fillOpacity: 0.85,
@@ -1552,9 +1570,8 @@ map.on('click', (e) => {
 const layerNames = { destruction:'Руйнування', recovery:'Відновлення', funding:'Фінансування', needs:'Потреби' };
 
 function setLayer(type) {
-  document.querySelectorAll('.layer-item').forEach((el, i) => {
-    const types = ['destruction','recovery','funding','needs'];
-    el.classList.toggle('active', types[i] === type);
+  document.querySelectorAll('.layer-item').forEach((el) => {
+    el.classList.toggle('active', el.dataset.layer === type);
   });
   document.getElementById('activeLayerName').textContent = layerNames[type] || type;
 
@@ -1575,7 +1592,7 @@ function setLayer(type) {
     destruction: (h) => h.color,
   };
 
-  if (currentOblast) {
+  if (currentOblast && hromadaLayers.length > 0) {
     hromadaLayers.forEach((layer, i) => {
       const hromada = HROMADAS[currentOblast.id][i];
       if (hromada) {

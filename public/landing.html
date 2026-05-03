@@ -142,7 +142,8 @@ nav{position:sticky;top:0;z-index:200;height:52px;background:rgba(255,255,255,0.
 .btn-hero-s:hover{border-color:rgba(255,255,255,.4);}
 .hero-right{position:relative;background:var(--navy2);}
 #heroMap{width:100%;height:100%;min-height:560px;}
-.hero-right::after{content:"";position:absolute;inset:0;box-shadow:inset 60px 0 80px -40px var(--navy);pointer-events:none;z-index:500;}
+.hero-right::before{content:"";position:absolute;inset:0;background:linear-gradient(to right,var(--navy) 0%,rgba(11,24,41,0.5) 35%,transparent 60%);pointer-events:none;z-index:2;}
+.hero-right::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,var(--navy) 0%,transparent 25%,transparent 75%,var(--navy) 100%);pointer-events:none;z-index:2;}
 .hero-map-label{position:absolute;top:16px;left:16px;z-index:1000;background:rgba(13,27,54,.85);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:8px 14px;font-size:11px;color:rgba(255,255,255,.6);backdrop-filter:blur(4px);}
 .hero-map-label strong{color:white;display:block;font-size:13px;margin-bottom:2px;}
 
@@ -399,7 +400,7 @@ footer{background:var(--navy2);padding:40px 48px 22px;}
   .hero-actions button{width:100%;}
   .hero-right{order:2;min-height:300px;}
   #heroMap{min-height:300px;height:300px;}
-  .hero-right::after{box-shadow:inset 0 60px 80px -40px var(--navy);}
+  .hero-right::after{background:linear-gradient(to bottom,var(--navy) 0%,transparent 20%,transparent 80%,var(--navy) 100%);}
 
   .stats{padding:0 16px;}
   .stats-inner{grid-template-columns:1fr 1fr;}
@@ -488,7 +489,7 @@ footer{background:var(--navy2);padding:40px 48px 22px;}
   </div>
   <div class="hero-right">
     <div class="hero-map-label"><strong>UA Rebuild</strong>Дані оновлено: Травень 2026</div>
-    <img src="/hero-map.png" alt="UA Rebuild карта" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;min-height:560px;"/>
+    <img src="/hero-map.png" alt="UA Rebuild карта" style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;min-height:560px;position:relative;z-index:1;"/>
   </div>
 </div>
 
