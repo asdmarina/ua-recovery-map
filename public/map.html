@@ -1541,6 +1541,8 @@ map.on('zoomend', () => {
 map.on('click', (e) => {
   // close detail if clicked on empty map
   if (!currentOblast) return;
+  // close mobile panel on map click
+  if (window.innerWidth <= 768) closeMobilePanel();
 });
 
 // ============================================================
@@ -1743,10 +1745,7 @@ function closeMobilePanel() {
   document.querySelector('.left-panel').classList.remove('open');
   document.getElementById('panelOverlay').classList.remove('open');
 }
-// Close panel on map click (mobile) - use Leaflet event
-map.on('click', function() {
-  if (window.innerWidth <= 768) closeMobilePanel();
-});
+// Close panel on map click (mobile) - handled by existing map.on('click') above
 
 </script>
 </body>

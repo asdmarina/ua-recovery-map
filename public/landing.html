@@ -488,7 +488,7 @@ footer{background:var(--navy2);padding:40px 48px 22px;}
   </div>
   <div class="hero-right">
     <div class="hero-map-label"><strong>UA Rebuild</strong>Дані оновлено: Травень 2026</div>
-    <div id="heroMap"></div>
+    <img src="/hero-map.png" alt="UA Rebuild карта" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;min-height:560px;"/>
   </div>
 </div>
 
@@ -766,6 +766,7 @@ footer{background:var(--navy2);padding:40px 48px 22px;}
             <div class="map-preview-hint">1 673 громади · Рівень руйнувань · AI-аналітика</div>
           </div>
         </div>
+        <div class="map-legend-row">
           <div class="leg-item"><div class="leg-dot" style="background:#16A34A;"></div>Активне відновлення</div>
           <div class="leg-item"><div class="leg-dot" style="background:#D97706;"></div>В процесі</div>
           <div class="leg-item"><div class="leg-dot" style="background:#DC2626;"></div>Критична потреба</div>
@@ -930,9 +931,7 @@ function initMaps(){
   };
 
   // Hero map
-  const heroMap = L.map('heroMap',{zoomControl:false,attributionControl:false,dragging:false,scrollWheelZoom:false,doubleClickZoom:false,keyboard:false}).setView([49,32],5);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',{opacity:0.4}).addTo(heroMap);
-  fetchGeoJSON(heroMap, true);
+  fetchGeoJSON = function(){}; // no-op, maps replaced with screenshots
 }
 
 function fetchGeoJSON(map, isDark){
