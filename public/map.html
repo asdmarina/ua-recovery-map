@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UA Rebuild — Карта відновлення України</title>
+<title>UA Rebuild - Ukraine Recovery Map</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
 <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
 <link rel="apple-touch-icon" sizes="180x180" href="/favicon-32.png"/>
@@ -21,8 +21,6 @@
     --muted: #6b7a99;
     --accent: #3b82f6;
     --accent2: #60a5fa;
-
-    /* destruction scale */
     --d-none:     #1a3a2e;
     --d-low:      #2d6a4f;
     --d-moderate: #f59e0b;
@@ -30,9 +28,7 @@
     --d-critical: #7f1d1d;
     --d-occupied: #374151;
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   body {
     font-family: 'Inter', sans-serif;
     background: var(--bg);
@@ -42,8 +38,6 @@
     flex-direction: column;
     overflow: hidden;
   }
-
-  /* HEADER - unified with landing */
   header {
     display: flex;
     align-items: center;
@@ -56,19 +50,10 @@
     z-index: 200;
     gap: 12px;
   }
-
-  .header-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
+  .header-left { display: flex; align-items: center; gap: 12px; }
   .back-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px;
     border-radius: 8px;
     background: rgba(255,255,255,0.05);
     border: 1px solid var(--border);
@@ -77,846 +62,231 @@
     transition: all 0.15s;
     flex-shrink: 0;
   }
-  .back-btn:hover {
-    background: rgba(255,255,255,0.09);
-    color: var(--text);
-    border-color: rgba(255,255,255,0.15);
-  }
-
-  .header-divider {
-    width: 1px;
-    height: 20px;
-    background: var(--border);
-    flex-shrink: 0;
-  }
-
-  .logo {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-  }
-
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
+  .back-btn:hover { background: rgba(255,255,255,0.09); color: var(--text); border-color: rgba(255,255,255,0.15); }
+  .header-divider { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
+  .logo { display: flex; align-items: center; text-decoration: none; }
+  .header-right { display: flex; align-items: center; gap: 12px; }
   .hamburger {
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 4px;
-    width: 36px;
-    height: 36px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    cursor: pointer;
-    padding: 0;
+    display: none; flex-direction: column; justify-content: center; align-items: center;
+    gap: 4px; width: 36px; height: 36px;
+    background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+    border-radius: 8px; cursor: pointer; padding: 0;
   }
-  .hamburger span {
-    display: block;
-    width: 16px;
-    height: 1.5px;
-    background: var(--text);
-    border-radius: 2px;
-    transition: all 0.2s;
-  }
-
-  .lang-toggle {
-    display: flex;
-    background: var(--surface2);
-    border-radius: 6px;
-    padding: 2px;
-    gap: 2px;
-  }
+  .hamburger span { display: block; width: 16px; height: 1.5px; background: var(--text); border-radius: 2px; transition: all 0.2s; }
+  .lang-toggle { display: flex; background: var(--surface2); border-radius: 6px; padding: 2px; gap: 2px; }
   .lang-toggle button {
-    background: none;
-    border: none;
-    color: var(--muted);
-    font-size: 11px;
-    font-weight: 600;
-    padding: 4px 8px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-family: 'Inter', sans-serif;
-    transition: all 0.15s;
+    background: none; border: none; color: var(--muted); font-size: 11px; font-weight: 600;
+    padding: 4px 8px; border-radius: 4px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.15s;
   }
-  .lang-toggle button.active {
-    background: var(--accent);
-    color: white;
-  }
-
+  .lang-toggle button.active { background: var(--accent); color: white; }
   .updated-badge {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    gap: 5px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--muted);
+    display: flex; align-items: center; gap: 5px;
   }
   .updated-badge::before {
-    content: '';
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: #22c55e;
-    animation: pulse 2s infinite;
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: #22c55e; animation: pulse 2s infinite;
   }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-  }
-
-  /* MAIN LAYOUT */
-  .main {
-    display: flex;
-    flex: 1;
-    overflow: hidden;
-  }
-
-  /* LEFT PANEL */
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+  .main { display: flex; flex: 1; overflow: hidden; }
   .left-panel {
-    width: 320px;
-    flex-shrink: 0;
-    background: var(--surface);
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+    width: 320px; flex-shrink: 0;
+    background: var(--surface); border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; overflow: hidden;
   }
-
-  .panel-tabs {
-    display: flex;
-    border-bottom: 1px solid var(--border);
-    padding: 0 4px;
-    flex-shrink: 0;
-  }
+  .panel-tabs { display: flex; border-bottom: 1px solid var(--border); padding: 0 4px; flex-shrink: 0; }
   .panel-tab {
-    flex: 1;
-    background: none;
-    border: none;
-    color: var(--muted);
-    font-size: 11px;
-    font-weight: 500;
-    padding: 12px 8px;
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    font-family: 'Inter', sans-serif;
-    transition: all 0.15s;
-    letter-spacing: 0.3px;
-    text-transform: uppercase;
+    flex: 1; background: none; border: none; color: var(--muted);
+    font-size: 11px; font-weight: 500; padding: 12px 8px;
+    cursor: pointer; border-bottom: 2px solid transparent;
+    font-family: 'Inter', sans-serif; transition: all 0.15s;
+    letter-spacing: 0.3px; text-transform: uppercase;
   }
-  .panel-tab.active {
-    color: var(--accent2);
-    border-bottom-color: var(--accent2);
-  }
-
-  .panel-content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 16px;
-  }
+  .panel-tab.active { color: var(--accent2); border-bottom-color: var(--accent2); }
+  .panel-content { flex: 1; overflow-y: auto; padding: 16px; }
   .panel-content::-webkit-scrollbar { width: 4px; }
   .panel-content::-webkit-scrollbar-track { background: transparent; }
   .panel-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-
-  /* LAYER CONTROLS */
   .section-label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    color: var(--muted);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 10px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--muted);
+    letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px;
   }
-
   .layer-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
-
   .layer-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 12px;
-    background: var(--surface2);
-    border-radius: 8px;
-    cursor: pointer;
-    border: 1px solid transparent;
-    transition: all 0.15s;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 12px; background: var(--surface2); border-radius: 8px;
+    cursor: pointer; border: 1px solid transparent; transition: all 0.15s;
   }
   .layer-item:hover { border-color: var(--border); }
   .layer-item.active { border-color: var(--accent); background: rgba(59,130,246,0.08); }
-
   .layer-item-left { display: flex; align-items: center; gap: 10px; }
   .layer-dot { width: 10px; height: 10px; border-radius: 50%; }
   .layer-name { font-size: 13px; font-weight: 500; }
   .layer-check {
-    width: 18px; height: 18px;
-    border-radius: 4px;
+    width: 18px; height: 18px; border-radius: 4px;
     border: 2px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center; transition: all 0.15s;
   }
-  .layer-item.active .layer-check {
-    background: var(--accent);
-    border-color: var(--accent);
-  }
-  .layer-item.active .layer-check::after {
-    content: '✓';
-    font-size: 11px;
-    color: white;
-    font-weight: 700;
-  }
-
-  /* LEGEND */
+  .layer-item.active .layer-check { background: var(--accent); border-color: var(--accent); }
+  .layer-item.active .layer-check::after { content: '✓'; font-size: 11px; color: white; font-weight: 700; }
   .legend { margin-bottom: 20px; }
   .legend-scale { display: flex; flex-direction: column; gap: 5px; }
   .legend-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 6px 10px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background 0.1s;
+    display: flex; align-items: center; gap: 10px; padding: 6px 10px;
+    border-radius: 6px; cursor: pointer; transition: background 0.1s;
   }
   .legend-row:hover { background: var(--surface2); }
-  .legend-color {
-    width: 14px; height: 14px;
-    border-radius: 3px;
-    flex-shrink: 0;
-  }
+  .legend-color { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
   .legend-label { font-size: 12px; color: var(--text); }
-  .legend-count {
-    margin-left: auto;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-  }
-
-  /* STATS WIDGET */
-  .stats-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 20px;
-  }
-  .stat-card {
-    background: var(--surface2);
-    border-radius: 8px;
-    padding: 12px;
-    border: 1px solid var(--border);
-  }
-  .stat-label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 9px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    margin-bottom: 6px;
-  }
-  .stat-value {
-    font-family: 'Unbounded', sans-serif;
-    font-size: 18px;
-    font-weight: 600;
-    line-height: 1;
-  }
+  .legend-count { margin-left: auto; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted); }
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+  .stat-card { background: var(--surface2); border-radius: 8px; padding: 12px; border: 1px solid var(--border); }
+  .stat-label { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+  .stat-value { font-family: 'Unbounded', sans-serif; font-size: 18px; font-weight: 600; line-height: 1; }
   .stat-value.red { color: #ef4444; }
   .stat-value.amber { color: #f59e0b; }
   .stat-value.green { color: #22c55e; }
   .stat-value.blue { color: var(--accent2); }
-  .stat-sub {
-    font-size: 10px;
-    color: var(--muted);
-    margin-top: 3px;
-  }
-
-  /* MAP CONTAINER */
-  .map-wrapper {
-    flex: 1;
-    position: relative;
-    overflow: hidden;
-  }
-
-  #map {
-    width: 100%;
-    height: 100%;
-    background: var(--bg) !important;
-  }
-
-  .leaflet-container {
-    background: #0d1420 !important;
-    font-family: 'Inter', sans-serif !important;
-  }
-
-  /* MAP OVERLAY CONTROLS */
-  .map-controls {
-    position: absolute;
-    top: 14px;
-    left: 14px;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
+  .stat-sub { font-size: 10px; color: var(--muted); margin-top: 3px; }
+  .map-wrapper { flex: 1; position: relative; overflow: hidden; }
+  #map { width: 100%; height: 100%; background: var(--bg) !important; }
+  .leaflet-container { background: #0d1420 !important; font-family: 'Inter', sans-serif !important; }
+  .map-controls { position: absolute; top: 14px; left: 14px; z-index: 1000; display: flex; flex-direction: column; gap: 6px; }
   .map-search {
-    display: flex;
-    align-items: center;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 8px 12px;
-    gap: 8px;
-    width: 260px;
-    backdrop-filter: blur(10px);
+    display: flex; align-items: center; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px;
+    gap: 8px; width: 260px; backdrop-filter: blur(10px);
   }
-  .map-search input {
-    background: none;
-    border: none;
-    outline: none;
-    color: var(--text);
-    font-size: 13px;
-    font-family: 'Inter', sans-serif;
-    flex: 1;
-  }
+  .map-search input { background: none; border: none; outline: none; color: var(--text); font-size: 13px; font-family: 'Inter', sans-serif; flex: 1; }
   .map-search input::placeholder { color: var(--muted); }
   .search-icon { color: var(--muted); font-size: 14px; }
-
   .zoom-hint {
-    background: rgba(17,24,39,0.85);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 6px 10px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    color: var(--muted);
-    backdrop-filter: blur(8px);
-    width: fit-content;
+    background: rgba(17,24,39,0.85); border: 1px solid var(--border);
+    border-radius: 6px; padding: 6px 10px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--muted);
+    backdrop-filter: blur(8px); width: fit-content;
   }
-
-  /* BREADCRUMB */
   .map-breadcrumb {
-    position: absolute;
-    top: 14px;
-    right: 14px;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(17,24,39,0.9);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 8px 12px;
-    font-size: 12px;
-    backdrop-filter: blur(10px);
+    position: absolute; top: 14px; right: 14px; z-index: 1000;
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(17,24,39,0.9); border: 1px solid var(--border);
+    border-radius: 8px; padding: 8px 12px; font-size: 12px; backdrop-filter: blur(10px);
   }
   .breadcrumb-item { color: var(--muted); cursor: pointer; }
   .breadcrumb-item:hover { color: var(--accent2); }
   .breadcrumb-item.current { color: var(--text); font-weight: 500; }
   .breadcrumb-sep { color: var(--border); }
-
-  /* RIGHT PANEL - DETAIL */
   .right-panel {
-    width: 300px;
-    flex-shrink: 0;
-    background: var(--surface);
-    border-left: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    transition: transform 0.25s ease;
+    width: 300px; flex-shrink: 0; background: var(--surface);
+    border-left: 1px solid var(--border); display: flex; flex-direction: column;
+    overflow: hidden; transition: transform 0.25s ease;
   }
   .right-panel.hidden { transform: translateX(300px); display: none; }
-
-  .detail-header {
-    padding: 16px;
-    border-bottom: 1px solid var(--border);
-    flex-shrink: 0;
-  }
-
-  .detail-region {
-    font-size: 10px;
-    color: var(--muted);
-    font-family: 'IBM Plex Mono', monospace;
-    margin-bottom: 4px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .detail-name {
-    font-family: 'Unbounded', sans-serif;
-    font-size: 15px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    line-height: 1.3;
-  }
-
-  .status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 600;
-    font-family: 'IBM Plex Mono', monospace;
-  }
+  .detail-header { padding: 16px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+  .detail-region { font-size: 10px; color: var(--muted); font-family: 'IBM Plex Mono', monospace; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .detail-name { font-family: 'Unbounded', sans-serif; font-size: 15px; font-weight: 600; margin-bottom: 8px; line-height: 1.3; }
+  .status-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; font-family: 'IBM Plex Mono', monospace; }
   .status-badge.critical { background: rgba(127,29,29,0.4); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
   .status-badge.high { background: rgba(180,60,0,0.3); color: #fdba74; border: 1px solid rgba(245,158,11,0.3); }
   .status-badge.moderate { background: rgba(161,98,7,0.25); color: #fcd34d; border: 1px solid rgba(245,158,11,0.2); }
   .status-badge.low { background: rgba(20,83,45,0.3); color: #86efac; border: 1px solid rgba(34,197,94,0.2); }
   .status-badge.occupied { background: rgba(55,65,81,0.5); color: #9ca3af; border: 1px solid rgba(107,114,128,0.3); }
-
-  .detail-scroll {
-    flex: 1;
-    overflow-y: auto;
-    padding: 16px;
-  }
+  .detail-scroll { flex: 1; overflow-y: auto; padding: 16px; }
   .detail-scroll::-webkit-scrollbar { width: 3px; }
   .detail-scroll::-webkit-scrollbar-thumb { background: var(--border); }
-
-  .metrics-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
-
-  .metric-card {
-    background: var(--surface2);
-    border-radius: 8px;
-    padding: 12px;
-    border: 1px solid var(--border);
-  }
-  .metric-label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 9px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    margin-bottom: 5px;
-  }
-  .metric-value {
-    font-family: 'Unbounded', sans-serif;
-    font-size: 22px;
-    font-weight: 600;
-    line-height: 1;
-  }
+  .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+  .metric-card { background: var(--surface2); border-radius: 8px; padding: 12px; border: 1px solid var(--border); }
+  .metric-label { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px; }
+  .metric-value { font-family: 'Unbounded', sans-serif; font-size: 22px; font-weight: 600; line-height: 1; }
   .metric-value.danger { color: #ef4444; }
   .metric-value.warning { color: #f59e0b; }
   .metric-value.success { color: #22c55e; }
   .metric-value.info { color: var(--accent2); }
-
   .progress-section { margin-bottom: 16px; }
   .progress-section .section-label { margin-bottom: 8px; }
-
-  .progress-item {
-    margin-bottom: 10px;
-  }
-  .progress-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 5px;
-  }
+  .progress-item { margin-bottom: 10px; }
+  .progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
   .progress-name { font-size: 12px; color: var(--text); }
   .progress-pct { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted); }
-
-  .progress-bar {
-    height: 5px;
-    background: var(--surface2);
-    border-radius: 3px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    border-radius: 3px;
-    transition: width 0.6s ease;
-  }
-
+  .progress-bar { height: 5px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
   .blockchain-badge {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 11px 12px;
-    background: rgba(22,163,74,0.06);
-    border: 1px solid rgba(22,163,74,0.2);
-    border-radius: 8px;
-    margin-bottom: 16px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background 0.15s;
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 11px 12px; background: rgba(22,163,74,0.06);
+    border: 1px solid rgba(22,163,74,0.2); border-radius: 8px; margin-bottom: 16px;
+    cursor: pointer; text-decoration: none; transition: background 0.15s;
   }
   .blockchain-badge:hover { background: rgba(22,163,74,0.11); }
-  .chain-icon {
-    width: 28px; height: 28px;
-    border-radius: 6px;
-    background: rgba(22,163,74,0.12);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    color: #4ade80;
-  }
+  .chain-icon { width: 28px; height: 28px; border-radius: 6px; background: rgba(22,163,74,0.12); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #4ade80; }
   .chain-meta { flex: 1; min-width: 0; }
-  .chain-label {
-    font-size: 10px;
-    color: #4ade80;
-    font-family: 'IBM Plex Mono', monospace;
-    font-weight: 600;
-    letter-spacing: 0.4px;
-    text-transform: uppercase;
-    margin-bottom: 2px;
-    display: flex; align-items: center; gap: 5px;
-  }
-  .chain-verified-dot {
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    background: #4ade80;
-    animation: pulse 2s infinite;
-    flex-shrink: 0;
-  }
-  .chain-hash {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    color: var(--accent2);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .chain-hint {
-    font-size: 9px;
-    color: var(--muted);
-    margin-top: 3px;
-  }
-
-  /* AI CHAT */
-  .ai-panel {
-    position: absolute;
-    bottom: 16px;
-    right: 16px;
-    z-index: 1000;
-    width: 300px;
-  }
-
+  .chain-label { font-size: 10px; color: #4ade80; font-family: 'IBM Plex Mono', monospace; font-weight: 600; letter-spacing: 0.4px; text-transform: uppercase; margin-bottom: 2px; display: flex; align-items: center; gap: 5px; }
+  .chain-verified-dot { width: 5px; height: 5px; border-radius: 50%; background: #4ade80; animation: pulse 2s infinite; flex-shrink: 0; }
+  .chain-hash { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--accent2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .chain-hint { font-size: 9px; color: var(--muted); margin-top: 3px; }
+  .ai-panel { position: absolute; bottom: 16px; right: 16px; z-index: 1000; width: 300px; }
   .ai-toggle {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--accent);
-    border: none;
-    border-radius: 10px;
-    padding: 10px 14px;
-    cursor: pointer;
-    color: white;
-    font-size: 12px;
-    font-weight: 600;
-    font-family: 'Inter', sans-serif;
-    width: 100%;
-    justify-content: space-between;
-    transition: background 0.15s;
+    display: flex; align-items: center; gap: 8px; background: var(--accent);
+    border: none; border-radius: 10px; padding: 10px 14px; cursor: pointer;
+    color: white; font-size: 12px; font-weight: 600; font-family: 'Inter', sans-serif;
+    width: 100%; justify-content: space-between; transition: background 0.15s;
     box-shadow: 0 4px 20px rgba(59,130,246,0.35);
   }
   .ai-toggle:hover { background: #2563eb; }
-
-  .ai-status {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .ai-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: #86efac;
-    animation: pulse 2s infinite;
-  }
-
-  .ai-chat-box {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    margin-bottom: 8px;
-    overflow: hidden;
-    display: none;
-    flex-direction: column;
-    max-height: 320px;
-  }
+  .ai-status { display: flex; align-items: center; gap: 6px; }
+  .ai-dot { width: 6px; height: 6px; border-radius: 50%; background: #86efac; animation: pulse 2s infinite; }
+  .ai-chat-box { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 8px; overflow: hidden; display: none; flex-direction: column; max-height: 320px; }
   .ai-chat-box.open { display: flex; }
-
-  .ai-chat-header {
-    padding: 10px 14px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .ai-chat-title {
-    font-size: 12px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .ai-messages {
-    flex: 1;
-    overflow-y: auto;
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    min-height: 120px;
-    max-height: 200px;
-  }
+  .ai-chat-header { padding: 10px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .ai-chat-title { font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+  .ai-messages { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; min-height: 120px; max-height: 200px; }
   .ai-messages::-webkit-scrollbar { width: 3px; }
   .ai-messages::-webkit-scrollbar-thumb { background: var(--border); }
-
-  .ai-msg {
-    font-size: 12px;
-    line-height: 1.5;
-    padding: 8px 10px;
-    border-radius: 8px;
-    max-width: 90%;
-    animation: fadeUp 0.2s ease;
-  }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .ai-msg.user {
-    background: var(--accent);
-    color: white;
-    align-self: flex-end;
-    border-bottom-right-radius: 2px;
-  }
-  .ai-msg.assistant {
-    background: var(--surface2);
-    color: var(--text);
-    align-self: flex-start;
-    border-bottom-left-radius: 2px;
-  }
-
-  .ai-quick-prompts {
-    padding: 8px 12px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    border-top: 1px solid var(--border);
-  }
-  .quick-prompt {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 4px 10px;
-    font-size: 10px;
-    color: var(--muted);
-    cursor: pointer;
-    transition: all 0.15s;
-    font-family: 'Inter', sans-serif;
-  }
-  .quick-prompt:hover {
-    color: var(--accent2);
-    border-color: var(--accent2);
-    background: rgba(59,130,246,0.08);
-  }
-
-  .ai-input-row {
-    display: flex;
-    gap: 6px;
-    padding: 10px 12px;
-    border-top: 1px solid var(--border);
-  }
-  .ai-input {
-    flex: 1;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 7px 10px;
-    color: var(--text);
-    font-size: 12px;
-    font-family: 'Inter', sans-serif;
-    outline: none;
-    transition: border-color 0.15s;
-  }
+  .ai-msg { font-size: 12px; line-height: 1.5; padding: 8px 10px; border-radius: 8px; max-width: 90%; animation: fadeUp 0.2s ease; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  .ai-msg.user { background: var(--accent); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+  .ai-msg.assistant { background: var(--surface2); color: var(--text); align-self: flex-start; border-bottom-left-radius: 2px; }
+  .ai-quick-prompts { padding: 8px 12px; display: flex; flex-wrap: wrap; gap: 5px; border-top: 1px solid var(--border); }
+  .quick-prompt { background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 4px 10px; font-size: 10px; color: var(--muted); cursor: pointer; transition: all 0.15s; font-family: 'Inter', sans-serif; }
+  .quick-prompt:hover { color: var(--accent2); border-color: var(--accent2); background: rgba(59,130,246,0.08); }
+  .ai-input-row { display: flex; gap: 6px; padding: 10px 12px; border-top: 1px solid var(--border); }
+  .ai-input { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 7px 10px; color: var(--text); font-size: 12px; font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.15s; }
   .ai-input:focus { border-color: var(--accent); }
   .ai-input::placeholder { color: var(--muted); }
-
-  .ai-send {
-    background: var(--accent);
-    border: none;
-    border-radius: 6px;
-    padding: 7px 10px;
-    color: white;
-    cursor: pointer;
-    font-size: 12px;
-    transition: background 0.15s;
-  }
+  .ai-send { background: var(--accent); border: none; border-radius: 6px; padding: 7px 10px; color: white; cursor: pointer; font-size: 12px; transition: background 0.15s; }
   .ai-send:hover { background: #2563eb; }
-
-  /* LOADING */
-  .typing-indicator {
-    display: flex;
-    gap: 4px;
-    align-items: center;
-    padding: 8px 12px;
-  }
-  .typing-dot {
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    background: var(--muted);
-    animation: typingBounce 1.2s infinite;
-  }
+  .typing-indicator { display: flex; gap: 4px; align-items: center; padding: 8px 12px; }
+  .typing-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--muted); animation: typingBounce 1.2s infinite; }
   .typing-dot:nth-child(2) { animation-delay: 0.15s; }
   .typing-dot:nth-child(3) { animation-delay: 0.3s; }
-  @keyframes typingBounce {
-    0%, 60%, 100% { transform: translateY(0); }
-    30% { transform: translateY(-5px); }
-  }
-
-  /* TOOLTIP */
-  .leaflet-tooltip {
-    background: var(--surface) !important;
-    border: 1px solid var(--border) !important;
-    border-radius: 8px !important;
-    color: var(--text) !important;
-    font-family: 'Inter', sans-serif !important;
-    padding: 0 !important;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.5) !important;
-  }
+  @keyframes typingBounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
+  .leaflet-tooltip { background: var(--surface) !important; border: 1px solid var(--border) !important; border-radius: 8px !important; color: var(--text) !important; font-family: 'Inter', sans-serif !important; padding: 0 !important; box-shadow: 0 8px 32px rgba(0,0,0,0.5) !important; }
   .leaflet-tooltip::before { display: none !important; }
-
-  .tooltip-inner {
-    padding: 10px 12px;
-    min-width: 160px;
-  }
-  .tooltip-name {
-    font-weight: 600;
-    font-size: 13px;
-    margin-bottom: 6px;
-    color: var(--text);
-  }
-  .tooltip-region {
-    font-size: 10px;
-    color: var(--muted);
-    margin-bottom: 8px;
-    font-family: 'IBM Plex Mono', monospace;
-  }
-  .tooltip-metrics {
-    display: flex;
-    gap: 12px;
-  }
+  .tooltip-inner { padding: 10px 12px; min-width: 160px; }
+  .tooltip-name { font-weight: 600; font-size: 13px; margin-bottom: 6px; color: var(--text); }
+  .tooltip-region { font-size: 10px; color: var(--muted); margin-bottom: 8px; font-family: 'IBM Plex Mono', monospace; }
+  .tooltip-metrics { display: flex; gap: 12px; }
   .tooltip-metric { text-align: center; }
-  .tooltip-metric-val {
-    font-family: 'Unbounded', sans-serif;
-    font-size: 15px;
-    font-weight: 600;
-    line-height: 1;
-  }
-  .tooltip-metric-lbl {
-    font-size: 9px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-top: 2px;
-  }
-
-  /* BOTTOM STATUS BAR */
-  .statusbar {
-    height: 28px;
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    padding: 0 16px;
-    gap: 20px;
-    flex-shrink: 0;
-  }
-  .statusbar-item {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    color: var(--muted);
-  }
+  .tooltip-metric-val { font-family: 'Unbounded', sans-serif; font-size: 15px; font-weight: 600; line-height: 1; }
+  .tooltip-metric-lbl { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+  .statusbar { height: 28px; background: var(--surface); border-top: 1px solid var(--border); display: flex; align-items: center; padding: 0 16px; gap: 20px; flex-shrink: 0; }
+  .statusbar-item { display: flex; align-items: center; gap: 5px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--muted); }
   .statusbar-item strong { color: var(--text); }
-
-  /* MOBILE OVERLAY */
-  .panel-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.6);
-    z-index: 299;
-    backdrop-filter: blur(2px);
-  }
+  .panel-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 299; backdrop-filter: blur(2px); }
   .panel-overlay.open { display: block; }
-
-  /* ── RESPONSIVE ── */
   @media (max-width: 768px) {
     .hamburger { display: flex; }
     .updated-badge { display: none; }
-
-    /* left panel becomes a slide-in drawer */
-    .left-panel {
-      position: fixed;
-      top: 52px;
-      left: 0;
-      bottom: 0;
-      width: 280px;
-      z-index: 300;
-      transform: translateX(-100%);
-      transition: transform 0.25s ease;
-      box-shadow: 4px 0 24px rgba(0,0,0,0.4);
-    }
-    .left-panel.open {
-      transform: translateX(0);
-    }
-
-    /* right panel - slides up from bottom as a sheet */
-    .right-panel {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      width: 100% !important;
-      max-height: 55vh;
-      border-left: none;
-      border-top: 1px solid var(--border);
-      border-radius: 16px 16px 0 0;
-      transform: translateY(100%);
-      transition: transform 0.3s ease;
-      z-index: 301;
-    }
-    .right-panel:not(.hidden) {
-      transform: translateY(0);
-      display: flex;
-    }
-
-    /* AI panel repositioned */
-    .ai-panel {
-      bottom: 12px;
-      right: 12px;
-      left: 12px;
-      width: auto;
-    }
+    .left-panel { position: fixed; top: 52px; left: 0; bottom: 0; width: 280px; z-index: 300; transform: translateX(-100%); transition: transform 0.25s ease; box-shadow: 4px 0 24px rgba(0,0,0,0.4); }
+    .left-panel.open { transform: translateX(0); }
+    .right-panel { position: fixed; bottom: 0; left: 0; right: 0; width: 100% !important; max-height: 55vh; border-left: none; border-top: 1px solid var(--border); border-radius: 16px 16px 0 0; transform: translateY(100%); transition: transform 0.3s ease; z-index: 301; }
+    .right-panel:not(.hidden) { transform: translateY(0); display: flex; }
+    .ai-panel { bottom: 12px; right: 12px; left: 12px; width: auto; }
     .ai-chat-box { max-height: 260px; }
-
-    /* map controls narrower */
     .map-search { width: 200px; }
-
-    /* breadcrumb shorter */
     .map-breadcrumb { font-size: 11px; padding: 6px 10px; }
-
-    /* status bar horizontal scroll */
     .statusbar { overflow-x: auto; }
     .statusbar::-webkit-scrollbar { display: none; }
-
-    /* header back btn label hidden */
-    .back-btn-label { display: none; }
   }
-
   @media (max-width: 480px) {
     header { padding: 0 14px; }
     .map-search { width: 160px; }
@@ -952,8 +322,6 @@
 <div class="panel-overlay" id="panelOverlay" onclick="closeMobilePanel()"></div>
 
 <div class="main">
-
-  <!-- LEFT PANEL -->
   <div class="left-panel">
     <div class="panel-tabs">
       <button class="panel-tab active" onclick="switchTab('layers')">Шари</button>
@@ -995,8 +363,8 @@
       </div>
 
       <div class="legend">
-        <div class="section-label">Легенда — Руйнування</div>
-        <div class="legend-scale">
+        <div class="section-label" id="legendTitle">Легенда - Руйнування</div>
+        <div class="legend-scale" id="legendScale">
           <div class="legend-row" onclick="filterByLevel('critical')">
             <div class="legend-color" style="background:var(--d-critical)"></div>
             <div class="legend-label">Критичні (>70%)</div>
@@ -1004,17 +372,17 @@
           </div>
           <div class="legend-row" onclick="filterByLevel('high')">
             <div class="legend-color" style="background:var(--d-high)"></div>
-            <div class="legend-label">Високі (50–70%)</div>
+            <div class="legend-label">Високі (50-70%)</div>
             <div class="legend-count">89</div>
           </div>
           <div class="legend-row" onclick="filterByLevel('moderate')">
             <div class="legend-color" style="background:var(--d-moderate)"></div>
-            <div class="legend-label">Помірні (20–50%)</div>
+            <div class="legend-label">Помірні (20-50%)</div>
             <div class="legend-count">214</div>
           </div>
           <div class="legend-row" onclick="filterByLevel('low')">
             <div class="legend-color" style="background:var(--d-low)"></div>
-            <div class="legend-label">Низькі (<20%)</div>
+            <div class="legend-label">Низькі (&lt;20%)</div>
             <div class="legend-count">612</div>
           </div>
           <div class="legend-row">
@@ -1025,7 +393,7 @@
           <div class="legend-row">
             <div class="legend-color" style="background:var(--d-occupied)"></div>
             <div class="legend-label">Окуповані</div>
-            <div class="legend-count">—</div>
+            <div class="legend-count">-</div>
           </div>
         </div>
       </div>
@@ -1056,39 +424,36 @@
     </div>
 
     <div class="panel-content" id="tab-stats" style="display:none">
-      <div class="section-label">Топ-5 областей за руйнуваннями</div>
-      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
-        <div id="top-regions"></div>
-      </div>
+      <div class="section-label">Топ областей за руйнуваннями</div>
+      <div id="top-regions"></div>
     </div>
 
     <div class="panel-content" id="tab-alerts" style="display:none">
       <div class="section-label">Останні оновлення</div>
       <div style="display:flex;flex-direction:column;gap:8px">
         <div style="background:var(--surface2);border-radius:8px;padding:12px;border-left:3px solid #ef4444">
-          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">18 квіт 2026 · Критично</div>
-          <div style="font-size:12px">Авдіївська громада — новий удар по інфраструктурі, потреба $12M</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">18 квіт 2026 - Критично</div>
+          <div style="font-size:12px">Авдіївська громада - новий удар по інфраструктурі, потреба $12M</div>
         </div>
         <div style="background:var(--surface2);border-radius:8px;padding:12px;border-left:3px solid #f59e0b">
-          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">17 квіт 2026 · Оновлення</div>
-          <div style="font-size:12px">Херсон — завершено 3 об'єкти відновлення житла (240 родин)</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">17 квіт 2026 - Оновлення</div>
+          <div style="font-size:12px">Херсон - завершено 3 об'єкти відновлення житла (240 родин)</div>
         </div>
         <div style="background:var(--surface2);border-radius:8px;padding:12px;border-left:3px solid #22c55e">
-          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">16 квіт 2026 · Фінансування</div>
-          <div style="font-size:12px">ЄС виділив €180M для Харківської обл. — 67 громад</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">16 квіт 2026 - Фінансування</div>
+          <div style="font-size:12px">ЄС виділив €180M для Харківської обл. - 67 громад</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- MAP -->
   <div class="map-wrapper">
     <div class="map-controls">
       <div class="map-search">
         <span class="search-icon">⌕</span>
         <input type="text" placeholder="Знайти громаду або область..." id="searchInput" oninput="handleSearch(this.value)">
       </div>
-      <div class="zoom-hint" id="zoomHint">Масштабуйте для перегляду громад</div>
+      <div class="zoom-hint" id="zoomHint">Клікніть на область для перегляду громад</div>
     </div>
 
     <div class="map-breadcrumb" id="breadcrumb" style="display:none">
@@ -1099,13 +464,10 @@
 
     <div id="map"></div>
 
-    <!-- AI Panel -->
     <div class="ai-panel">
       <div class="ai-chat-box" id="aiChatBox">
         <div class="ai-chat-header">
-          <div class="ai-chat-title">
-            <span>🤖</span> UA Rebuild AI
-          </div>
+          <div class="ai-chat-title"><span>🤖</span> UA Rebuild AI</div>
           <button onclick="toggleAI()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px">×</button>
         </div>
         <div class="ai-messages" id="aiMessages">
@@ -1128,87 +490,48 @@
     </div>
   </div>
 
-  <!-- RIGHT DETAIL PANEL -->
   <div class="right-panel hidden" id="detailPanel">
     <div class="detail-header">
-      <div class="detail-region" id="detail-region">Область · Район</div>
+      <div class="detail-region" id="detail-region">Область - Район</div>
       <div class="detail-name" id="detail-name">Громада</div>
       <span class="status-badge critical" id="detail-badge">Критична</span>
     </div>
     <div class="detail-scroll">
       <div class="metrics-grid">
-        <div class="metric-card">
-          <div class="metric-label">Руйнування</div>
-          <div class="metric-value danger" id="detail-destruction">—</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">Відновлено</div>
-          <div class="metric-value success" id="detail-recovery">—</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">Потреба</div>
-          <div class="metric-value warning" id="detail-need">—</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">Допомога</div>
-          <div class="metric-value info" id="detail-aid">—</div>
-        </div>
+        <div class="metric-card"><div class="metric-label">Руйнування</div><div class="metric-value danger" id="detail-destruction">-</div></div>
+        <div class="metric-card"><div class="metric-label">Відновлено</div><div class="metric-value success" id="detail-recovery">-</div></div>
+        <div class="metric-card"><div class="metric-label">Потреба</div><div class="metric-value warning" id="detail-need">-</div></div>
+        <div class="metric-card"><div class="metric-label">Допомога</div><div class="metric-value info" id="detail-aid">-</div></div>
       </div>
-
       <div class="progress-section">
         <div class="section-label">Секторальний прогрес</div>
         <div class="progress-item">
-          <div class="progress-header">
-            <span class="progress-name">Інфраструктура</span>
-            <span class="progress-pct" id="prog-infra">—%</span>
-          </div>
-          <div class="progress-bar">
-            <div class="progress-fill" id="fill-infra" style="background:#ef4444;width:0%"></div>
-          </div>
+          <div class="progress-header"><span class="progress-name">Інфраструктура</span><span class="progress-pct" id="prog-infra">-%</span></div>
+          <div class="progress-bar"><div class="progress-fill" id="fill-infra" style="background:#ef4444;width:0%"></div></div>
         </div>
         <div class="progress-item">
-          <div class="progress-header">
-            <span class="progress-name">Житло</span>
-            <span class="progress-pct" id="prog-housing">—%</span>
-          </div>
-          <div class="progress-bar">
-            <div class="progress-fill" id="fill-housing" style="background:#f59e0b;width:0%"></div>
-          </div>
+          <div class="progress-header"><span class="progress-name">Житло</span><span class="progress-pct" id="prog-housing">-%</span></div>
+          <div class="progress-bar"><div class="progress-fill" id="fill-housing" style="background:#f59e0b;width:0%"></div></div>
         </div>
         <div class="progress-item">
-          <div class="progress-header">
-            <span class="progress-name">Соц. сервіси</span>
-            <span class="progress-pct" id="prog-social">—%</span>
-          </div>
-          <div class="progress-bar">
-            <div class="progress-fill" id="fill-social" style="background:#3b82f6;width:0%"></div>
-          </div>
+          <div class="progress-header"><span class="progress-name">Соц. сервіси</span><span class="progress-pct" id="prog-social">-%</span></div>
+          <div class="progress-bar"><div class="progress-fill" id="fill-social" style="background:#3b82f6;width:0%"></div></div>
         </div>
         <div class="progress-item">
-          <div class="progress-header">
-            <span class="progress-name">Освіта</span>
-            <span class="progress-pct" id="prog-edu">—%</span>
-          </div>
-          <div class="progress-bar">
-            <div class="progress-fill" id="fill-edu" style="background:#a855f7;width:0%"></div>
-          </div>
+          <div class="progress-header"><span class="progress-name">Освіта</span><span class="progress-pct" id="prog-edu">-%</span></div>
+          <div class="progress-bar"><div class="progress-fill" id="fill-edu" style="background:#a855f7;width:0%"></div></div>
         </div>
       </div>
-
-      <a class="blockchain-badge" id="chain-badge-link" href="https://bscscan.com/tx/" target="_blank" rel="noopener" title="Перевірити на BscScan">
+      <a class="blockchain-badge" id="chain-badge-link" href="https://bscscan.com/tx/" target="_blank" rel="noopener">
         <div class="chain-icon">
           <svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
         <div class="chain-meta">
-          <div class="chain-label">
-            <span class="chain-verified-dot"></span>
-            BNB Chain · Верифіковано
-          </div>
+          <div class="chain-label"><span class="chain-verified-dot"></span>BNB Chain - Верифіковано</div>
           <div class="chain-hash" id="detail-hash">0x3f4a...c8d2</div>
           <div class="chain-hint">Клікніть щоб перевірити на BscScan →</div>
         </div>
       </a>
-
       <div style="margin-bottom:12px">
         <div class="section-label" style="margin-bottom:8px">Джерела даних</div>
         <div style="display:flex;flex-wrap:wrap;gap:5px">
@@ -1226,42 +549,127 @@
   <div class="statusbar-item">Громад на карті: <strong>1 673</strong></div>
   <div class="statusbar-item">Активний шар: <strong id="activeLayerName">Руйнування</strong></div>
   <div class="statusbar-item">Масштаб: <strong id="zoomLevel">6</strong></div>
-  <div class="statusbar-item" style="margin-left:auto">Пілот v0.1 · Дані умовні</div>
+  <div class="statusbar-item" style="margin-left:auto">Пілот v0.1 - Дані умовні</div>
 </div>
 
 <script>
 // ============================================================
-// DATA: Ukraine oblasts with mock hromada data
+// ACTIVE LAYER STATE - single source of truth
 // ============================================================
+let activeLayer = 'destruction';
 
+// ============================================================
+// COLOR MAPS - centralized
+// ============================================================
+const COLOR_MAPS = {
+  destruction: (h) => h.color,
+  recovery: (h) => {
+    const v = h.recovery;
+    return v < 10 ? '#7f1d1d' : v < 25 ? '#b45309' : v < 50 ? '#2d6a4f' : '#166534';
+  },
+  funding: (h) => {
+    const v = parseFloat(h.aid);
+    return v < 1 ? '#374151' : v < 2 ? '#1e3a5f' : v < 4 ? '#1d4ed8' : '#3b82f6';
+  },
+  needs: (h) => {
+    const v = h.need;
+    return v < 20 ? '#1a3a2e' : v < 40 ? '#d97706' : '#ef4444';
+  },
+};
+
+// Oblast colors by layer
+const OBLAST_COLOR_MAPS = {
+  destruction: (o) => o.color,
+  recovery: (o) => {
+    const hromadas = HROMADAS[o.id];
+    if (!hromadas) return o.color;
+    const avg = hromadas.reduce((a, h) => a + h.recovery, 0) / hromadas.length;
+    return avg < 10 ? '#7f1d1d' : avg < 25 ? '#b45309' : avg < 50 ? '#2d6a4f' : '#166534';
+  },
+  funding: (o) => {
+    const hromadas = HROMADAS[o.id];
+    if (!hromadas) return o.color;
+    const avg = hromadas.reduce((a, h) => a + parseFloat(h.aid), 0) / hromadas.length;
+    return avg < 1 ? '#374151' : avg < 2 ? '#1e3a5f' : avg < 4 ? '#1d4ed8' : '#3b82f6';
+  },
+  needs: (o) => {
+    const hromadas = HROMADAS[o.id];
+    if (!hromadas) return o.color;
+    const avg = hromadas.reduce((a, h) => a + h.need, 0) / hromadas.length;
+    return avg < 20 ? '#1a3a2e' : avg < 40 ? '#d97706' : '#ef4444';
+  },
+};
+
+const LEGEND_DATA = {
+  destruction: {
+    title: 'Легенда - Руйнування',
+    items: [
+      { color: '#7f1d1d', label: 'Критичні (>70%)', count: '47' },
+      { color: '#ef4444', label: 'Високі (50-70%)', count: '89' },
+      { color: '#f59e0b', label: 'Помірні (20-50%)', count: '214' },
+      { color: '#2d6a4f', label: 'Низькі (<20%)', count: '612' },
+      { color: '#1a3a2e', label: 'Немає даних / безпечна', count: '711' },
+      { color: '#374151', label: 'Окуповані', count: '-' },
+    ]
+  },
+  recovery: {
+    title: 'Легенда - Відновлення',
+    items: [
+      { color: '#166534', label: 'Високе (>50%)', count: '' },
+      { color: '#2d6a4f', label: 'Помірне (25-50%)', count: '' },
+      { color: '#b45309', label: 'Низьке (10-25%)', count: '' },
+      { color: '#7f1d1d', label: 'Критично низьке (<10%)', count: '' },
+    ]
+  },
+  funding: {
+    title: 'Легенда - Фінансування',
+    items: [
+      { color: '#3b82f6', label: 'Значне (>$4M)', count: '' },
+      { color: '#1d4ed8', label: 'Середнє ($2-4M)', count: '' },
+      { color: '#1e3a5f', label: 'Низьке ($1-2M)', count: '' },
+      { color: '#374151', label: 'Мінімальне (<$1M)', count: '' },
+    ]
+  },
+  needs: {
+    title: 'Легенда - Потреби громад',
+    items: [
+      { color: '#ef4444', label: 'Критичні (>40%)', count: '' },
+      { color: '#d97706', label: 'Помірні (20-40%)', count: '' },
+      { color: '#1a3a2e', label: 'Низькі (<20%)', count: '' },
+    ]
+  },
+};
+
+// ============================================================
+// DATA
+// ============================================================
 const OBLASTS = [
-  { id: "kherson",    name: "Херсонська обл.",   color: "#7f1d1d", level: "critical", cx: 34.0, cy: 46.5 },
-  { id: "zaporizhia", name: "Запорізька обл.",    color: "#b45309", level: "high",     cx: 35.5, cy: 47.5 },
-  { id: "donetsk",    name: "Донецька обл.",      color: "#7f1d1d", level: "critical", cx: 37.8, cy: 48.0 },
-  { id: "luhansk",    name: "Луганська обл.",     color: "#374151", level: "occupied", cx: 39.3, cy: 48.8 },
-  { id: "kharkiv",    name: "Харківська обл.",    color: "#b45309", level: "high",     cx: 36.2, cy: 49.8 },
-  { id: "mykolaiv",   name: "Миколаївська обл.",  color: "#b45309", level: "high",     cx: 32.0, cy: 47.1 },
-  { id: "odesa",      name: "Одеська обл.",       color: "#d97706", level: "moderate", cx: 30.7, cy: 46.5 },
-  { id: "dnipro",     name: "Дніпропетровська",   color: "#d97706", level: "moderate", cx: 34.9, cy: 48.5 },
-  { id: "poltava",    name: "Полтавська обл.",    color: "#2d6a4f", level: "low",      cx: 33.8, cy: 49.6 },
-  { id: "sumy",       name: "Сумська обл.",       color: "#d97706", level: "moderate", cx: 34.2, cy: 50.9 },
-  { id: "chernihiv",  name: "Чернігівська обл.",  color: "#d97706", level: "moderate", cx: 31.5, cy: 51.5 },
-  { id: "kyiv",       name: "Київська обл.",      color: "#2d6a4f", level: "low",      cx: 30.9, cy: 50.4 },
-  { id: "zhytomyr",   name: "Житомирська обл.",   color: "#1a3a2e", level: "none",     cx: 28.5, cy: 50.3 },
-  { id: "vinnytsia",  name: "Вінницька обл.",     color: "#1a3a2e", level: "none",     cx: 28.3, cy: 49.2 },
-  { id: "khmelnytsk", name: "Хмельницька обл.",   color: "#1a3a2e", level: "none",     cx: 26.9, cy: 49.4 },
-  { id: "cherkasy",   name: "Черкаська обл.",     color: "#2d6a4f", level: "low",      cx: 31.5, cy: 49.4 },
-  { id: "kirovohrad", name: "Кіровоградська",     color: "#2d6a4f", level: "low",      cx: 32.3, cy: 48.5 },
-  { id: "lviv",       name: "Львівська обл.",     color: "#1a3a2e", level: "none",     cx: 24.0, cy: 49.8 },
-  { id: "ivanofrankiv",name: "Івано-Франківська", color: "#1a3a2e", level: "none",     cx: 24.7, cy: 48.9 },
-  { id: "ternopil",   name: "Тернопільська обл.", color: "#1a3a2e", level: "none",     cx: 25.6, cy: 49.5 },
-  { id: "rivne",      name: "Рівненська обл.",    color: "#1a3a2e", level: "none",     cx: 26.3, cy: 50.6 },
-  { id: "volyn",      name: "Волинська обл.",     color: "#1a3a2e", level: "none",     cx: 25.3, cy: 51.0 },
-  { id: "zakarpattia",name: "Закарпатська обл.",  color: "#1a3a2e", level: "none",     cx: 23.3, cy: 48.4 },
-  { id: "chernivtsi", name: "Чернівецька обл.",   color: "#1a3a2e", level: "none",     cx: 25.9, cy: 48.3 },
+  { id: "kherson",     name: "Херсонська обл.",    color: "#7f1d1d", level: "critical", cx: 34.0, cy: 46.5 },
+  { id: "zaporizhia",  name: "Запорізька обл.",     color: "#b45309", level: "high",     cx: 35.5, cy: 47.5 },
+  { id: "donetsk",     name: "Донецька обл.",       color: "#7f1d1d", level: "critical", cx: 37.8, cy: 48.0 },
+  { id: "luhansk",     name: "Луганська обл.",      color: "#374151", level: "occupied", cx: 39.3, cy: 48.8 },
+  { id: "kharkiv",     name: "Харківська обл.",     color: "#b45309", level: "high",     cx: 36.2, cy: 49.8 },
+  { id: "mykolaiv",    name: "Миколаївська обл.",   color: "#b45309", level: "high",     cx: 32.0, cy: 47.1 },
+  { id: "odesa",       name: "Одеська обл.",        color: "#d97706", level: "moderate", cx: 30.7, cy: 46.5 },
+  { id: "dnipro",      name: "Дніпропетровська",    color: "#d97706", level: "moderate", cx: 34.9, cy: 48.5 },
+  { id: "poltava",     name: "Полтавська обл.",     color: "#2d6a4f", level: "low",      cx: 33.8, cy: 49.6 },
+  { id: "sumy",        name: "Сумська обл.",        color: "#d97706", level: "moderate", cx: 34.2, cy: 50.9 },
+  { id: "chernihiv",   name: "Чернігівська обл.",   color: "#d97706", level: "moderate", cx: 31.5, cy: 51.5 },
+  { id: "kyiv",        name: "Київська обл.",       color: "#2d6a4f", level: "low",      cx: 30.9, cy: 50.4 },
+  { id: "zhytomyr",    name: "Житомирська обл.",    color: "#1a3a2e", level: "none",     cx: 28.5, cy: 50.3 },
+  { id: "vinnytsia",   name: "Вінницька обл.",      color: "#1a3a2e", level: "none",     cx: 28.3, cy: 49.2 },
+  { id: "khmelnytsk",  name: "Хмельницька обл.",    color: "#1a3a2e", level: "none",     cx: 26.9, cy: 49.4 },
+  { id: "cherkasy",    name: "Черкаська обл.",      color: "#2d6a4f", level: "low",      cx: 31.5, cy: 49.4 },
+  { id: "kirovohrad",  name: "Кіровоградська",      color: "#2d6a4f", level: "low",      cx: 32.3, cy: 48.5 },
+  { id: "lviv",        name: "Львівська обл.",      color: "#1a3a2e", level: "none",     cx: 24.0, cy: 49.8 },
+  { id: "ivanofrankiv",name: "Івано-Франківська",   color: "#1a3a2e", level: "none",     cx: 24.7, cy: 48.9 },
+  { id: "ternopil",    name: "Тернопільська обл.",  color: "#1a3a2e", level: "none",     cx: 25.6, cy: 49.5 },
+  { id: "rivne",       name: "Рівненська обл.",     color: "#1a3a2e", level: "none",     cx: 26.3, cy: 50.6 },
+  { id: "volyn",       name: "Волинська обл.",      color: "#1a3a2e", level: "none",     cx: 25.3, cy: 51.0 },
+  { id: "zakarpattia", name: "Закарпатська обл.",   color: "#1a3a2e", level: "none",     cx: 23.3, cy: 48.4 },
+  { id: "chernivtsi",  name: "Чернівецька обл.",    color: "#1a3a2e", level: "none",     cx: 25.9, cy: 48.3 },
 ];
 
-// Mock hromadas per oblast
 function generateHromadas(oblast) {
   const destructionByLevel = {
     critical: [72, 78, 81, 65, 88, 74, 69, 77, 83, 71],
@@ -1271,7 +679,6 @@ function generateHromadas(oblast) {
     none:     [2, 4, 3, 1, 5, 2, 3, 4, 1, 2],
     occupied: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   };
-
   const names = {
     kherson:     ["Каховська", "Херсонська", "Скадовська", "Бериславська", "Нова Каховка"],
     zaporizhia:  ["Мелітопольська", "Запорізька", "Енергодарська", "Василівська", "Пологівська"],
@@ -1281,10 +688,8 @@ function generateHromadas(oblast) {
     luhansk:     ["Сєвєродонецька", "Лисичанська", "Рубіжанська", "Стаханівська", "Луганська"],
     default:     ["Центральна", "Північна", "Південна", "Східна", "Західна"]
   };
-
   const oblastNames = names[oblast.id] || names.default;
   const destVals = destructionByLevel[oblast.level];
-
   return oblastNames.map((n, i) => {
     const dest = destVals[i % destVals.length];
     const recovery = Math.round(dest * (0.1 + Math.random() * 0.3));
@@ -1294,18 +699,14 @@ function generateHromadas(oblast) {
     const housing = Math.round(recovery * (0.6 + Math.random() * 0.4));
     const social = Math.round(recovery * (0.7 + Math.random() * 0.3));
     const edu = Math.round(recovery * (0.4 + Math.random() * 0.6));
-
     const lvl = dest >= 70 ? 'critical' : dest >= 50 ? 'high' : dest >= 20 ? 'moderate' : 'low';
     const colors = { critical:'#7f1d1d', high:'#b45309', moderate:'#d97706', low:'#2d6a4f', occupied:'#374151' };
-
     return {
       name: n + " громада",
       oblast: oblast.name,
       level: oblast.level === 'occupied' ? 'occupied' : lvl,
       color: oblast.level === 'occupied' ? '#374151' : colors[lvl],
-      destruction: dest,
-      recovery,
-      need,
+      destruction: dest, recovery, need,
       aid: `$${aid}M`,
       infra, housing, social, edu,
       hash: '0x' + Math.random().toString(16).substr(2,4) + '...' + Math.random().toString(16).substr(2,4),
@@ -1321,39 +722,23 @@ OBLASTS.forEach(o => { HROMADAS[o.id] = generateHromadas(o); });
 // ============================================================
 // MAP INIT
 // ============================================================
-
 const map = L.map('map', {
-  center: [48.5, 31.5],
-  zoom: 6,
-  zoomControl: false,
-  attributionControl: false,
-  minZoom: 5,
-  maxZoom: 12
+  center: [48.5, 31.5], zoom: 6,
+  zoomControl: false, attributionControl: false,
+  minZoom: 5, maxZoom: 12
 });
-
 L.control.zoom({ position: 'bottomleft' }).addTo(map);
-
-// Dark tile layer
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
-  attribution: '',
-  subdomains: 'abcd',
-  maxZoom: 19
+  attribution: '', subdomains: 'abcd', maxZoom: 19
 }).addTo(map);
-
-// Ukraine boundary highlight
-const ukrBounds = [[44.2, 22.0], [52.4, 40.2]];
-L.rectangle(ukrBounds, {
-  color: 'rgba(59,130,246,0.3)',
-  weight: 1,
-  fillColor: 'transparent',
-  fillOpacity: 0,
-  dashArray: '4,4'
+L.rectangle([[44.2, 22.0], [52.4, 40.2]], {
+  color: 'rgba(59,130,246,0.3)', weight: 1,
+  fillColor: 'transparent', fillOpacity: 0, dashArray: '4,4'
 }).addTo(map);
 
 // ============================================================
-// OBLAST CIRCLES (zoom 5-7)
+// OBLAST CIRCLES
 // ============================================================
-
 let oblastLayers = [];
 let hromadaLayers = [];
 let currentOblast = null;
@@ -1361,6 +746,11 @@ let currentOblast = null;
 function getDestructionLabel(level) {
   const labels = { critical:'Критичний', high:'Високий', moderate:'Помірний', low:'Низький', none:'Безпечна', occupied:'Окупована' };
   return labels[level] || level;
+}
+
+function getOblastColor(oblast) {
+  const colorFn = OBLAST_COLOR_MAPS[activeLayer] || OBLAST_COLOR_MAPS.destruction;
+  return colorFn(oblast);
 }
 
 OBLASTS.forEach(oblast => {
@@ -1373,7 +763,7 @@ OBLASTS.forEach(oblast => {
   });
 
   const hromadas = HROMADAS[oblast.id];
-  const avgDest = Math.round(hromadas.reduce((a,h) => a + h.destruction, 0) / hromadas.length);
+  const avgDest = Math.round(hromadas.reduce((a, h) => a + h.destruction, 0) / hromadas.length);
 
   circle.bindTooltip(`
     <div class="tooltip-inner">
@@ -1397,56 +787,28 @@ OBLASTS.forEach(oblast => {
   `, { permanent: false, direction: 'top', opacity: 1 });
 
   circle.on('click', () => drillIntoOblast(oblast));
-  circle.on('mouseover', function() {
-    this.setStyle({ radius: 22, fillOpacity: 1 });
-  });
-  circle.on('mouseout', function() {
-    this.setStyle({ radius: 18, fillOpacity: 0.8 });
-  });
+  circle.on('mouseover', function() { this.setStyle({ radius: 22, fillOpacity: 1 }); });
+  circle.on('mouseout', function() { this.setStyle({ radius: 18, fillOpacity: 0.8 }); });
 
   circle.addTo(map);
-  oblastLayers.push(circle);
+  oblastLayers.push({ circle, oblast });
 });
 
 // ============================================================
 // DRILL INTO OBLAST
 // ============================================================
-
 function drillIntoOblast(oblast) {
   currentOblast = oblast;
-
-  // Hide oblast circles
-  oblastLayers.forEach(l => map.removeLayer(l));
-
-  // Clear old hromada layers
-  hromadaLayers.forEach(l => map.removeLayer(l));
+  oblastLayers.forEach(l => map.removeLayer(l.circle));
+  hromadaLayers.forEach(l => map.removeLayer(l.circle));
   hromadaLayers = [];
 
-  // Zoom to oblast region
-  const bounds = [
+  map.fitBounds([
     [oblast.cy - 1.2, oblast.cx - 1.8],
     [oblast.cy + 1.2, oblast.cx + 1.8]
-  ];
-  map.fitBounds(bounds, { padding: [40, 40] });
+  ], { padding: [40, 40] });
 
-  // Show hromada circles using current active layer color
-  const colorMaps = {
-    recovery: (h) => {
-      const v = h.recovery;
-      return v < 10 ? '#7f1d1d' : v < 25 ? '#b45309' : v < 50 ? '#2d6a4f' : '#166534';
-    },
-    funding: (h) => {
-      const v = parseFloat(h.aid);
-      return v < 1 ? '#374151' : v < 2 ? '#1e3a5f' : v < 4 ? '#1d4ed8' : '#3b82f6';
-    },
-    needs: (h) => {
-      const v = h.need;
-      return v < 20 ? '#1a3a2e' : v < 40 ? '#d97706' : '#ef4444';
-    },
-    destruction: (h) => h.color,
-  };
-  const activeLayerType = document.querySelector('.layer-item.active')?.dataset?.layer || 'destruction';
-  const getColor = colorMaps[activeLayerType] || colorMaps.destruction;
+  const getColor = COLOR_MAPS[activeLayer] || COLOR_MAPS.destruction;
 
   HROMADAS[oblast.id].forEach(h => {
     const circle = L.circleMarker([h.lat, h.lng], {
@@ -1483,10 +845,9 @@ function drillIntoOblast(oblast) {
     circle.on('mouseout', function() { this.setStyle({ radius: 14, fillOpacity: 0.85 }); });
 
     circle.addTo(map);
-    hromadaLayers.push(circle);
+    hromadaLayers.push({ circle, hromada: h });
   });
 
-  // Show breadcrumb
   document.getElementById('breadcrumb').style.display = 'flex';
   document.getElementById('breadcrumb-region').textContent = oblast.name;
   document.getElementById('zoomHint').textContent = 'Клікніть на громаду для деталей';
@@ -1494,9 +855,9 @@ function drillIntoOblast(oblast) {
 
 function resetView() {
   currentOblast = null;
-  hromadaLayers.forEach(l => map.removeLayer(l));
+  hromadaLayers.forEach(l => map.removeLayer(l.circle));
   hromadaLayers = [];
-  oblastLayers.forEach(l => l.addTo(map));
+  oblastLayers.forEach(l => l.circle.addTo(map));
   map.setView([48.5, 31.5], 6);
   document.getElementById('breadcrumb').style.display = 'none';
   document.getElementById('detailPanel').classList.add('hidden');
@@ -1504,112 +865,103 @@ function resetView() {
 }
 
 // ============================================================
-// HROMADA DETAIL PANEL
+// HROMADA DETAIL
 // ============================================================
-
 const statusLabels = { critical:'Критична', high:'Високий ризик', moderate:'Помірна', low:'Стабілізується', occupied:'Окупована' };
 const statusClasses = { critical:'critical', high:'high', moderate:'moderate', low:'low', occupied:'occupied' };
 
 function showHromadaDetail(h) {
   const panel = document.getElementById('detailPanel');
   panel.classList.remove('hidden');
-
   document.getElementById('detail-region').textContent = h.oblast;
   document.getElementById('detail-name').textContent = h.name;
-
   const badge = document.getElementById('detail-badge');
   badge.textContent = statusLabels[h.level] || h.level;
   badge.className = 'status-badge ' + (statusClasses[h.level] || 'moderate');
-
   document.getElementById('detail-destruction').textContent = h.destruction + '%';
   document.getElementById('detail-recovery').textContent = h.recovery + '%';
   document.getElementById('detail-need').textContent = h.need + '%';
   document.getElementById('detail-aid').textContent = h.aid;
   document.getElementById('detail-hash').textContent = h.hash;
-
-  const setProgress = (id, fillId, val, color) => {
-    document.getElementById(id).textContent = val + '%';
-    const el = document.getElementById(fillId);
-    el.style.background = color;
-    setTimeout(() => el.style.width = val + '%', 50);
-  };
-
-  // Reset widths first
   ['fill-infra','fill-housing','fill-social','fill-edu'].forEach(id => {
     document.getElementById(id).style.width = '0%';
   });
-
   setTimeout(() => {
-    setProgress('prog-infra',    'fill-infra',    h.infra,    '#ef4444');
-    setProgress('prog-housing',  'fill-housing',  h.housing,  '#f59e0b');
-    setProgress('prog-social',   'fill-social',   h.social,   '#3b82f6');
-    setProgress('prog-edu',      'fill-edu',      h.edu,      '#a855f7');
+    const set = (id, fillId, val, color) => {
+      document.getElementById(id).textContent = val + '%';
+      const el = document.getElementById(fillId);
+      el.style.background = color;
+      setTimeout(() => el.style.width = val + '%', 50);
+    };
+    set('prog-infra',   'fill-infra',   h.infra,   '#ef4444');
+    set('prog-housing', 'fill-housing', h.housing, '#f59e0b');
+    set('prog-social',  'fill-social',  h.social,  '#3b82f6');
+    set('prog-edu',     'fill-edu',     h.edu,     '#a855f7');
   }, 100);
 }
 
 // ============================================================
-// MAP EVENTS
+// LAYER SWITCHING - THE FIX
 // ============================================================
-
-map.on('zoomend', () => {
-  const z = map.getZoom();
-  document.getElementById('zoomLevel').textContent = z;
-});
-
-map.on('click', (e) => {
-  // close detail if clicked on empty map
-  if (!currentOblast) return;
-  // close mobile panel on map click
-  if (window.innerWidth <= 768) closeMobilePanel();
-});
-
-// ============================================================
-// LAYER SWITCHING
-// ============================================================
-
 const layerNames = { destruction:'Руйнування', recovery:'Відновлення', funding:'Фінансування', needs:'Потреби' };
 
+function updateLegend(type) {
+  const data = LEGEND_DATA[type];
+  if (!data) return;
+  document.getElementById('legendTitle').textContent = data.title;
+  document.getElementById('legendScale').innerHTML = data.items.map(item => `
+    <div class="legend-row">
+      <div class="legend-color" style="background:${item.color}"></div>
+      <div class="legend-label">${item.label}</div>
+      ${item.count ? `<div class="legend-count">${item.count}</div>` : ''}
+    </div>
+  `).join('');
+}
+
 function setLayer(type) {
-  document.querySelectorAll('.layer-item').forEach((el) => {
+  // 1. Update state
+  activeLayer = type;
+
+  // 2. Update UI checkboxes
+  document.querySelectorAll('.layer-item').forEach(el => {
     el.classList.toggle('active', el.dataset.layer === type);
   });
+
+  // 3. Update status bar
   document.getElementById('activeLayerName').textContent = layerNames[type] || type;
 
-  // Recolor circles based on layer
-  const colorMaps = {
-    recovery: (h) => {
-      const v = h.recovery;
-      return v < 10 ? '#7f1d1d' : v < 25 ? '#b45309' : v < 50 ? '#2d6a4f' : '#166534';
-    },
-    funding: (h) => {
-      const v = parseFloat(h.aid);
-      return v < 1 ? '#374151' : v < 2 ? '#1e3a5f' : v < 4 ? '#1d4ed8' : '#3b82f6';
-    },
-    needs: (h) => {
-      const v = h.need;
-      return v < 20 ? '#1a3a2e' : v < 40 ? '#d97706' : '#ef4444';
-    },
-    destruction: (h) => h.color,
-  };
+  // 4. Update legend
+  updateLegend(type);
 
+  // 5a. If in oblast drill-in: recolor hromada circles
   if (currentOblast && hromadaLayers.length > 0) {
-    hromadaLayers.forEach((layer, i) => {
-      const hromada = HROMADAS[currentOblast.id][i];
-      if (hromada) {
-        const newColor = colorMaps[type] ? colorMaps[type](hromada) : hromada.color;
-        layer.setStyle({ fillColor: newColor });
-      }
+    const getColor = COLOR_MAPS[type] || COLOR_MAPS.destruction;
+    hromadaLayers.forEach(({ circle, hromada }) => {
+      circle.setStyle({ fillColor: getColor(hromada) });
+    });
+  }
+
+  // 5b. If on overview: recolor oblast circles
+  if (!currentOblast) {
+    const getOblastColorFn = OBLAST_COLOR_MAPS[type] || OBLAST_COLOR_MAPS.destruction;
+    oblastLayers.forEach(({ circle, oblast }) => {
+      circle.setStyle({ fillColor: getOblastColorFn(oblast) });
     });
   }
 }
 
 // ============================================================
+// MAP EVENTS
+// ============================================================
+map.on('zoomend', () => {
+  document.getElementById('zoomLevel').textContent = map.getZoom();
+});
+
+// ============================================================
 // SEARCH
 // ============================================================
-
 function handleSearch(val) {
   if (!val || val.length < 2) return;
-  // Find matching oblast
   const match = OBLASTS.find(o => o.name.toLowerCase().includes(val.toLowerCase()));
   if (match) drillIntoOblast(match);
 }
@@ -1617,17 +969,14 @@ function handleSearch(val) {
 // ============================================================
 // TAB SWITCHING
 // ============================================================
-
 function switchTab(tab) {
   ['layers','stats','alerts'].forEach(t => {
     const el = document.getElementById('tab-' + t);
     if (el) el.style.display = t === tab ? 'block' : 'none';
   });
   document.querySelectorAll('.panel-tab').forEach((btn, i) => {
-    const tabs = ['layers','stats','alerts'];
-    btn.classList.toggle('active', tabs[i] === tab);
+    btn.classList.toggle('active', ['layers','stats','alerts'][i] === tab);
   });
-
   if (tab === 'stats') renderStatsTab();
 }
 
@@ -1639,12 +988,11 @@ function renderStatsTab() {
       return (lvlOrder[b.level]||0) - (lvlOrder[a.level]||0);
     })
     .slice(0, 7);
-
   document.getElementById('top-regions').innerHTML = data.map(o => {
     const hromadas = HROMADAS[o.id];
     const avg = Math.round(hromadas.reduce((a,h) => a + h.destruction, 0) / hromadas.length);
     return `
-      <div style="background:var(--surface2);border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:10px;margin-bottom:6px;cursor:pointer" onclick="drillIntoOblast(${JSON.stringify(o).replace(/"/g,'&quot;')})">
+      <div style="background:var(--surface2);border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:10px;margin-bottom:6px;cursor:pointer" onclick='drillIntoOblast(${JSON.stringify(o)})'>
         <div style="width:10px;height:10px;border-radius:50%;background:${o.color};flex-shrink:0"></div>
         <div style="flex:1">
           <div style="font-size:12px;font-weight:500">${o.name}</div>
@@ -1657,37 +1005,54 @@ function renderStatsTab() {
 }
 
 // ============================================================
-// LANG TOGGLE
+// FILTER BY LEVEL
 // ============================================================
+function filterByLevel(level) {
+  if (!currentOblast) {
+    oblastLayers.forEach(({ circle, oblast }) => {
+      circle.setStyle({ fillOpacity: oblast.level === level ? 1 : 0.15 });
+    });
+    setTimeout(() => {
+      oblastLayers.forEach(({ circle }) => circle.setStyle({ fillOpacity: 0.8 }));
+    }, 2000);
+  }
+}
 
+// ============================================================
+// LANG / MOBILE / AI
+// ============================================================
 function setLang(lang) {
   document.querySelectorAll('.lang-toggle button').forEach(btn => {
     btn.classList.toggle('active', btn.textContent === lang.toUpperCase());
   });
 }
 
-// ============================================================
-// AI CHAT (mock responses)
-// ============================================================
+function toggleMobilePanel() {
+  const panel = document.querySelector('.left-panel');
+  const overlay = document.getElementById('panelOverlay');
+  panel.classList.toggle('open');
+  overlay.classList.toggle('open');
+}
+function closeMobilePanel() {
+  document.querySelector('.left-panel').classList.remove('open');
+  document.getElementById('panelOverlay').classList.remove('open');
+}
 
 let aiOpen = false;
-
 function toggleAI() {
   aiOpen = !aiOpen;
-  const box = document.getElementById('aiChatBox');
-  box.classList.toggle('open', aiOpen);
+  document.getElementById('aiChatBox').classList.toggle('open', aiOpen);
 }
 
 const aiResponses = {
-  'Де найбільше недофінансування?': 'Найбільший розрив між потребами та отриманою допомогою — у Херсонській (82% gap) та Запорізькій (74% gap) областях. Разом потребують ще ~$1.8B непокритих коштів.',
-  'Топ-3 найвразливіших громади': 'На основі composite score (руйнування + відновлення + доступ):\n1. Авдіївська — 88% руйнувань, відновлено 9%\n2. Маріупольська — 83%, відн. 6%\n3. Каховська — 78%, відн. 12%',
+  'Де найбільше недофінансування?': 'Найбільший розрив між потребами та отриманою допомогою - у Херсонській (82% gap) та Запорізькій (74% gap) областях. Разом потребують ще ~$1.8B непокритих коштів.',
+  'Топ-3 найвразливіших громади': 'На основі composite score:\n1. Авдіївська - 88% руйнувань, відновлено 9%\n2. Маріупольська - 83%, відн. 6%\n3. Каховська - 78%, відн. 12%',
   'Прогрес відновлення за регіонами': 'Найкращий прогрес: Полтавська (38%), Київська (31%), Чернігівська (27%).\nНайгірший: Луганська (окупована), Херсонська (8%), Запорізька (11%).',
 };
 
 function sendQuick(text) {
   addMessage(text, 'user');
-  const response = aiResponses[text] || 'Аналізую дані по ' + text.toLowerCase() + '... (mock response — реальний AI потребує підключення API)';
-  setTimeout(() => addMessage(response, 'assistant'), 700);
+  setTimeout(() => addMessage(aiResponses[text] || 'Аналізую...', 'assistant'), 700);
 }
 
 function sendAI() {
@@ -1696,18 +1061,14 @@ function sendAI() {
   if (!text) return;
   addMessage(text, 'user');
   input.value = '';
-
-  // Show typing
   const typingEl = document.createElement('div');
   typingEl.className = 'typing-indicator';
   typingEl.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
   document.getElementById('aiMessages').appendChild(typingEl);
   scrollAI();
-
   setTimeout(() => {
     typingEl.remove();
-    const response = aiResponses[text] || `Запит "${text}" отримано. У повній версії тут буде відповідь AI з аналізом даних по громадах, регіонах і джерелах фінансування.`;
-    addMessage(response, 'assistant');
+    addMessage(aiResponses[text] || `Запит "${text}" отримано. У повній версії - відповідь AI з аналізом даних.`, 'assistant');
   }, 1200);
 }
 
@@ -1724,46 +1085,6 @@ function scrollAI() {
   const msgs = document.getElementById('aiMessages');
   msgs.scrollTop = msgs.scrollHeight;
 }
-
-// ============================================================
-// FILTER BY LEVEL
-// ============================================================
-
-function filterByLevel(level) {
-  if (!currentOblast) {
-    // Highlight oblasts of that level
-    oblastLayers.forEach((layer, i) => {
-      const o = OBLASTS[i];
-      const match = o.level === level;
-      layer.setStyle({ fillOpacity: match ? 1 : 0.2 });
-    });
-    setTimeout(() => {
-      oblastLayers.forEach(l => l.setStyle({ fillOpacity: 0.8 }));
-    }, 2000);
-  }
-}
-
-// Init zoom hint
-document.getElementById('zoomHint').textContent = 'Клікніть на область для перегляду громад';
-// Mobile panel
-function toggleMobilePanel() {
-  const panel = document.querySelector('.left-panel');
-  const overlay = document.getElementById('panelOverlay');
-  const isOpen = panel.classList.contains('open');
-  if (isOpen) {
-    panel.classList.remove('open');
-    overlay.classList.remove('open');
-  } else {
-    panel.classList.add('open');
-    overlay.classList.add('open');
-  }
-}
-function closeMobilePanel() {
-  document.querySelector('.left-panel').classList.remove('open');
-  document.getElementById('panelOverlay').classList.remove('open');
-}
-// Close panel on map click (mobile) - handled by existing map.on('click') above
-
 </script>
 </body>
 </html>
