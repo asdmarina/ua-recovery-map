@@ -129,7 +129,7 @@ nav{position:sticky;top:0;z-index:200;height:52px;background:rgba(255,255,255,0.
 .hero{position:relative;background:var(--navy);min-height:560px;display:grid;grid-template-columns:1fr 1.1fr;gap:0;overflow:hidden;}
 .hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);background-size:42px 42px;mask-image:radial-gradient(ellipse at 30% 50%,#000 30%,transparent 75%);-webkit-mask-image:radial-gradient(ellipse at 30% 50%,#000 30%,transparent 75%);pointer-events:none;z-index:1;}
 .hero-left,.hero-right{position:relative;z-index:2;}
-.hero-left{padding:64px 48px 52px;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(to right,rgba(11,24,41,0.95) 60%,transparent 100%);}
+.hero-left{padding:64px 48px 52px;display:flex;flex-direction:column;justify-content:center;}
 .hero-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:5px 12px;font-size:11px;font-weight:500;color:rgba(255,255,255,.6);margin-bottom:24px;width:fit-content;}
 .hero-tag-dot{width:5px;height:5px;border-radius:50%;background:#4ADE80;}
 .hero h1{font-size:44px;font-weight:700;line-height:1.1;color:white;letter-spacing:-.025em;margin-bottom:18px;}
@@ -142,8 +142,8 @@ nav{position:sticky;top:0;z-index:200;height:52px;background:rgba(255,255,255,0.
 .btn-hero-s:hover{border-color:rgba(255,255,255,.4);}
 .hero-right{position:relative;background:var(--navy2);}
 #heroMap{width:100%;height:100%;min-height:560px;}
-.hero-right::before{content:"";position:absolute;inset:0;background:linear-gradient(to right,var(--navy) 0%,rgba(11,24,41,0.3) 28%,transparent 50%);pointer-events:none;z-index:2;}
-.hero-right::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(11,24,41,0.45) 0%,transparent 18%,transparent 82%,rgba(11,24,41,0.45) 100%);pointer-events:none;z-index:2;}
+.hero-right::before{content:"";position:absolute;inset:0;background:linear-gradient(to right,var(--navy) 0%,var(--navy) 42%,rgba(15,30,53,0.0) 68%,transparent 100%);pointer-events:none;z-index:2;}
+.hero-right::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,var(--navy) 0%,transparent 22%,transparent 78%,var(--navy) 100%);pointer-events:none;z-index:2;}
 .hero-map-label{position:absolute;top:16px;left:16px;z-index:1000;background:rgba(13,27,54,.85);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:8px 14px;font-size:11px;color:rgba(255,255,255,.6);backdrop-filter:blur(4px);}
 .hero-map-label strong{color:white;display:block;font-size:13px;margin-bottom:2px;}
 
@@ -296,9 +296,9 @@ nav{position:sticky;top:0;z-index:200;height:52px;background:rgba(255,255,255,0.
 .btn-cta-o:hover{background:rgba(255,255,255,.08);}
 
 /* ─── FOOTER ─── */
-footer{background:var(--navy2);padding:40px 48px 22px;}
-.ft-grid{display:grid;grid-template-columns:260px 1fr 1fr 1fr;gap:40px;max-width:1200px;margin:0 auto;padding-bottom:36px;border-bottom:1px solid rgba(255,255,255,.08);}
-.ft-logo{display:flex;align-items:center;gap:9px;margin-bottom:12px;}
+footer{background:var(--navy);padding:48px 48px 0;}
+.ft-inner{max-width:1200px;margin:0 auto;}
+.ft-grid{display:grid;grid-template-columns:260px 1fr 1fr 1fr;gap:40px;padding-bottom:36px;border-bottom:1px solid rgba(255,255,255,.08);}
 .ft-flag{width:24px;height:16px;border-radius:2px;overflow:hidden;display:flex;flex-direction:column;}
 .ft-flag-t{flex:1;background:#005BBB;}
 .ft-flag-b{flex:1;background:#FFD700;}
@@ -307,9 +307,10 @@ footer{background:var(--navy2);padding:40px 48px 22px;}
 .ft-col h4{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:14px;}
 .ft-col a{display:block;font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;margin-bottom:8px;transition:color .15s;}
 .ft-col a:hover{color:white;}
-.ft-bottom{max-width:1200px;margin:0 auto;padding-top:22px;display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,.2);}
+.ft-bottom{padding:20px 0 28px;display:flex;justify-content:space-between;align-items:flex-end;font-size:11px;color:rgba(255,255,255,.2);}
 .ft-chain{display:flex;align-items:center;gap:7px;}
-.ft-chain-badge{background:rgba(255,255,255,.07);color:rgba(255,255,255,.4);font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;}
+.ft-george{line-height:0;}
+.ft-chain{display:flex;align-items:center;gap:7px;}
 
 /* ─── LEAFLET OVERRIDES ─── */
 .leaflet-container{background:#1a2744!important;}
@@ -388,6 +389,21 @@ footer{background:var(--navy2);padding:40px 48px 22px;}
 .ai-demo-verified{font-size:10px;color:rgba(255,255,255,.25);font-family:'IBM Plex Mono',monospace;}
 .ai-explain{}
 
+/* CHAIN BLOCK IN COMMUNITY CARD */
+.cc-chain-block{display:block;margin-top:12px;background:#0F1E35;border:1px solid rgba(74,222,128,.2);border-radius:8px;padding:10px 13px;text-decoration:none;transition:background .15s;}
+.cc-chain-block:hover{background:#162641;}
+.cc-chain-head{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+.cc-chain-label{font-size:10px;color:#4ade80;font-family:'IBM Plex Mono',monospace;font-weight:600;text-transform:uppercase;letter-spacing:.4px;flex:1;}
+.cc-chain-live{font-size:10px;color:#4ade80;font-family:'IBM Plex Mono',monospace;font-weight:600;}
+.cc-chain-hash{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#60a5fa;margin-bottom:3px;}
+.cc-chain-hint{font-size:10px;color:rgba(255,255,255,.3);}
+
+/* LIVE equal height */
+.live-grid{display:grid;grid-template-columns:1fr 380px;gap:24px;align-items:stretch;}
+.right-panels{display:flex;flex-direction:column;}
+.community-card{flex:1;display:flex;flex-direction:column;}
+.cc-bars{flex:1;}
+
 /* ─── MOBILE (≤768px) ─── */
 @media (max-width:768px){
   nav{padding:0 16px;gap:12px;}
@@ -439,8 +455,9 @@ footer{background:var(--navy2);padding:40px 48px 22px;}
   .cta-btns button{width:100%;}
 
   footer{padding:30px 20px 18px;}
-  .ft-grid{grid-template-columns:1fr;gap:24px;padding-bottom:24px;}
-  .ft-bottom{flex-direction:column;gap:8px;}
+  .ft-grid{grid-template-columns:1fr 1fr;gap:20px;padding-bottom:24px;}
+  .ft-brand{grid-column:1/-1;}
+  .ft-bottom{flex-direction:row;align-items:flex-end;}
 
   .modal-back{padding:0;align-items:stretch;}
   .modal{max-width:100%;border-radius:0;max-height:100vh;padding:60px 22px 24px;}
@@ -503,8 +520,7 @@ footer{background:var(--navy2);padding:40px 48px 22px;}
     <div class="stat"><div class="stat-n">$47B+</div><div class="stat-l">Задокументована міжнародна допомога</div></div>
     <div class="stat"><div class="stat-n">1,400+</div><div class="stat-l">Громад потребують пріоритетної уваги</div></div>
     <div class="stat"><div class="stat-n">68%</div><div class="stat-l">Допомоги не відстежується публічно</div></div>
-    <div class="stat"><div class="stat-n">24 год</div><div class="stat-l">Цикл оновлення даних</div></div>
-    <div class="stat stat-chain"><a href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener" class="stat-chain-link"><div class="stat-n stat-n-green">5 ✓</div><div class="stat-l">Верифікацій on-chain · <span class="stat-bsc">BscScan ↗</span></div></a></div>
+    <div class="stat"><div class="stat-n stat-n-green"><a href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener" style="color:#4ade80;text-decoration:none;">9 ✓</a></div><div class="stat-l">Верифікацій on-chain · <a href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener" class="stat-bsc">BscScan ↗</a></div></div>
   </div>
 </div>
 
@@ -798,13 +814,17 @@ footer{background:var(--navy2);padding:40px 48px 22px;}
           <div class="cc-bars">
             <div class="cc-bar-row"><span class="cc-bar-lbl">Інфраструктура</span><div class="cc-bar-wrap"><div class="cc-bar-fill" style="width:18%;background:#DC2626;"></div></div><span class="cc-bar-val">18%</span></div>
             <div class="cc-bar-row"><span class="cc-bar-lbl">Житло</span><div class="cc-bar-wrap"><div class="cc-bar-fill" style="width:24%;background:#D97706;"></div></div><span class="cc-bar-val">24%</span></div>
-            <div class="cc-bar-row"><span class="cc-bar-lbl">Соц. сервіси</span><div class="cc-bar-wrap"><div class="cc-bar-fill" style="width:35%;background:#2563EB;"></div></div><span class="cc-bar-val">35%</span></div>
+            <div class="cc-bar-row"><span class="cc-bar-lbl">Соц. сервіси</span><div class="cc-bar-wrap"><div class="cc-bar-fill" style="width:35%;background:#1A4480;"></div></div><span class="cc-bar-val">35%</span></div>
           </div>
-          <div class="cc-footer">
-            <svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span class="cc-chain">BNB Chain ·</span>
-            <span class="cc-hash">0x3f4a...c8d2</span>
-          </div>
+          <a class="cc-chain-block" href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener">
+            <div class="cc-chain-head">
+              <svg width="13" height="13" fill="none" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#4ade80" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="#4ade80" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="cc-chain-label">BNB Chain · Верифіковано</span>
+              <span class="cc-chain-live">9 записів ✓</span>
+            </div>
+            <div class="cc-chain-hash">0x93f529ad...291947fcd</div>
+            <div class="cc-chain-hint">Перевірити на BscScan ↗</div>
+          </a>
         </div>
       </div>
     </div>
@@ -822,8 +842,8 @@ footer{background:var(--navy2);padding:40px 48px 22px;}
         <div class="s-item"><span class="s-dot" style="background:#16A34A;"></span><span class="s-txt">Архітектура системи</span><span class="s-badge b-done">Готово</span></div>
         <div class="s-item"><span class="s-dot" style="background:#16A34A;"></span><span class="s-txt">Інтерактивна карта — прототип</span><span class="s-badge b-done">Готово</span></div>
         <div class="s-item"><span class="s-dot" style="background:#16A34A;"></span><span class="s-txt">AI-аналітика — базовий Q&A</span><span class="s-badge b-done">Готово</span></div>
-        <div class="s-item"><span class="s-dot" style="background:#D97706;"></span><span class="s-txt">BNB Chain smart contracts</span><span class="s-badge b-wip">В процесі</span></div>
-        <div class="s-item"><span class="s-dot" style="background:#D97706;"></span><span class="s-txt">Інтеграція датасетів OCHA/UNHCR</span><span class="s-badge b-wip">В процесі</span></div>
+        <div class="s-item"><span class="s-dot" style="background:#16A34A;"></span><span class="s-txt">BNB Chain smart contracts · <a href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener" style="color:var(--ua-blue);font-size:11px;">9 верифікацій ↗</a></span><span class="s-badge b-done">Готово</span></div>
+        <div class="s-item"><span class="s-dot" style="background:#94A3B8;"></span><span class="s-txt">Інтеграція датасетів OCHA/UNHCR</span><span class="s-badge b-plan">Q3 2026</span></div>
         <div class="s-item"><span class="s-dot" style="background:#94A3B8;"></span><span class="s-txt">Партнерства з НГО</span><span class="s-badge b-plan">Q3 2026</span></div>
         <div class="s-item"><span class="s-dot" style="background:#94A3B8;"></span><span class="s-txt">Публічний запуск</span><span class="s-badge b-plan">Q3 2026</span></div>
       </div>
@@ -891,16 +911,24 @@ footer{background:var(--navy2);padding:40px 48px 22px;}
 
 <!-- FOOTER -->
 <footer>
-  <div class="ft-grid">
-    <div>
-      <div class="ft-logo"><img src="/logo.svg" alt="UA Rebuild" height="28" style="display:block;"/></div>
-      <div class="ft-desc">Публічна платформа моніторингу відновлення України. Відкриті дані, блокчейн-верифікація, AI-аналітика.</div>
+  <div class="ft-inner">
+    <div class="ft-grid">
+      <div class="ft-brand">
+        <div class="ft-logo"><img src="/logo.svg" alt="UA Rebuild" height="28" style="display:block;"/></div>
+        <div class="ft-desc">Публічна платформа моніторингу відновлення України. Відкриті дані, блокчейн-верифікація, AI-аналітика.</div>
+        <div class="ft-chain" style="margin-top:16px;">Верифіковано на <span class="ft-chain-badge">BNB Chain</span></div>
+      </div>
+      <div class="ft-col"><h4>Платформа</h4><a href="/map">Карта громад</a><a href="#verification">Верифікація on-chain</a><a href="#ai-agent">AI-аналітика</a></div>
+      <div class="ft-col"><h4>Про проект</h4><a href="#problem">Проблема</a><a href="#solution">Рішення</a><a href="#status">Статус</a><a href="#status">Дорожня карта</a></div>
+      <div class="ft-col"><h4>Контакт</h4><a href="mailto:hello@uarebuild.org">hello@uarebuild.org</a><a href="#" onclick="document.getElementById('pilotModal').style.display='flex';return false;">Приєднатись до пілоту</a></div>
     </div>
-    <div class="ft-col"><h4>Платформа</h4><a href="/map">Карта громад</a><a href="/map">AI-аналітика</a><a href="#verification">Верифікація</a><a href="#ai-agent">AI агент</a></div>
-    <div class="ft-col"><h4>Ресурси</h4><a href="#problem">Проблема</a><a href="#solution">Рішення</a><a href="#status">Статус</a><a href="#verification">Як це працює</a></div>
-    <div class="ft-col"><h4>Контакт</h4><a href="mailto:hello@uarebuild.org">hello@uarebuild.org</a><a href="#pilot-form" onclick="document.getElementById('pilotModal').style.display='flex'">Приєднатись до пілоту</a><a href="https://github.com/asdmarina/ua-recovery-map" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="ft-bottom">
+      <span>© 2026 UA Rebuild</span>
+      <div class="ft-george">
+        <img src="/st-george.png" alt="" height="80" style="opacity:.18;filter:invert(1);display:block;"/>
+      </div>
+    </div>
   </div>
-  <div class="ft-bottom"><span>© 2026 UA Rebuild · <span style="color:rgba(255,255,255,.18);">Beta v0.2 · Травень 2026</span></span><div class="ft-chain">Верифіковано на <span class="ft-chain-badge">BNB Chain</span></div></div>
 </footer>
 
 <script>
