@@ -71,24 +71,24 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --blue:#1B4FCC;
-  --blue-mid:#2563EB;
+  --blue:#1A4480;
+  --blue-mid:#1C5BA3;
   --blue-light:#EFF6FF;
-  --navy:#0D1B36;
-  --navy2:#162040;
+  --navy:#0F1E35;
+  --navy2:#162641;
   --text:#0F172A;
   --text2:#475569;
   --text3:#94A3B8;
-  --border:#E2E8F0;
-  --bg:#F8FAFC;
+  --border:#D1D9E0;
+  --bg:#F5F7FA;
   --white:#FFFFFF;
-  --green:#16A34A;
+  --green:#15803D;
   --green-bg:#F0FDF4;
-  --amber:#B45309;
+  --amber:#92400E;
   --amber-bg:#FFFBEB;
-  --red:#B91C1C;
+  --red:#991B1B;
   --red-bg:#FEF2F2;
-  --yellow-ua:#FFD700;
+  --yellow-ua:#F5C518;
   --blue-ua:#005BBB;
 }
 html{font-family:'Inter',system-ui,sans-serif;color:var(--text);scroll-behavior:smooth;-webkit-font-smoothing:antialiased;}
@@ -148,7 +148,11 @@ nav{position:sticky;top:0;z-index:200;height:52px;background:rgba(255,255,255,0.
 .hero-map-label strong{color:white;display:block;font-size:13px;margin-bottom:2px;}
 
 /* ─── STATS ─── */
-.stats{background:var(--blue);padding:0 48px;}
+.stats{background:#0F1E35;border-top:3px solid #1A4480;padding:0 48px;}
+.stat-chain-link{text-decoration:none;color:inherit;display:block;}
+.stat-chain-link:hover .stat-bsc{text-decoration:underline;}
+.stat-n-green{color:#4ade80!important;}
+.stat-bsc{color:#60a5fa;font-size:10px;}
 .stats-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);}
 .stat{padding:30px 0 30px 32px;border-right:1px solid rgba(255,255,255,.22);position:relative;}
 .stat:first-child{padding-left:0;}
@@ -489,7 +493,7 @@ footer{background:var(--navy2);padding:40px 48px 22px;}
   </div>
   <div class="hero-right">
     <div class="hero-map-label"><strong>UA Rebuild</strong>Дані оновлено: Травень 2026</div>
-    <img src="/hero-map.png" alt="UA Rebuild карта" style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;min-height:560px;position:relative;z-index:1;"/>
+    <div id="heroMap" style="width:100%;height:100%;min-height:560px;position:relative;z-index:1;background:#111a27;"></div>
   </div>
 </div>
 
@@ -500,6 +504,7 @@ footer{background:var(--navy2);padding:40px 48px 22px;}
     <div class="stat"><div class="stat-n">1,400+</div><div class="stat-l">Громад потребують пріоритетної уваги</div></div>
     <div class="stat"><div class="stat-n">68%</div><div class="stat-l">Допомоги не відстежується публічно</div></div>
     <div class="stat"><div class="stat-n">24 год</div><div class="stat-l">Цикл оновлення даних</div></div>
+    <div class="stat stat-chain"><a href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener" class="stat-chain-link"><div class="stat-n stat-n-green">5 ✓</div><div class="stat-l">Верифікацій on-chain · <span class="stat-bsc">BscScan ↗</span></div></a></div>
   </div>
 </div>
 
@@ -585,7 +590,7 @@ footer{background:var(--navy2);padding:40px 48px 22px;}
       <div class="how-line"></div>
       <div class="how-step"><div class="how-n">1</div><div class="how-ttl">Збір даних</div><div class="how-txt">OCHA, UNHCR, Мінреінтеграції та звіти НГО агрегуються автоматично кожні 24 години.</div></div>
       <div class="how-step"><div class="how-n">2</div><div class="how-ttl">Карта</div><div class="how-txt">Обираєш регіон або громаду, активуєш шари — і одразу бачиш повну картину відновлення.</div></div>
-      <div class="how-step"><div class="how-n">3</div><div class="how-ttl">Верифікація</div><div class="how-txt">Ключові записи отримують хеши на BNB Chain — незмінний публічний доказ стану даних.</div></div>
+      <div class="how-step"><div class="how-n">3</div><div class="how-ttl">Верифікація</div><div class="how-txt">Ключові записи отримують хеши на BNB Chain — незмінний публічний доказ. <a href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener" style="color:#1A4480;font-weight:600;white-space:nowrap;">Переглянути контракт ↗</a></div></div>
       <div class="how-step"><div class="how-n">4</div><div class="how-ttl">AI-запит</div><div class="how-txt">Задаєш питання чатботу — він аналізує структуровані дані і генерує відповідь з джерелами.</div></div>
     </div>
   </div>
@@ -626,7 +631,7 @@ footer{background:var(--navy2);padding:40px 48px 22px;}
           <div class="vrf-num">04</div>
           <div class="vrf-body">
             <div class="vrf-ttl">Як перевірити самостійно?</div>
-            <div class="vrf-txt">Клікніть на хеш у правій панелі карти — відкриється BscScan, публічний Explorer BNB Chain. Там видно транзакцію, дату, адресу контракту. Нічого довіряти нам на слово не потрібно.</div>
+            <div class="vrf-txt">Клікніть на хеш у правій панелі карти — відкриється BscScan, публічний Explorer BNB Chain. Там видно транзакцію, дату, адресу контракту. Нічого довіряти нам на слово не потрібно. <a href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener" style="color:var(--blue);font-weight:600;">Відкрити контракт на BscScan ↗</a></div>
           </div>
         </div>
       </div>
@@ -936,7 +941,67 @@ function initMaps(){
   };
 
   // Hero map
-  fetchGeoJSON = function(){}; // no-op, maps replaced with screenshots
+  fetchGeoJSON = function(){}; // no-op for live map
+
+  // Hero map - live Leaflet
+  const heroMap = L.map('heroMap', {
+    center: [49.0, 32.0],
+    zoom: 6,
+    zoomControl: false,
+    scrollWheelZoom: false,
+    attributionControl: false,
+    dragging: false,
+    doubleClickZoom: false,
+    keyboard: false,
+  });
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
+    subdomains: 'abcd', maxZoom: 19
+  }).addTo(heroMap);
+
+  const oblasts = [
+    {name:'Харківська обл.',    lat:49.99, lng:36.23, ruin:58, rec:12, help:7.2,  level:'Високий',   fill:'#7c1d1d', border:'#f87171'},
+    {name:'Донецька обл.',      lat:48.00, lng:37.80, ruin:78, rec:2,  help:0.8,  level:'Критичний', fill:'#4c0d0d', border:'#ef4444'},
+    {name:'Луганська обл.',     lat:48.70, lng:39.30, ruin:67, rec:3,  help:1.2,  level:'Критичний', fill:'#4c0d0d', border:'#ef4444'},
+    {name:'Запорізька обл.',    lat:47.80, lng:35.15, ruin:47, rec:8,  help:5.1,  level:'Помірний',  fill:'#7c4010', border:'#fb923c'},
+    {name:'Херсонська обл.',    lat:46.60, lng:32.60, ruin:71, rec:4,  help:1.5,  level:'Критичний', fill:'#4c0d0d', border:'#ef4444'},
+    {name:'Миколаївська обл.',  lat:47.00, lng:31.98, ruin:52, rec:9,  help:4.4,  level:'Високий',   fill:'#7c1d1d', border:'#f87171'},
+    {name:'Дніпропетровська обл.',lat:48.45,lng:35.05,ruin:34, rec:21, help:4.8,  level:'Помірний',  fill:'#7c4010', border:'#fb923c'},
+    {name:'Полтавська обл.',    lat:49.59, lng:34.55, ruin:41, rec:15, help:3.6,  level:'Помірний',  fill:'#7c4010', border:'#fb923c'},
+    {name:'Сумська обл.',       lat:50.91, lng:34.80, ruin:38, rec:12, help:2.9,  level:'Помірний',  fill:'#7c4010', border:'#fb923c'},
+    {name:'Чернігівська обл.',  lat:51.50, lng:31.30, ruin:22, rec:28, help:2.0,  level:'Помірний',  fill:'#7c4010', border:'#fb923c'},
+    {name:'Київська обл.',      lat:50.35, lng:30.90, ruin:16, rec:44, help:3.2,  level:'Низький',   fill:'#1f5c32', border:'#4ade80'},
+    {name:'Житомирська обл.',   lat:50.25, lng:28.65, ruin:18, rec:29, help:1.5,  level:'Низький',   fill:'#1f5c32', border:'#4ade80'},
+    {name:'Вінницька обл.',     lat:49.23, lng:28.47, ruin:9,  rec:55, help:1.1,  level:'Низький',   fill:'#1f5c32', border:'#4ade80'},
+    {name:'Черкаська обл.',     lat:49.44, lng:32.06, ruin:14, rec:33, help:1.4,  level:'Низький',   fill:'#1f5c32', border:'#4ade80'},
+    {name:'Кіровоградська обл.',lat:48.50, lng:32.25, ruin:28, rec:18, help:2.2,  level:'Помірний',  fill:'#7c4010', border:'#fb923c'},
+    {name:'Одеська обл.',       lat:46.48, lng:30.73, ruin:19, rec:26, help:2.8,  level:'Низький',   fill:'#1f5c32', border:'#4ade80'},
+    {name:'Львівська обл.',     lat:49.84, lng:24.03, ruin:12, rec:45, help:2.1,  level:'Низький',   fill:'#1f5c32', border:'#4ade80'},
+    {name:'Київ (місто)',       lat:50.45, lng:30.52, ruin:11, rec:61, help:5.8,  level:'Низький',   fill:'#1f5c32', border:'#4ade80'},
+    {name:'Харків (місто)',     lat:49.99, lng:36.25, ruin:55, rec:14, help:3.1,  level:'Високий',   fill:'#7c1d1d', border:'#f87171'},
+  ];
+
+  const levelColors = {'Критичний':'#ef4444','Високий':'#f87171','Помірний':'#fb923c','Низький':'#4ade80'};
+
+  oblasts.forEach(o => {
+    const baseR = 8 + (o.ruin / 100) * 14;
+    const circle = L.circleMarker([o.lat, o.lng], {
+      radius: baseR,
+      fillColor: o.fill,
+      fillOpacity: 0.9,
+      color: o.border,
+      weight: 1.5,
+    }).addTo(heroMap);
+
+    const lc = levelColors[o.level] || '#fff';
+    circle.bindPopup(`<div style="font-family:system-ui,sans-serif;background:#1a2332;border:1px solid rgba(255,255,255,0.15);border-radius:9px;padding:12px 16px;min-width:190px;"><div style="font-weight:600;font-size:13px;color:#fff;margin-bottom:8px;">${o.name}</div><div style="display:flex;justify-content:space-between;font-size:12px;margin-top:4px;gap:16px;"><span style="color:rgba(255,255,255,0.4);">Рівень</span><span style="font-weight:600;color:${lc};">${o.level}</span></div><div style="display:flex;justify-content:space-between;font-size:12px;margin-top:4px;gap:16px;"><span style="color:rgba(255,255,255,0.4);">Руйнування</span><span style="font-weight:600;color:#f87171;">${o.ruin}%</span></div><div style="display:flex;justify-content:space-between;font-size:12px;margin-top:4px;gap:16px;"><span style="color:rgba(255,255,255,0.4);">Відновлення</span><span style="font-weight:600;color:#4ade80;">${o.rec}%</span></div></div>`,
+      {closeButton:false, offset:[0,-4]});
+    circle.on('mouseover', function(){ this.openPopup(); });
+    circle.on('mouseout',  function(){ this.closePopup(); });
+
+    let t = Math.random() * Math.PI * 2;
+    setInterval(() => { t += 0.03; circle.setStyle({radius: baseR * (1 + Math.sin(t) * 0.08)}); }, 60);
+  });
 }
 
 function fetchGeoJSON(map, isDark){
