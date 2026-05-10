@@ -74,8 +74,8 @@
   --blue:#1A4480;
   --blue-mid:#1C5BA3;
   --blue-light:#EFF6FF;
-  --navy:#0F1E35;
-  --navy2:#162641;
+  --navy:#1B3A6B;
+  --navy2:#1E4278;
   --text:#0F172A;
   --text2:#475569;
   --text3:#94A3B8;
@@ -142,13 +142,13 @@ nav{position:sticky;top:0;z-index:200;height:52px;background:rgba(255,255,255,0.
 .btn-hero-s:hover{border-color:rgba(255,255,255,.4);}
 .hero-right{position:relative;background:var(--navy2);}
 #heroMap{width:100%;height:100%;min-height:560px;}
-.hero-right::before{content:"";position:absolute;inset:0;background:linear-gradient(to right,var(--navy) 0%,var(--navy) 42%,rgba(15,30,53,0.0) 68%,transparent 100%);pointer-events:none;z-index:2;}
-.hero-right::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,var(--navy) 0%,transparent 22%,transparent 78%,var(--navy) 100%);pointer-events:none;z-index:2;}
+.hero-right::before{content:"";position:absolute;inset:0;background:linear-gradient(to right,var(--navy) 0%,var(--navy) 38%,rgba(27,58,107,0.0) 62%,transparent 100%);pointer-events:none;z-index:2;}
+.hero-right::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(27,58,107,0.7) 0%,transparent 20%,transparent 80%,rgba(27,58,107,0.7) 100%);pointer-events:none;z-index:2;}
 .hero-map-label{position:absolute;top:16px;left:16px;z-index:1000;background:rgba(13,27,54,.85);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:8px 14px;font-size:11px;color:rgba(255,255,255,.6);backdrop-filter:blur(4px);}
 .hero-map-label strong{color:white;display:block;font-size:13px;margin-bottom:2px;}
 
 /* ─── STATS ─── */
-.stats{background:#0F1E35;border-top:3px solid #1A4480;padding:0 48px;}
+.stats{background:#1B3A6B;border-top:3px solid #2D5A9E;padding:0 48px;}
 .stat-chain-link{text-decoration:none;color:inherit;display:block;}
 .stat-chain-link:hover .stat-bsc{text-decoration:underline;}
 .stat-n-green{color:#4ade80!important;}
@@ -277,13 +277,13 @@ nav{position:sticky;top:0;z-index:200;height:52px;background:rgba(255,255,255,0.
 .b-done{background:rgba(22,163,74,.15);color:#16A34A;}
 .b-wip{background:var(--amber-bg);color:var(--amber);}
 .b-plan{background:var(--bg);color:var(--text3);border:1px solid var(--border);opacity:.6;}
-.roadmap{background:var(--navy);border-radius:12px;padding:28px 26px;}
-.rm-h{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:22px;}
+.roadmap{background:#EEF2F8;border:1px solid #C5D3E8;border-radius:12px;padding:28px 26px;}
+.rm-h{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#6B7E99;margin-bottom:22px;}
 .rm-item{display:flex;gap:16px;margin-bottom:20px;}
 .rm-item:last-child{margin-bottom:0;}
-.rm-q{font-size:13px;font-weight:700;color:#60A5FA;flex-shrink:0;width:24px;}
-.rm-period{font-size:10px;color:rgba(255,255,255,.35);margin-bottom:3px;}
-.rm-desc{font-size:13px;color:rgba(255,255,255,.72);line-height:1.5;}
+.rm-q{font-size:13px;font-weight:700;color:#1A4480;flex-shrink:0;width:24px;}
+.rm-period{font-size:10px;color:#8899B0;margin-bottom:3px;}
+.rm-desc{font-size:13px;color:#2D3F55;line-height:1.5;}
 
 /* ─── CTA ─── */
 .cta{position:relative;background:var(--blue);padding:56px 48px;text-align:center;}
@@ -390,7 +390,7 @@ footer{background:var(--navy);padding:48px 48px 0;}
 .ai-explain{}
 
 /* CHAIN BLOCK IN COMMUNITY CARD */
-.cc-chain-block{display:block;margin-top:12px;background:#0F1E35;border:1px solid rgba(74,222,128,.2);border-radius:8px;padding:10px 13px;text-decoration:none;transition:background .15s;}
+.cc-chain-block{display:block;margin-top:12px;background:#1B3A6B;border:1px solid rgba(74,222,128,.25);border-radius:8px;padding:10px 13px;text-decoration:none;transition:background .15s;}
 .cc-chain-block:hover{background:#162641;}
 .cc-chain-head{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
 .cc-chain-label{font-size:10px;color:#4ade80;font-family:'IBM Plex Mono',monospace;font-weight:600;text-transform:uppercase;letter-spacing:.4px;flex:1;}
@@ -925,7 +925,7 @@ footer{background:var(--navy);padding:48px 48px 0;}
     <div class="ft-bottom">
       <span>© 2026 UA Rebuild</span>
       <div class="ft-george">
-        <img src="/st-george.png" alt="" height="80" style="opacity:.18;filter:invert(1);display:block;"/>
+        <img src="/st-george.svg" alt="" height="120" style="opacity:.22;display:block;"/>
       </div>
     </div>
   </div>
@@ -973,8 +973,8 @@ function initMaps(){
 
   // Hero map - live Leaflet
   const heroMap = L.map('heroMap', {
-    center: [49.0, 32.0],
-    zoom: 6,
+    center: [48.5, 31.5],
+    zoom: 5,
     zoomControl: false,
     scrollWheelZoom: false,
     attributionControl: false,
