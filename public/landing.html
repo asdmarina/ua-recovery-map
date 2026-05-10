@@ -74,8 +74,8 @@
   --blue:#1A4480;
   --blue-mid:#1C5BA3;
   --blue-light:#EFF6FF;
-  --navy:#1B3A6B;
-  --navy2:#1E4278;
+  --navy:#152D55;
+  --navy2:#1A3560;
   --text:#0F172A;
   --text2:#475569;
   --text3:#94A3B8;
@@ -973,7 +973,7 @@ function initMaps(){
 
   // Hero map - live Leaflet
   const heroMap = L.map('heroMap', {
-    center: [48.5, 31.5],
+    center: [48.8, 30.5],
     zoom: 5,
     zoomControl: false,
     scrollWheelZoom: false,
@@ -988,25 +988,32 @@ function initMaps(){
   }).addTo(heroMap);
 
   const oblasts = [
-    {name:'Харківська обл.',    lat:49.99, lng:36.23, ruin:58, rec:12, help:7.2,  level:'Високий',   fill:'#7c1d1d', border:'#f87171'},
-    {name:'Донецька обл.',      lat:48.00, lng:37.80, ruin:78, rec:2,  help:0.8,  level:'Критичний', fill:'#4c0d0d', border:'#ef4444'},
-    {name:'Луганська обл.',     lat:48.70, lng:39.30, ruin:67, rec:3,  help:1.2,  level:'Критичний', fill:'#4c0d0d', border:'#ef4444'},
-    {name:'Запорізька обл.',    lat:47.80, lng:35.15, ruin:47, rec:8,  help:5.1,  level:'Помірний',  fill:'#7c4010', border:'#fb923c'},
-    {name:'Херсонська обл.',    lat:46.60, lng:32.60, ruin:71, rec:4,  help:1.5,  level:'Критичний', fill:'#4c0d0d', border:'#ef4444'},
-    {name:'Миколаївська обл.',  lat:47.00, lng:31.98, ruin:52, rec:9,  help:4.4,  level:'Високий',   fill:'#7c1d1d', border:'#f87171'},
-    {name:'Дніпропетровська обл.',lat:48.45,lng:35.05,ruin:34, rec:21, help:4.8,  level:'Помірний',  fill:'#7c4010', border:'#fb923c'},
-    {name:'Полтавська обл.',    lat:49.59, lng:34.55, ruin:41, rec:15, help:3.6,  level:'Помірний',  fill:'#7c4010', border:'#fb923c'},
-    {name:'Сумська обл.',       lat:50.91, lng:34.80, ruin:38, rec:12, help:2.9,  level:'Помірний',  fill:'#7c4010', border:'#fb923c'},
-    {name:'Чернігівська обл.',  lat:51.50, lng:31.30, ruin:22, rec:28, help:2.0,  level:'Помірний',  fill:'#7c4010', border:'#fb923c'},
-    {name:'Київська обл.',      lat:50.35, lng:30.90, ruin:16, rec:44, help:3.2,  level:'Низький',   fill:'#1f5c32', border:'#4ade80'},
-    {name:'Житомирська обл.',   lat:50.25, lng:28.65, ruin:18, rec:29, help:1.5,  level:'Низький',   fill:'#1f5c32', border:'#4ade80'},
-    {name:'Вінницька обл.',     lat:49.23, lng:28.47, ruin:9,  rec:55, help:1.1,  level:'Низький',   fill:'#1f5c32', border:'#4ade80'},
-    {name:'Черкаська обл.',     lat:49.44, lng:32.06, ruin:14, rec:33, help:1.4,  level:'Низький',   fill:'#1f5c32', border:'#4ade80'},
-    {name:'Кіровоградська обл.',lat:48.50, lng:32.25, ruin:28, rec:18, help:2.2,  level:'Помірний',  fill:'#7c4010', border:'#fb923c'},
-    {name:'Одеська обл.',       lat:46.48, lng:30.73, ruin:19, rec:26, help:2.8,  level:'Низький',   fill:'#1f5c32', border:'#4ade80'},
-    {name:'Львівська обл.',     lat:49.84, lng:24.03, ruin:12, rec:45, help:2.1,  level:'Низький',   fill:'#1f5c32', border:'#4ade80'},
-    {name:'Київ (місто)',       lat:50.45, lng:30.52, ruin:11, rec:61, help:5.8,  level:'Низький',   fill:'#1f5c32', border:'#4ade80'},
-    {name:'Харків (місто)',     lat:49.99, lng:36.25, ruin:55, rec:14, help:3.1,  level:'Високий',   fill:'#7c1d1d', border:'#f87171'},
+    {name:'Харківська обл.',      lat:49.99, lng:36.23, ruin:58, rec:12, help:7.2,  level:'Високий',   fill:'#DC2626', border:'#FCA5A5'},
+    {name:'Донецька обл.',        lat:48.00, lng:37.80, ruin:78, rec:2,  help:0.8,  level:'Критичний', fill:'#991B1B', border:'#EF4444'},
+    {name:'Луганська обл.',       lat:48.70, lng:39.30, ruin:67, rec:3,  help:1.2,  level:'Критичний', fill:'#991B1B', border:'#EF4444'},
+    {name:'Запорізька обл.',      lat:47.80, lng:35.15, ruin:47, rec:8,  help:5.1,  level:'Помірний',  fill:'#D97706', border:'#FCD34D'},
+    {name:'Херсонська обл.',      lat:46.60, lng:32.60, ruin:71, rec:4,  help:1.5,  level:'Критичний', fill:'#991B1B', border:'#EF4444'},
+    {name:'Миколаївська обл.',    lat:47.00, lng:31.98, ruin:52, rec:9,  help:4.4,  level:'Високий',   fill:'#DC2626', border:'#FCA5A5'},
+    {name:'Дніпропетровська обл.',lat:48.45, lng:35.05, ruin:34, rec:21, help:4.8,  level:'Помірний',  fill:'#D97706', border:'#FCD34D'},
+    {name:'Полтавська обл.',      lat:49.59, lng:34.55, ruin:41, rec:15, help:3.6,  level:'Помірний',  fill:'#D97706', border:'#FCD34D'},
+    {name:'Сумська обл.',         lat:50.91, lng:34.80, ruin:38, rec:12, help:2.9,  level:'Помірний',  fill:'#D97706', border:'#FCD34D'},
+    {name:'Чернігівська обл.',    lat:51.50, lng:31.30, ruin:22, rec:28, help:2.0,  level:'Помірний',  fill:'#D97706', border:'#FCD34D'},
+    {name:'Київська обл.',        lat:50.35, lng:30.90, ruin:16, rec:44, help:3.2,  level:'Низький',   fill:'#15803D', border:'#4ADE80'},
+    {name:'Житомирська обл.',     lat:50.25, lng:28.65, ruin:18, rec:29, help:1.5,  level:'Низький',   fill:'#15803D', border:'#4ADE80'},
+    {name:'Вінницька обл.',       lat:49.23, lng:28.47, ruin:9,  rec:55, help:1.1,  level:'Низький',   fill:'#15803D', border:'#4ADE80'},
+    {name:'Черкаська обл.',       lat:49.44, lng:32.06, ruin:14, rec:33, help:1.4,  level:'Низький',   fill:'#15803D', border:'#4ADE80'},
+    {name:'Кіровоградська обл.',  lat:48.50, lng:32.25, ruin:28, rec:18, help:2.2,  level:'Помірний',  fill:'#D97706', border:'#FCD34D'},
+    {name:'Одеська обл.',         lat:46.48, lng:30.73, ruin:19, rec:26, help:2.8,  level:'Низький',   fill:'#15803D', border:'#4ADE80'},
+    {name:'Львівська обл.',       lat:49.84, lng:24.03, ruin:12, rec:45, help:2.1,  level:'Низький',   fill:'#15803D', border:'#4ADE80'},
+    {name:'Івано-Франківська обл.',lat:48.92, lng:24.71, ruin:5, rec:71, help:1.2, level:'Низький',   fill:'#15803D', border:'#4ADE80'},
+    {name:'Рівненська обл.',      lat:50.62, lng:26.25, ruin:11, rec:38, help:0.9,  level:'Низький',   fill:'#15803D', border:'#4ADE80'},
+    {name:'Тернопільська обл.',   lat:49.55, lng:25.59, ruin:8,  rec:62, help:1.8,  level:'Низький',   fill:'#15803D', border:'#4ADE80'},
+    {name:'Хмельницька обл.',     lat:49.42, lng:26.98, ruin:10, rec:48, help:1.3,  level:'Низький',   fill:'#15803D', border:'#4ADE80'},
+    {name:'Закарпатська обл.',    lat:48.62, lng:22.29, ruin:4,  rec:78, help:0.7,  level:'Низький',   fill:'#15803D', border:'#4ADE80'},
+    {name:'Чернівецька обл.',     lat:48.29, lng:25.93, ruin:6,  rec:66, help:0.8,  level:'Низький',   fill:'#15803D', border:'#4ADE80'},
+    {name:'Волинська обл.',       lat:50.74, lng:25.33, ruin:9,  rec:52, help:1.0,  level:'Низький',   fill:'#15803D', border:'#4ADE80'},
+    {name:'Київ (місто)',         lat:50.45, lng:30.52, ruin:11, rec:61, help:5.8,  level:'Низький',   fill:'#15803D', border:'#4ADE80'},
+    {name:'Харків (місто)',       lat:50.00, lng:36.30, ruin:55, rec:14, help:3.1,  level:'Високий',   fill:'#DC2626', border:'#FCA5A5'},
   ];
 
   const levelColors = {'Критичний':'#ef4444','Високий':'#f87171','Помірний':'#fb923c','Низький':'#4ade80'};
