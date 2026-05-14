@@ -131,7 +131,7 @@ nav{position:sticky;top:0;z-index:200;height:52px;background:rgba(255,255,255,0.
 .hero-left,.hero-right{position:relative;z-index:2;}
 .hero-left{padding:64px 48px 52px;display:flex;flex-direction:column;justify-content:center;}
 .hero-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:5px 12px;font-size:11px;font-weight:500;color:rgba(255,255,255,.6);margin-bottom:24px;width:fit-content;}
-.hero-tag-dot{width:5px;height:5px;border-radius:50%;background:#4ADE80;}
+.hero-tag-dot{width:5px;height:5px;border-radius:50%;background:#60A5FA;}
 .hero h1{font-size:44px;font-weight:700;line-height:1.1;color:white;letter-spacing:-.025em;margin-bottom:18px;}
 .hero h1 strong{color:var(--yellow-ua);}
 .hero-sub{font-size:16px;color:rgba(255,255,255,.62);line-height:1.7;margin-bottom:36px;max-width:460px;}
@@ -151,7 +151,7 @@ nav{position:sticky;top:0;z-index:200;height:52px;background:rgba(255,255,255,0.
 .stats{background:#1B3A6B;border-top:3px solid #2D5A9E;padding:0 48px;}
 .stat-chain-link{text-decoration:none;color:inherit;display:block;}
 .stat-chain-link:hover .stat-bsc{text-decoration:underline;}
-.stat-n-green{color:#4ade80!important;}
+.stat-n-green{color:#FFFFFF!important;}
 .stat-bsc{color:#60a5fa;font-size:10px;}
 .stats-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);}
 .stat{padding:30px 0 30px 32px;border-right:1px solid rgba(255,255,255,.22);position:relative;}
@@ -201,7 +201,7 @@ nav{position:sticky;top:0;z-index:200;height:52px;background:rgba(255,255,255,0.
 .map-card-header{padding:11px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,#fff,#fafbfc);}
 .map-card-title{font-size:13px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:7px;}
 .map-card-title::before{content:"";display:inline-flex;gap:4px;width:38px;height:8px;background-image:radial-gradient(circle,#FCA5A5 3px,transparent 3.5px),radial-gradient(circle,#FDE68A 3px,transparent 3.5px),radial-gradient(circle,#86EFAC 3px,transparent 3.5px);background-size:13px 8px;background-position:0 50%,13px 50%,26px 50%;background-repeat:no-repeat;margin-right:4px;}
-.live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:blink 2.2s infinite;}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#1A4480;animation:blink 2.2s infinite;}
 .map-card-meta{font-size:11px;color:var(--text3);font-variant-numeric:tabular-nums;}
 #liveMap{height:400px;}
 .map-legend-row{display:none;}
@@ -237,8 +237,8 @@ nav{position:sticky;top:0;z-index:200;height:52px;background:rgba(255,255,255,0.
 .chat-card:hover{box-shadow:0 1px 3px rgba(15,23,42,.05),0 22px 60px -18px rgba(27,79,204,.28);}
 .chat-top{background:linear-gradient(180deg,var(--navy),#0a1530);padding:13px 16px;display:flex;flex-direction:column;gap:4px;}
 .chat-top-row{display:flex;align-items:center;gap:8px;}
-.chat-top-dot{width:7px;height:7px;border-radius:50%;background:#4ADE80;box-shadow:0 0 0 0 rgba(74,222,128,.6);animation:chatPulse 2s infinite;}
-@keyframes chatPulse{0%{box-shadow:0 0 0 0 rgba(74,222,128,.55);}70%{box-shadow:0 0 0 8px rgba(74,222,128,0);}100%{box-shadow:0 0 0 0 rgba(74,222,128,0);}}
+.chat-top-dot{width:7px;height:7px;border-radius:50%;background:#60A5FA;box-shadow:0 0 0 0 rgba(96,165,250,.4);animation:chatPulse 2s infinite;}
+@keyframes chatPulse{0%{box-shadow:0 0 0 0 rgba(96,165,250,.4);}70%{box-shadow:0 0 0 8px rgba(96,165,250,0);}100%{box-shadow:0 0 0 0 rgba(96,165,250,0);}}
 .chat-top-title{font-size:12px;font-weight:600;color:rgba(255,255,255,.92);letter-spacing:.01em;}
 .chat-top-sub{font-size:10.5px;color:rgba(255,255,255,.5);line-height:1.4;}
 .chat-body{padding:16px;background:var(--bg);min-height:220px;display:flex;flex-direction:column;gap:10px;max-height:280px;overflow-y:auto;scroll-behavior:smooth;}
@@ -264,7 +264,7 @@ nav{position:sticky;top:0;z-index:200;height:52px;background:rgba(255,255,255,0.
 .chat-btn:hover{background:var(--blue-mid);transform:translateY(-1px);}
 .chat-btn:active{transform:translateY(0);}
 .chat-foot{display:flex;align-items:center;gap:8px;padding:8px 14px;background:#0a1530;color:rgba(255,255,255,.55);font-size:10px;}
-.chat-foot-dot{width:5px;height:5px;border-radius:50%;background:#4ADE80;}
+.chat-foot-dot{width:5px;height:5px;border-radius:50%;background:#60A5FA;}
 .chat-foot-sep{opacity:.3;}
 
 /* ─── STATUS ─── */
@@ -274,7 +274,7 @@ nav{position:sticky;top:0;z-index:200;height:52px;background:rgba(255,255,255,0.
 .s-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
 .s-txt{font-size:13px;color:var(--text);flex:1;}
 .s-badge{font-size:10px;font-weight:600;padding:2px 9px;border-radius:4px;white-space:nowrap;}
-.b-done{background:rgba(22,163,74,.15);color:#16A34A;}
+.b-done{background:rgba(26,68,128,.1);color:#1A4480;}
 .b-wip{background:var(--amber-bg);color:var(--amber);}
 .b-plan{background:var(--bg);color:var(--text3);border:1px solid var(--border);opacity:.6;}
 .roadmap{background:#EEF2F8;border:1px solid #C5D3E8;border-radius:12px;padding:28px 26px;}
@@ -333,7 +333,7 @@ footer{background:#0F1E35;padding:36px 48px 0;}
 .f-submit:hover{opacity:.88;}
 .f-success{display:none;text-align:center;padding:30px 10px 10px;}
 .f-success.show{display:block;}
-.f-success-icon{width:54px;height:54px;border-radius:50%;background:rgba(74,222,128,.15);color:#4ADE80;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
+.f-success-icon{width:54px;height:54px;border-radius:50%;background:rgba(26,68,128,.1);color:#1A4480;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
 .f-success-msg{font-size:15px;color:rgba(255,255,255,.85);line-height:1.55;}
 
 /* VERIFICATION SECTION */
@@ -343,14 +343,14 @@ footer{background:#0F1E35;padding:36px 48px 0;}
 .vrf-num{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:#1B4FCC;opacity:.5;padding-top:2px;flex-shrink:0;width:24px;}
 .vrf-ttl{font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;}
 .vrf-txt{font-size:13px;color:var(--text2);line-height:1.7;}
-.vrf-card{background:#EEF2F8;border:1px solid #C5D3E8;border-radius:14px;padding:22px;position:sticky;top:62px;}
-.vrf-card-head{display:flex;align-items:center;gap:8px;margin-bottom:18px;font-size:13px;font-weight:600;color:#15803D;}
-.vrf-badge-live{margin-left:auto;background:rgba(21,128,61,.1);color:#15803D;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;border:1px solid rgba(21,128,61,.25);letter-spacing:.5px;}
+.vrf-card{background:#FFFFFF;border:1px solid #D1D9E0;border-radius:12px;padding:24px;position:sticky;top:62px;box-shadow:0 1px 3px rgba(15,23,42,.06),0 8px 32px -8px rgba(15,23,42,.1);}
+.vrf-card-head{display:flex;align-items:center;gap:8px;margin-bottom:18px;font-size:13px;font-weight:600;color:#1A4480;}
+.vrf-badge-live{margin-left:auto;background:rgba(26,68,128,.08);color:#1A4480;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;border:1px solid rgba(26,68,128,.2);letter-spacing:.5px;}
 .vrf-card-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #D1D9E0;}
 .vrf-card-label{font-size:10px;color:#8899B0;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.5px;}
 .vrf-card-val{font-size:12px;font-weight:500;color:#2D3F55;}
-.vrf-green{color:#4ade80!important;font-weight:700!important;font-size:14px!important;}
-.vrf-chain-pill{background:rgba(234,179,8,.1);color:#fbbf24;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;border:1px solid rgba(234,179,8,.2);}
+.vrf-green{color:#1A4480!important;font-weight:700!important;font-size:14px!important;}
+.vrf-chain-pill{background:rgba(26,68,128,.08);color:#1A4480;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;border:1px solid rgba(26,68,128,.2);}
 .vrf-card-hash{padding:10px 0 4px;}
 .vrf-hash-val{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#1A4480;margin-top:4px;word-break:break-all;}
 .vrf-scan-btn{display:flex;align-items:center;gap:6px;margin-top:14px;padding:9px 14px;background:rgba(26,68,128,.08);border:1px solid #C5D3E8;border-radius:8px;color:#1A4480;font-size:12px;font-weight:600;text-decoration:none;transition:background .15s;justify-content:center;}
@@ -368,7 +368,7 @@ footer{background:#0F1E35;padding:36px 48px 0;}
 .ai-layout{display:grid;grid-template-columns:380px 1fr;gap:48px;align-items:start;}
 .ai-demo-card{background:#EEF2F8;border:1px solid #C5D3E8;border-radius:14px;overflow:hidden;position:sticky;top:62px;}
 .ai-demo-head{display:flex;align-items:center;gap:8px;padding:14px 16px;background:rgba(26,68,128,.05);border-bottom:1px solid #C5D3E8;}
-.ai-demo-dot{width:8px;height:8px;border-radius:50%;background:#15803D;animation:pulse 2s infinite;flex-shrink:0;}
+.ai-demo-dot{width:8px;height:8px;border-radius:50%;background:#1B4FCC;animation:pulse 2s infinite;flex-shrink:0;}
 .ai-demo-title{font-size:12px;font-weight:600;color:#152D55;flex:1;}
 .ai-demo-powered{font-size:10px;color:#8899B0;font-family:'IBM Plex Mono',monospace;}
 .ai-demo-messages{padding:16px;display:flex;flex-direction:column;gap:10px;}
@@ -381,18 +381,18 @@ footer{background:#0F1E35;padding:36px 48px 0;}
 .ai-chip:hover{background:#E2EAF4;}
 .ai-demo-footer{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:rgba(26,68,128,.03);border-top:1px solid #C5D3E8;}
 .ai-demo-status{display:flex;align-items:center;gap:6px;font-size:10px;color:#8899B0;}
-.ai-status-dot{width:5px;height:5px;border-radius:50%;background:#15803D;animation:pulse 2s infinite;flex-shrink:0;}
+.ai-status-dot{width:5px;height:5px;border-radius:50%;background:#1B4FCC;animation:pulse 2s infinite;flex-shrink:0;}
 .ai-demo-verified{font-size:10px;color:#8899B0;font-family:'IBM Plex Mono',monospace;}
 .ai-explain{}
 
 /* CHAIN BLOCK IN COMMUNITY CARD */
-.cc-chain-block{display:block;margin-top:12px;background:#1B3A6B;border:1px solid rgba(74,222,128,.25);border-radius:8px;padding:10px 13px;text-decoration:none;transition:background .15s;}
-.cc-chain-block:hover{background:#162641;}
+.cc-chain-block{display:block;margin-top:12px;background:#F0F4FF;border:1px solid #C5D3E8;border-radius:8px;padding:10px 13px;text-decoration:none;transition:background .15s;}
+.cc-chain-block:hover{background:#E5EDFF;}
 .cc-chain-head{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
-.cc-chain-label{font-size:10px;color:#4ade80;font-family:'IBM Plex Mono',monospace;font-weight:600;text-transform:uppercase;letter-spacing:.4px;flex:1;}
-.cc-chain-live{font-size:10px;color:#4ade80;font-family:'IBM Plex Mono',monospace;font-weight:600;}
-.cc-chain-hash{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#60a5fa;margin-bottom:3px;}
-.cc-chain-hint{font-size:10px;color:rgba(255,255,255,.3);}
+.cc-chain-label{font-size:10px;color:#1A4480;font-family:'IBM Plex Mono',monospace;font-weight:600;text-transform:uppercase;letter-spacing:.4px;flex:1;}
+.cc-chain-live{font-size:10px;color:#1A4480;font-family:'IBM Plex Mono',monospace;font-weight:600;}
+.cc-chain-hash{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#1B4FCC;margin-bottom:3px;}
+.cc-chain-hint{font-size:10px;color:#6B7E99;}
 
 /* LIVE equal height */
 .live-grid{display:grid;grid-template-columns:1fr 380px;gap:24px;align-items:stretch;}
@@ -526,7 +526,7 @@ footer{background:#0F1E35;padding:36px 48px 0;}
     <div class="stat"><div class="stat-n">$47B+</div><div class="stat-l">Задокументована міжнародна допомога</div></div>
     <div class="stat"><div class="stat-n">1,400+</div><div class="stat-l">Громад потребують пріоритетної уваги</div></div>
     <div class="stat"><div class="stat-n">68%</div><div class="stat-l">Допомоги не відстежується публічно</div></div>
-    <div class="stat"><div class="stat-n stat-n-green"><a href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener" style="color:#4ade80;text-decoration:none;">9 ✓</a></div><div class="stat-l">Верифікацій on-chain · <a href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener" class="stat-bsc">BscScan ↗</a></div></div>
+    <div class="stat"><div class="stat-n stat-n-green"><a href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener" style="color:#FFFFFF;text-decoration:none;">9 ✓</a></div><div class="stat-l">Верифікацій on-chain · <a href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener" class="stat-bsc">BscScan ↗</a></div></div>
   </div>
 </div>
 
@@ -583,15 +583,15 @@ footer{background:#0F1E35;padding:36px 48px 0;}
         <div class="sol-txt">Інтерактивна карта на рівні громад — рівень руйнувань, отримана допомога, стан відновлення. Шари даних перемикаються в один клік.</div>
       </div>
       <div class="sol-card">
-        <div class="sol-icon" style="background:#F0FDF4;">
+        <div class="sol-icon" style="background:#EFF6FF;">
           <!-- Shield check -->
-          <svg width="24" height="24" fill="none" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#1B4FCC" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="#1B4FCC" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
         <div class="sol-ttl">Блокчейн-верифікація</div>
         <div class="sol-txt">Ключові записи фіксуються на BNB Chain. Будь-хто може перевірити що дані не змінювались — незалежно і публічно.</div>
       </div>
       <div class="sol-card">
-        <div class="sol-icon" style="background:#FFFBEB;">
+        <div class="sol-icon" style="background:#EFF6FF;">
           <!-- Message circle -->
           <svg width="24" height="24" fill="none" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#B45309" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
@@ -661,7 +661,7 @@ footer{background:#0F1E35;padding:36px 48px 0;}
       <!-- Right: visual chain card -->
       <div class="vrf-card">
         <div class="vrf-card-head">
-          <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#1A4480" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="#1A4480" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
           <span>Верифікований запис</span>
           <span class="vrf-badge-live">Live</span>
         </div>
@@ -815,7 +815,7 @@ footer{background:#0F1E35;padding:36px 48px 0;}
             <div class="cc-m"><div class="cc-m-lbl">Руйнування</div><div class="cc-m-val" style="color:#B91C1C;">71%</div></div>
             <div class="cc-m"><div class="cc-m-lbl">Відновлено</div><div class="cc-m-val" style="color:#D97706;">18%</div></div>
             <div class="cc-m"><div class="cc-m-lbl">Потреба</div><div class="cc-m-val" style="color:#B91C1C;">53%</div></div>
-            <div class="cc-m"><div class="cc-m-lbl">Допомога</div><div class="cc-m-val" style="color:#16A34A;">$2.1M</div></div>
+            <div class="cc-m"><div class="cc-m-lbl">Допомога</div><div class="cc-m-val" style="color:#1A4480;">$2.1M</div></div>
           </div>
           <div class="cc-bars">
             <div class="cc-bar-row"><span class="cc-bar-lbl">Інфраструктура</span><div class="cc-bar-wrap"><div class="cc-bar-fill" style="width:18%;background:#DC2626;"></div></div><span class="cc-bar-val">18%</span></div>
@@ -824,7 +824,7 @@ footer{background:#0F1E35;padding:36px 48px 0;}
           </div>
           <a class="cc-chain-block" href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener">
             <div class="cc-chain-head">
-              <svg width="13" height="13" fill="none" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#4ade80" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="#4ade80" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg width="13" height="13" fill="none" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#1A4480" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="#1A4480" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="cc-chain-label">BNB Chain · Верифіковано</span>
               <span class="cc-chain-live">9 записів ✓</span>
             </div>
@@ -845,10 +845,10 @@ footer{background:#0F1E35;padding:36px 48px 0;}
     <p class="sec-desc">UA Rebuild в активній розробці, не дослідницький проект.</p>
     <div class="status-wrap">
       <div class="status-list">
-        <div class="s-item"><span class="s-dot" style="background:#16A34A;"></span><span class="s-txt">Архітектура системи</span><span class="s-badge b-done">Готово</span></div>
-        <div class="s-item"><span class="s-dot" style="background:#16A34A;"></span><span class="s-txt">Інтерактивна карта — прототип</span><span class="s-badge b-done">Готово</span></div>
-        <div class="s-item"><span class="s-dot" style="background:#16A34A;"></span><span class="s-txt">AI-аналітика — базовий Q&A</span><span class="s-badge b-done">Готово</span></div>
-        <div class="s-item"><span class="s-dot" style="background:#16A34A;"></span><span class="s-txt">BNB Chain smart contracts · <a href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener" style="color:var(--ua-blue);font-size:11px;">9 верифікацій ↗</a></span><span class="s-badge b-done">Готово</span></div>
+        <div class="s-item"><span class="s-dot" style="background:#1A4480;"></span><span class="s-txt">Архітектура системи</span><span class="s-badge b-done">Готово</span></div>
+        <div class="s-item"><span class="s-dot" style="background:#1A4480;"></span><span class="s-txt">Інтерактивна карта — прототип</span><span class="s-badge b-done">Готово</span></div>
+        <div class="s-item"><span class="s-dot" style="background:#1A4480;"></span><span class="s-txt">AI-аналітика — базовий Q&A</span><span class="s-badge b-done">Готово</span></div>
+        <div class="s-item"><span class="s-dot" style="background:#1A4480;"></span><span class="s-txt">BNB Chain smart contracts · <a href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener" style="color:var(--ua-blue);font-size:11px;">9 верифікацій ↗</a></span><span class="s-badge b-done">Готово</span></div>
         <div class="s-item"><span class="s-dot" style="background:#94A3B8;"></span><span class="s-txt">Інтеграція датасетів OCHA/UNHCR</span><span class="s-badge b-plan">Q3 2026</span></div>
         <div class="s-item"><span class="s-dot" style="background:#94A3B8;"></span><span class="s-txt">Партнерства з НГО</span><span class="s-badge b-plan">Q3 2026</span></div>
         <div class="s-item"><span class="s-dot" style="background:#94A3B8;"></span><span class="s-txt">Публічний запуск</span><span class="s-badge b-plan">Q3 2026</span></div>
