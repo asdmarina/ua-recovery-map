@@ -101,7 +101,7 @@ UA Rebuild is the missing layer on top of existing data sources.
 
 ## Founder
 
-Marina — Senior Product Designer with experience building monitoring systems for UNDP (Lebanon, Madagascar). Backed by Binance Web3 Grant.
+Marina Linchevska - Senior Product Designer with experience building monitoring systems for UNDP.
 
 ---
 
