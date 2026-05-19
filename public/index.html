@@ -52,9 +52,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--bg2);border
 /* ── HERO ── */
 .hero{margin-top:46px;position:relative;min-height:100vh;display:flex;flex-direction:column;}
 .hero-img{position:relative;flex:1;min-height:76vh;overflow:hidden;}
-.hero-bg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=1800&q=85');background-size:cover;background-position:center 35%;}
-.hero-fade{position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 0%,rgba(232,232,230,.05) 55%,transparent 100%);}
-.hero-kicker{position:absolute;top:22px;left:32px;font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);}
+.hero-bg{position:absolute;inset:0;background-image:url('hero.jpg');background-size:cover;background-position:center 40%;}
+.hero-fade{position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 0%,rgba(14,14,12,.3) 45%,rgba(14,14,12,.15) 100%);}
+.hero-kicker{position:absolute;top:22px;left:32px;font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);text-shadow:0 1px 8px rgba(0,0,0,.6);}
 .hero-card{position:absolute;top:50%;right:32px;transform:translateY(-50%);width:210px;padding:18px;background:var(--dark);border:1px solid var(--gold);box-shadow:0 8px 40px rgba(0,0,0,.45);}
 .dpulse{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:gpulse 2s infinite;display:inline-block;margin-right:5px;vertical-align:middle;}
 @keyframes gpulse{0%,100%{opacity:1;}50%{opacity:.3;}}
@@ -66,7 +66,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--bg2);border
 .card-lnk{display:inline-block;margin-top:5px;font-size:9px;color:var(--gold);text-decoration:none;text-transform:uppercase;letter-spacing:.1em;}
 .card-lnk:hover{opacity:.7;}
 .hero-hl{position:absolute;bottom:0;left:0;right:0;padding:0 32px;}
-.h1{font-family:'Oswald',sans-serif;font-weight:700;line-height:.96;color:var(--ink);font-size:clamp(48px,9.5vw,112px);letter-spacing:-.02em;}
+.h1{font-family:'Oswald',sans-serif;font-weight:700;line-height:.96;color:#F4F2EE;font-size:clamp(48px,9.5vw,112px);letter-spacing:-.02em;text-shadow:0 2px 24px rgba(0,0,0,.5);}
 .h1g{color:var(--gold);}
 .h1sub{font-family:'Oswald',sans-serif;font-size:clamp(13px,2vw,20px);letter-spacing:.04em;color:var(--muted);margin-bottom:18px;margin-top:4px;}
 .hero-below{background:var(--bg);padding:40px 32px 0;}
@@ -279,9 +279,9 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
     </a>
     <div class="nav-links">
       <a href="#challenge"><span class="ua">Проблема</span><span class="en">Challenge</span></a>
-      <a href="#wall"><span class="ua">Стіна відбудовників</span><span class="en">Wall of Rebuilders</span></a>
+      <a href="wall.html"><span class="ua">Стіна відбудовників</span><span class="en">Wall of Rebuilders</span></a>
       <a href="#how"><span class="ua">Як це працює</span><span class="en">How it works</span></a>
-      <a href="wall.html"><span class="ua">Стіна відбудовників</span><span class="en">Wall</span></a>
+      <a href="map.html"><span class="ua">Карта</span><span class="en">Map</span></a>
     </div>
     <div class="ltog">
       <button class="on" onclick="setLang('ua')">UA</button>
@@ -375,8 +375,8 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
   <div class="ch-in">
     <div class="sec-lbl"><span class="ua">Проблема</span><span class="en">The Challenge</span></div>
     <div class="sec-h2">
-      <span class="ua">$47 МІЛЬЯРДІВ.<br><span class="gbar">ЖОДНОГО РЕЄСТРУ</span><br>КУДИ ПІШЛИ ГРОШІ.</span>
-      <span class="en">$47 BILLION.<br><span class="gbar">NO PUBLIC RECORD</span><br>OF WHERE IT WENT.</span>
+      <span class="ua">МІЛЬЯРДИ ДОПОМОГИ.<br><span class="gbar">ЖОДНОГО ПУБЛІЧНОГО</span><br>РЕЄСТРУ.</span>
+      <span class="en">BILLIONS IN AID.<br><span class="gbar">NO PUBLIC</span><br>ACCOUNTABILITY.</span>
     </div>
     <p class="ch-tag">
       <span class="ua">UA Rebuild — публічний шар підзвітності поверх існуючих даних.</span>
