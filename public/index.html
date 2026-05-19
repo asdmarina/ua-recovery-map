@@ -5,19 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>UA Rebuild — Ukraine Remembers Every Contribution</title>
 <meta name="description" content="Public blockchain registry of verified contributions to Ukraine's reconstruction. Every donation, every volunteer effort — permanently recorded on BNB Chain."/>
-<link rel="icon" href="favicon.svg" type="image/svg+xml"/>
+<link rel="icon" href="favicon-32.png" type="image/png"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --bg:#E8E8E6;--bg2:#DDDCDA;--surface:#F2F2F0;
-  --gold:#B8960C;--gold2:#D4A017;
+  --bg:#EDECEA;--bg2:#E2E0DD;--surface:#F4F3F1;
+  --gold:#B8960C;--gold2:#C9A227;
   --ink:#0A0A0A;--ink2:#2A2A2A;
   --muted:#5A5855;--muted2:#8A8880;
   --border:#C8C8C4;--dark:#1A1A18;
 }
-html{font-family:'Inter',sans-serif;color:var(--ink);scroll-behavior:smooth;-webkit-font-smoothing:antialiased;}
+html{font-family:'Inter',sans-serif;color:var(--ink);scroll-behavior:smooth;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
 body{background:var(--bg);overflow-x:hidden;}
 
 /* ── LANG ── */
@@ -31,7 +31,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--bg2);border
 .nav-gold{height:2px;background:var(--gold);}
 .nav-in{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:44px;gap:20px;}
 .nav-logo{display:flex;align-items:center;text-decoration:none;margin-right:auto;}
-.nav-logo-text{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.05em;color:var(--ink);}
+.nav-logo-text{font-family:'Oswald',sans-serif;font-size:22px;letter-spacing:.04em;color:var(--ink);font-weight:600;}
 .nav-logo-text span{color:var(--gold);}
 .nav-links{display:flex;align-items:center;gap:22px;}
 .nav-links a,.nav-links button{background:none;border:none;cursor:pointer;font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .15s;padding:0;}
@@ -58,7 +58,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--bg2);border
 .hero-card{position:absolute;top:50%;right:32px;transform:translateY(-50%);width:210px;padding:18px;background:var(--dark);border:1px solid var(--gold);box-shadow:0 8px 40px rgba(0,0,0,.45);}
 .dpulse{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:gpulse 2s infinite;display:inline-block;margin-right:5px;vertical-align:middle;}
 @keyframes gpulse{0%,100%{opacity:1;}50%{opacity:.3;}}
-.card-n{font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--gold);line-height:1;margin:6px 0 2px;}
+.card-n{font-family:'Oswald',sans-serif;font-size:44px;font-weight:700;color:var(--gold);line-height:1;margin:6px 0 2px;letter-spacing:-.01em;}
 .card-sub{font-size:10px;font-weight:700;color:#F2F2F0;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;}
 .card-hr{border:none;border-top:1px solid rgba(255,255,255,.1);margin-bottom:8px;}
 .card-d{font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px;}
@@ -66,9 +66,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--bg2);border
 .card-lnk{display:inline-block;margin-top:5px;font-size:9px;color:var(--gold);text-decoration:none;text-transform:uppercase;letter-spacing:.1em;}
 .card-lnk:hover{opacity:.7;}
 .hero-hl{position:absolute;bottom:0;left:0;right:0;padding:0 32px;}
-.h1{font-family:'Bebas Neue',sans-serif;line-height:.9;color:var(--ink);font-size:clamp(52px,10vw,118px);}
+.h1{font-family:'Oswald',sans-serif;font-weight:700;line-height:.96;color:var(--ink);font-size:clamp(48px,9.5vw,112px);letter-spacing:-.02em;}
 .h1g{color:var(--gold);}
-.h1sub{font-family:'Bebas Neue',sans-serif;font-size:clamp(13px,2vw,20px);letter-spacing:.04em;color:var(--muted);margin-bottom:18px;margin-top:4px;}
+.h1sub{font-family:'Oswald',sans-serif;font-size:clamp(13px,2vw,20px);letter-spacing:.04em;color:var(--muted);margin-bottom:18px;margin-top:4px;}
 .hero-below{background:var(--bg);padding:40px 32px 0;}
 .hb-in{max-width:1280px;margin:0 auto;}
 .hero-p{font-size:15px;color:var(--ink2);line-height:1.78;max-width:520px;margin-bottom:22px;}
@@ -78,7 +78,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--bg2);border
 .stats{max-width:1280px;margin:40px auto 0;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--gold);}
 .stat{padding:20px 22px;border-right:1px solid var(--border);}
 .stat:last-child{border-right:none;}
-.stat-n{font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--ink);line-height:1;margin-bottom:3px;}
+.stat-n{font-family:'Oswald',sans-serif;font-size:40px;font-weight:700;color:var(--ink);line-height:1;margin-bottom:3px;letter-spacing:-.01em;}
 .stat-l{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:2px;}
 .stat-s{font-size:10px;color:var(--muted2);}
 .stat-a{font-size:10px;color:var(--gold);text-decoration:none;display:block;margin-top:2px;}
@@ -88,7 +88,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--bg2);border
 /* ── SHARED ── */
 .sec-lbl{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
 .sec-lbl::before{content:'';display:block;width:20px;height:1px;background:var(--gold);}
-.sec-h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(34px,5vw,68px);line-height:.92;margin-bottom:10px;}
+.sec-h2{font-family:'Oswald',sans-serif;font-size:clamp(32px,5vw,64px);font-weight:700;line-height:1.0;margin-bottom:14px;letter-spacing:-.01em;}
 .gbar{background:var(--gold);color:var(--ink);padding:0 6px;display:inline-block;line-height:1.05;}
 
 /* ── CHALLENGE ── */
@@ -109,7 +109,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--bg2);border
 .wc{background:var(--surface);padding:22px;border:1px solid var(--border);transition:border-color .2s;display:flex;flex-direction:column;}
 .wc:hover{border-color:var(--gold);}
 .wc-bar{height:2px;background:var(--gold);margin-bottom:14px;}
-.wc-name{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--ink);margin-bottom:7px;}
+.wc-name{font-family:'Oswald',sans-serif;font-size:20px;font-weight:600;color:var(--ink);margin-bottom:7px;letter-spacing:.02em;}
 .wc-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:11px;align-items:center;}
 .tag{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border:1px solid var(--gold);color:var(--gold);}
 .tag-uk{font-size:9px;color:var(--muted2);margin-left:2px;}
@@ -133,15 +133,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--bg2);border
 .cc-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .6s;}
 .cc:hover .cc-bg{transform:scale(1.04);}
 .cc-fade{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.88) 0%,rgba(10,10,10,.25) 55%,transparent 100%);}
-.cc-num{position:absolute;top:12px;left:12px;font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:.15em;color:var(--gold);}
+.cc-num{position:absolute;top:12px;left:12px;font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.15em;color:var(--gold);}
 .cc-status{position:absolute;top:12px;right:12px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:3px 7px;}
 .cc-status.done{background:var(--gold);color:var(--ink);}
 .cc-status.wip{background:transparent;border:1px solid rgba(255,255,255,.4);color:rgba(255,255,255,.8);}
 .cc-status.crit{background:#8B1A1A;color:#FCA5A5;}
 .cc-body{position:absolute;bottom:0;left:0;right:0;padding:16px;}
 .cc-oblast{font-size:9px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:3px;}
-.cc-ms{background:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:11px;color:var(--ink);padding:0 5px;display:inline-block;line-height:1.4;margin-bottom:5px;}
-.cc-name{font-family:'Bebas Neue',sans-serif;font-size:18px;color:#F2F2F0;margin-bottom:4px;}
+.cc-ms{background:var(--gold);font-family:'Oswald',sans-serif;font-size:10px;font-weight:600;color:var(--ink);padding:1px 6px;display:inline-block;line-height:1.5;margin-bottom:5px;letter-spacing:.06em;text-transform:uppercase;}
+.cc-name{font-family:'Oswald',sans-serif;font-size:17px;font-weight:600;color:#F2F2F0;margin-bottom:4px;letter-spacing:.02em;}
 .cc-detail{font-size:10px;color:#C8C8C4;line-height:1.55;}
 .comm-cta-row{text-align:center;padding:20px 32px;border-top:1px solid var(--gold);}
 
@@ -167,7 +167,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--bg2);border
 .dform-grid{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--border);}
 .df-l{background:var(--surface);padding:40px;}
 .df-r{background:var(--bg);padding:40px;border-left:1px solid var(--border);}
-.df-h{font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,4vw,52px);line-height:.9;margin-bottom:18px;}
+.df-h{font-family:'Oswald',sans-serif;font-size:clamp(28px,4vw,52px);line-height:.95;margin-bottom:18px;}
 .df-p{font-size:13px;color:var(--ink2);line-height:1.72;max-width:320px;margin-bottom:24px;}
 .df-item{display:flex;gap:10px;align-items:flex-start;margin-bottom:14px;}
 .df-chk{width:17px;height:17px;border:1px solid var(--gold);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;}
@@ -186,7 +186,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--bg2);border
 .fnote{font-size:9px;color:var(--muted2);text-align:center;margin-top:6px;line-height:1.5;}
 .success-msg{display:none;text-align:center;padding:40px 20px;}
 .sicon{width:46px;height:46px;border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;}
-.sttl{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--ink);text-transform:uppercase;margin-bottom:6px;}
+.sttl{font-family:'Oswald',sans-serif;font-size:22px;font-weight:600;color:var(--ink);letter-spacing:.03em;margin-bottom:6px;}
 .stxt{font-size:12px;color:var(--muted);line-height:1.65;}
 
 /* ── ROADMAP ── */
@@ -197,7 +197,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--bg2);border
 .rmc:last-child{border-right:none;}
 .rm-phase{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:2px;display:flex;align-items:center;gap:6px;}
 .rm-date{font-size:10px;color:var(--muted2);margin-bottom:9px;font-style:italic;}
-.rm-title{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--ink);margin-bottom:11px;text-transform:uppercase;}
+.rm-title{font-family:'Oswald',sans-serif;font-size:18px;font-weight:600;color:var(--ink);margin-bottom:11px;letter-spacing:.03em;}
 .rm-items{display:flex;flex-direction:column;gap:6px;}
 .rmi{display:flex;gap:6px;align-items:flex-start;font-size:11px;color:var(--ink2);line-height:1.55;}
 .rmi.done{color:var(--ink);font-weight:500;}
@@ -208,7 +208,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--bg2);border
 .cta-bg-img{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1527525443983-6e60c75fff46?w=1600&q=80');background-size:cover;background-position:center 40%;}
 .cta-overlay{position:absolute;inset:0;background:rgba(10,10,10,.84);}
 .cta-content{position:relative;max-width:1280px;margin:0 auto;padding:80px 32px;text-align:center;}
-.cta-h{font-family:'Bebas Neue',sans-serif;font-size:clamp(40px,7vw,80px);line-height:.9;margin-bottom:18px;color:#F2F2F0;}
+.cta-h{font-family:'Oswald',sans-serif;font-size:clamp(40px,7vw,80px);line-height:.95;margin-bottom:18px;color:#F2F2F0;}
 .cta-h .h1g{color:var(--gold);}
 .cta-sub{font-size:14px;color:#A8A8A4;line-height:1.72;margin-bottom:26px;max-width:460px;margin-left:auto;margin-right:auto;}
 .cta-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
@@ -216,8 +216,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--bg2);border
 /* ── FOOTER ── */
 footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--gold);}
 .ft-in{max-width:1280px;margin:0 auto;}
-.ft-grid{display:grid;grid-template-columns:240px 1fr 1fr 1fr;gap:32px;padding-bottom:22px;border-bottom:1px solid rgba(255,255,255,.07);}
-.ft-logo{font-family:'Bebas Neue',sans-serif;font-size:20px;color:#F2F2F0;letter-spacing:.04em;margin-bottom:8px;}
+.ft-grid{display:grid;grid-template-columns:240px 1fr 1fr auto;gap:32px;padding-bottom:22px;border-bottom:1px solid rgba(255,255,255,.07);}
+.ft-logo{font-family:'Oswald',sans-serif;font-size:18px;font-weight:600;color:#F2F2F0;letter-spacing:.05em;margin-bottom:8px;}
 .ft-logo span{color:var(--gold);}
 .ft-desc{font-size:11px;color:var(--muted2);line-height:1.72;max-width:200px;}
 .ft-col h4{font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
@@ -281,13 +281,12 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
       <a href="#challenge"><span class="ua">Проблема</span><span class="en">Challenge</span></a>
       <a href="#wall"><span class="ua">Стіна відбудовників</span><span class="en">Wall of Rebuilders</span></a>
       <a href="#how"><span class="ua">Як це працює</span><span class="en">How it works</span></a>
-      <a href="#join"><span class="ua">Приєднатись</span><span class="en">Join</span></a>
+      <a href="wall.html"><span class="ua">Стіна відбудовників</span><span class="en">Wall</span></a>
     </div>
     <div class="ltog">
       <button class="on" onclick="setLang('ua')">UA</button>
       <button onclick="setLang('en')">EN</button>
     </div>
-    <a class="btn-g" href="#join"><span class="ua">Подати внесок</span><span class="en">Submit</span></a>
     <button class="burger" onclick="toggleNav()" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
@@ -296,7 +295,6 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
     <a href="#challenge" onclick="toggleNav()"><span class="ua">Проблема</span><span class="en">Challenge</span></a>
     <a href="#wall" onclick="toggleNav()"><span class="ua">Стіна відбудовників</span><span class="en">Wall of Rebuilders</span></a>
     <a href="#how" onclick="toggleNav()"><span class="ua">Як це працює</span><span class="en">How it works</span></a>
-    <a href="#join" onclick="toggleNav()"><span class="ua">Подати внесок</span><span class="en">Submit contribution</span></a>
   </div>
 </nav>
 
@@ -333,12 +331,12 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
   <div class="hero-below">
     <div class="hb-in">
       <p class="hero-p">
-        <span class="ua">Верифікований публічний архів гуманітарних та відбудовних внесків. Кожна пожертва, кожне волонтерство, кожна відновлена школа — <strong>назавжди записані, незалежно перевіряються.</strong></span>
+        <span class="ua">Публічний архів внесків у відновлення України. Кожна пожертва, кожна відновлена школа — <strong>записані назавжди, верифіковані на блокчейні.</strong></span>
         <span class="en">A verified public archive of humanitarian and reconstruction contributions. Every donation, every volunteer effort, every rebuilt school — <strong>permanently recorded, independently verifiable.</strong></span>
       </p>
       <div class="hbtns">
         <a class="btn-g" href="#wall"><span class="ua">Стіна відбудовників</span><span class="en">Wall of Rebuilders</span></a>
-        <a class="btn-o" href="#how"><span class="ua">Як працює верифікація</span><span class="en">How verification works</span></a>
+        <a class="btn-o" href="map.html"><span class="ua">Відкрити карту</span><span class="en">Open map</span></a>
       </div>
     </div>
     <!-- Stats -->
@@ -381,7 +379,7 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
       <span class="en">$47 BILLION.<br><span class="gbar">NO PUBLIC RECORD</span><br>OF WHERE IT WENT.</span>
     </div>
     <p class="ch-tag">
-      <span class="ua">UA Rebuild створює відсутній шар підзвітності.</span>
+      <span class="ua">UA Rebuild — публічний шар підзвітності поверх існуючих даних.</span>
       <span class="en">UA Rebuild creates the missing accountability layer.</span>
     </p>
     <div class="ch-grid">
@@ -870,7 +868,7 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
     </p>
     <div class="cta-btns">
       <a class="btn-g" href="#wall"><span class="ua">Стіна відбудовників</span><span class="en">Wall of Rebuilders</span></a>
-      <a class="btn-o" style="color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.3);" href="#join"><span class="ua">Приєднатись до пілоту</span><span class="en">Join the Pilot</span></a>
+      <a class="btn-o" style="color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.3);" href="map.html"><span class="ua">Відкрити карту</span><span class="en">Open Map</span></a>
     </div>
   </div>
 </div>
@@ -891,14 +889,10 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
         <a href="#wall"><span class="ua">Стіна відбудовників</span><span class="en">Wall of Rebuilders</span></a>
         <a href="map.html"><span class="ua">Карта громад</span><span class="en">Community Map</span></a>
         <a href="#how"><span class="ua">Верифікація</span><span class="en">Verification</span></a>
-        <a href="#join"><span class="ua">Подати внесок</span><span class="en">Submit contribution</span></a>
+        <a href="wall.html"><span class="ua">Стіна відбудовників</span><span class="en">Wall of Rebuilders</span></a>
       </div>
-      <div class="ft-col">
-        <h4><span class="ua">Партнери</span><span class="en">Partners</span></h4>
-        <span>UNHCR Ukraine</span>
-        <span>OCHA</span>
-        <span>BNB Chain Foundation</span>
-        <span>Binance Web3 Lab</span>
+      <div style="display:flex;align-items:flex-end;justify-content:center;">
+        <img src="st-george.svg" alt="" style="height:90px;width:auto;opacity:0.35;filter:brightness(0) invert(1);" onerror="this.style.display='none'"/>
       </div>
       <div class="ft-col">
         <h4>On-Chain</h4>

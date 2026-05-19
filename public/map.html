@@ -4,14 +4,14 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>UA Rebuild — Recovery Map</title>
-<link rel="icon" href="favicon.svg" type="image/svg+xml"/>
+<link rel="icon" href="favicon-32.png" type="image/png"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-:root{--bg:#E8E8E6;--bg2:#DDDCDA;--surface:#F2F2F0;--gold:#B8960C;--gold2:#C9A84C;--ink:#0A0A0A;--ink2:#2A2A2A;--muted:#5A5855;--muted2:#8A8880;--border:#C8C8C4;--dark:#1A1A18;}
+:root{--bg:#EDECEA;--bg2:#E2E0DD;--surface:#F4F3F1;--gold:#B8960C;--gold2:#C9A84C;--ink:#0A0A0A;--ink2:#2A2A2A;--muted:#5A5855;--muted2:#8A8880;--border:#C8C8C4;--dark:#1A1A18;}
 html,body{font-family:'Inter',sans-serif;height:100%;overflow:hidden;color:var(--ink);background:var(--bg);}
 .en{display:none;}.ua{display:inline;}
 body.en .en{display:inline;} body.en .ua{display:none;}
@@ -67,7 +67,7 @@ body.en .en{display:inline;} body.en .ua{display:none;}
 /* STATS */
 .sb-stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);margin-bottom:16px;}
 .sb-stat{background:var(--surface);padding:12px;}
-.sb-stat-n{font-family:'Bebas Neue',sans-serif;font-size:20px;line-height:1;margin-bottom:2px;}
+.sb-stat-n{font-family:'Oswald',sans-serif;font-size:20px;line-height:1;margin-bottom:2px;}
 .sb-stat-l{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
 
 /* COMMUNITY DETAIL */
@@ -76,13 +76,13 @@ body.en .en{display:inline;} body.en .ua{display:none;}
 .sb-detail{margin-bottom:14px;}
 .sb-gold-bar{height:2px;background:var(--gold);margin-bottom:14px;}
 .sb-detail-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;gap:8px;}
-.sb-name{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--ink);letter-spacing:.02em;}
+.sb-name{font-family:'Oswald',sans-serif;font-size:16px;color:var(--ink);letter-spacing:.02em;}
 .sb-region{font-size:10px;color:var(--muted);margin-top:2px;}
 .sb-close{background:none;border:none;cursor:pointer;color:var(--muted);font-size:18px;line-height:1;transition:color .15s;}
 .sb-close:hover{color:var(--ink);}
 .sb-metrics{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);margin-bottom:14px;}
 .sb-metric{background:var(--surface);padding:10px 12px;}
-.sb-metric-v{font-family:'Bebas Neue',sans-serif;font-size:18px;line-height:1;margin-bottom:2px;}
+.sb-metric-v{font-family:'Oswald',sans-serif;font-size:18px;line-height:1;margin-bottom:2px;}
 .sb-metric-l{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
 
 /* PROGRESS BARS */
