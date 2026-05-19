@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>UA Rebuild — Ukraine Remembers Every Contribution</title>
 <meta name="description" content="Public blockchain registry of verified contributions to Ukraine's reconstruction. Every donation, every volunteer effort — permanently recorded on BNB Chain."/>
-<link rel="icon" href="favicon-32.png" type="image/png"/>
+<link rel="icon" href="favicon.svg" type="image/svg+xml"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
@@ -55,7 +55,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--bg2);border
 .hero-bg{position:absolute;inset:0;background-image:url('hero.jpg');background-size:cover;background-position:center 40%;}
 .hero-fade{position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 0%,rgba(14,14,12,.3) 45%,rgba(14,14,12,.15) 100%);}
 .hero-kicker{position:absolute;top:22px;left:32px;font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);text-shadow:0 1px 8px rgba(0,0,0,.6);}
-.hero-card{position:absolute;top:50%;right:32px;transform:translateY(-50%);width:210px;padding:18px;background:var(--dark);border:1px solid var(--gold);box-shadow:0 8px 40px rgba(0,0,0,.45);}
+.hero-card{display:none;}
 .dpulse{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:gpulse 2s infinite;display:inline-block;margin-right:5px;vertical-align:middle;}
 @keyframes gpulse{0%,100%{opacity:1;}50%{opacity:.3;}}
 .card-n{font-family:'Oswald',sans-serif;font-size:44px;font-weight:700;color:var(--gold);line-height:1;margin:6px 0 2px;letter-spacing:-.01em;}
@@ -66,7 +66,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--bg2);border
 .card-lnk{display:inline-block;margin-top:5px;font-size:9px;color:var(--gold);text-decoration:none;text-transform:uppercase;letter-spacing:.1em;}
 .card-lnk:hover{opacity:.7;}
 .hero-hl{position:absolute;bottom:0;left:0;right:0;padding:0 32px;}
-.h1{font-family:'Oswald',sans-serif;font-weight:700;line-height:.96;color:#F4F2EE;font-size:clamp(48px,9.5vw,112px);letter-spacing:-.02em;text-shadow:0 2px 24px rgba(0,0,0,.5);}
+.h1{font-family:'Oswald',sans-serif;font-weight:700;line-height:.96;color:#F4F2EE;font-size:clamp(36px,7vw,88px);letter-spacing:-.02em;text-shadow:0 2px 24px rgba(0,0,0,.5);}
 .h1g{color:var(--gold);}
 .h1sub{font-family:'Oswald',sans-serif;font-size:clamp(13px,2vw,20px);letter-spacing:.04em;color:var(--muted);margin-bottom:18px;margin-top:4px;}
 .hero-below{background:var(--bg);padding:40px 32px 0;}
@@ -307,11 +307,6 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
       <span class="ua">Система публічної пам'яті для України</span>
       <span class="en">Public memory system for Ukraine</span>
     </div>
-    <!-- Live card -->
-    <div class="hero-card">
-      <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.5);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;">
-        <span class="dpulse"></span>BNB Testnet · Live
-      </div>
       <div class="card-n">9</div>
       <div class="card-sub"><span class="ua">Записів on-chain</span><span class="en">On-chain records</span></div>
       <hr class="card-hr"/>
@@ -358,9 +353,9 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
         <div class="stat-s" style="font-family:'IBM Plex Mono',monospace;font-size:9px;">0x93f5...47fcd</div>
       </div>
       <div class="stat">
-        <div class="stat-n">$47B+</div>
-        <div class="stat-l"><span class="ua">Допомоги для України</span><span class="en">Aid committed to Ukraine</span></div>
-        <div class="stat-s"><span class="ua">Жодного єдиного реєстру</span><span class="en">No unified public record</span></div>
+        <div class="stat-n">2026</div>
+        <div class="stat-l"><span class="ua">Пілот запущено</span><span class="en">Pilot launched</span></div>
+        <div class="stat-s"><span class="ua">Травень · Київ</span><span class="en">May · Kyiv</span></div>
       </div>
     </div>
     <div class="pilot-n">
@@ -379,24 +374,24 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
       <span class="en">BILLIONS IN AID.<br><span class="gbar">NO PUBLIC</span><br>ACCOUNTABILITY.</span>
     </div>
     <p class="ch-tag">
-      <span class="ua">UA Rebuild — публічний шар підзвітності поверх існуючих даних.</span>
-      <span class="en">UA Rebuild creates the missing accountability layer.</span>
+      <span class="ua">UA Rebuild — перший верифікований публічний архів внесків у відновлення України.</span>
+      <span class="en">UA Rebuild is the first verified public archive of contributions to Ukraine's recovery.</span>
     </p>
     <div class="ch-grid">
       <div class="ch-col">
         <div class="ch-bar"></div>
-        <div class="ch-ttl"><span class="ua">Дані розпорошені</span><span class="en">Data scattered</span></div>
-        <p class="ch-txt"><span class="ua">OCHA, UNHCR, Мінреінтеграція, звіти НГО — кожен у своєму форматі без єдиного публічного інтерфейсу.</span><span class="en">OCHA, UNHCR, MinReintegration, NGO reports — each in its own format with no unified public interface.</span></p>
+        <div class="ch-ttl"><span class="ua">Архів внесків</span><span class="en">Contribution archive</span></div>
+        <p class="ch-txt"><span class="ua">Кожна пожертва, волонтерська акція, відбудований об'єкт — фіксується в єдиному публічному реєстрі. Не звіт. Постійний запис.</span><span class="en">Every donation, volunteer action, rebuilt facility — recorded in one public registry. Not a report. A permanent record.</span></p>
       </div>
       <div class="ch-col">
         <div class="ch-bar"></div>
-        <div class="ch-ttl"><span class="ua">Немає верифікації</span><span class="en">No verification layer</span></div>
-        <p class="ch-txt"><span class="ua">Неможливо перевірити чи дійшла допомога до громади. Записи можна змінити або видалити без публічного сліду.</span><span class="en">Impossible to verify whether aid reached a community. Records can be changed or lost without public trace.</span></p>
+        <div class="ch-ttl"><span class="ua">Блокчейн-верифікація</span><span class="en">Blockchain verification</span></div>
+        <p class="ch-txt"><span class="ua">Записи верифікуються партнерськими НГО та закріплюються на BNB Chain. Їх неможливо змінити, видалити або фальсифікувати.</span><span class="en">Records are verified by partner NGOs and anchored on BNB Chain. They cannot be altered, deleted, or falsified.</span></p>
       </div>
       <div class="ch-col">
         <div class="ch-bar"></div>
-        <div class="ch-ttl"><span class="ua">Громадська робота невидима</span><span class="en">Civic work goes unrecognized</span></div>
-        <p class="ch-txt"><span class="ua">Волонтери, донори діаспори, малі НГО — їхній вплив реальний але невидимий. UA Rebuild робить його постійним.</span><span class="en">Volunteers, diaspora donors, small NGOs — their impact is real but invisible. UA Rebuild makes it permanent.</span></p>
+        <div class="ch-ttl"><span class="ua">Пам'ять назавжди</span><span class="en">Memory forever</span></div>
+        <p class="ch-txt"><span class="ua">Волонтери, діаспора, міжнародні донори — всі хто допоміг Україні залишаються в публічній пам'яті. Незалежно від того, хто при владі.</span><span class="en">Volunteers, diaspora, international donors — all who helped Ukraine remain in the public record. Regardless of who is in power.</span></p>
       </div>
     </div>
   </div>
@@ -420,8 +415,8 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
         <div class="wc-bar"></div>
         <div class="wc-name">ACTED Ukraine</div>
         <div class="wc-tags">
-          <span class="tag">Shelter</span><span class="tag-uk ua">/ Укриття</span>
-          <span class="tag">Reconstruction</span><span class="tag-uk ua">/ Відбудова</span>
+          <span class="tag">Shelter</span>
+          <span class="tag">Reconstruction</span>
         </div>
         <p class="wc-impact">Restored 1,200 damaged homes and winterized 4 community centers in Mykolaiv region.</p>
         <div class="wc-foot">
@@ -438,8 +433,8 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
         <div class="wc-bar"></div>
         <div class="wc-name">UNHCR Ukraine</div>
         <div class="wc-tags">
-          <span class="tag">Displacement</span><span class="tag-uk ua">/ Переміщення</span>
-          <span class="tag">Emergency Aid</span><span class="tag-uk ua">/ Екстрена допомога</span>
+          <span class="tag">Displacement</span>
+          <span class="tag">Emergency Aid</span>
         </div>
         <p class="wc-impact">Reached 1.4M internally displaced persons with emergency cash assistance and protection services.</p>
         <div class="wc-foot">
@@ -456,8 +451,8 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
         <div class="wc-bar"></div>
         <div class="wc-name">Rebuild Ukraine Alliance</div>
         <div class="wc-tags">
-          <span class="tag">Infrastructure</span><span class="tag-uk ua">/ Інфраструктура</span>
-          <span class="tag">Education</span><span class="tag-uk ua">/ Освіта</span>
+          <span class="tag">Infrastructure</span>
+          <span class="tag">Education</span>
         </div>
         <p class="wc-impact">Coordinated reconstruction of 18 schools and 6 water treatment facilities across Donetsk frontline communities.</p>
         <div class="wc-foot">
@@ -474,8 +469,8 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
         <div class="wc-bar"></div>
         <div class="wc-name">Caritas Ukraine</div>
         <div class="wc-tags">
-          <span class="tag">Food</span><span class="tag-uk ua">/ Харчування</span>
-          <span class="tag">Social Support</span><span class="tag-uk ua">/ Соціальна підтримка</span>
+          <span class="tag">Food</span>
+          <span class="tag">Social Support</span>
         </div>
         <p class="wc-impact">Distributed food packages to 280,000 vulnerable households; running 12 day centers for displaced elderly.</p>
         <div class="wc-foot">
@@ -492,8 +487,8 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
         <div class="wc-bar"></div>
         <div class="wc-name">World Central Kitchen</div>
         <div class="wc-tags">
-          <span class="tag">Food</span><span class="tag-uk ua">/ Харчування</span>
-          <span class="tag">Frontline</span><span class="tag-uk ua">/ Лінія фронту</span>
+          <span class="tag">Food</span>
+          <span class="tag">Frontline</span>
         </div>
         <p class="wc-impact">8.4M meals served in frontline communities. 23 field kitchens operational across eastern Ukraine.</p>
         <div class="wc-foot">
@@ -510,8 +505,8 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
         <div class="wc-bar"></div>
         <div class="wc-name">Nova Ukraine</div>
         <div class="wc-tags">
-          <span class="tag">Humanitarian</span><span class="tag-uk ua">/ Гуманітарна</span>
-          <span class="tag">Diaspora</span><span class="tag-uk ua">/ Діаспора</span>
+          <span class="tag">Humanitarian</span>
+          <span class="tag">Diaspora</span>
         </div>
         <p class="wc-impact">$28M in aid delivered via 40+ partner organizations; generator program serving 210 critical facilities.</p>
         <div class="wc-foot">
@@ -557,10 +552,10 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
       <div class="cc-num">01</div>
       <div class="cc-status done"><span class="ua">Відновлено</span><span class="en">Restored</span></div>
       <div class="cc-body">
-        <div class="cc-oblast">Mykolaiv Oblast</div>
+        <div class="cc-oblast"><span class="ua">Миколаївська область</span><span class="en">Mykolaiv Oblast</span></div>
         <div class="cc-ms"><span class="ua">ШКОЛА №3 ВІДБУДОВАНА</span><span class="en">SCHOOL №3 REBUILT</span></div>
         <div class="cc-name">Snihurivka</div>
-        <div class="cc-detail">840 students returned. Water supply restored to 78% of households.</div>
+        <div class="cc-detail"><span class="ua">840 учнів повернулись. Водопостачання відновлено на 78% домогосподарств.</span><span class="en">840 students returned. Water supply restored to 78% of households.</span></div>
       </div>
     </div>
     <div class="cc">
@@ -569,10 +564,10 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
       <div class="cc-num">02</div>
       <div class="cc-status wip"><span class="ua">В процесі</span><span class="en">In Progress</span></div>
       <div class="cc-body">
-        <div class="cc-oblast">Kharkiv Oblast</div>
+        <div class="cc-oblast"><span class="ua">Харківська область</span><span class="en">Kharkiv Oblast</span></div>
         <div class="cc-ms"><span class="ua">ВОДОПОСТАЧАННЯ</span><span class="en">WATER INFRASTRUCTURE</span></div>
         <div class="cc-name">Izium</div>
-        <div class="cc-detail">60% restored. 3 NGOs active. Heating system repair ongoing.</div>
+        <div class="cc-detail"><span class="ua">60% відновлено. 3 НГО активні. Ремонт системи опалення тривaє.</span><span class="en">60% restored. 3 NGOs active. Heating system repair ongoing.</span></div>
       </div>
     </div>
     <div class="cc">
@@ -581,10 +576,10 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
       <div class="cc-num">03</div>
       <div class="cc-status done"><span class="ua">Відновлено</span><span class="en">Restored</span></div>
       <div class="cc-body">
-        <div class="cc-oblast">Kharkiv Oblast</div>
+        <div class="cc-oblast"><span class="ua">Харківська область</span><span class="en">Kharkiv Oblast</span></div>
         <div class="cc-ms"><span class="ua">МЕДЦЕНТР ВІДБУДОВАНО</span><span class="en">MEDICAL CENTER REBUILT</span></div>
         <div class="cc-name">Kupiansk</div>
-        <div class="cc-detail">Serving 12,000 residents. Generator installed, operational.</div>
+        <div class="cc-detail"><span class="ua">Обслуговує 12 000 мешканців. Генератор встановлено, працює.</span><span class="en">Serving 12,000 residents. Generator installed, operational.</span></div>
       </div>
     </div>
     <div class="cc">
@@ -593,10 +588,10 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
       <div class="cc-num">04</div>
       <div class="cc-status crit"><span class="ua">Критично</span><span class="en">Critical</span></div>
       <div class="cc-body">
-        <div class="cc-oblast">Donetsk Oblast</div>
+        <div class="cc-oblast"><span class="ua">Донецька область</span><span class="en">Donetsk Oblast</span></div>
         <div class="cc-ms"><span class="ua">ЕЛЕКТРОМЕРЕЖА</span><span class="en">POWER GRID</span></div>
         <div class="cc-name">Velyka Novosilka</div>
-        <div class="cc-detail">30% restored. High priority. 4 donor organizations coordinating.</div>
+        <div class="cc-detail"><span class="ua">30% відновлено. Високий пріоритет. 4 донорські організації координують зусилля.</span><span class="en">30% restored. High priority. 4 donor organizations coordinating.</span></div>
       </div>
     </div>
     <div class="cc">
@@ -605,10 +600,10 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
       <div class="cc-num">05</div>
       <div class="cc-status done"><span class="ua">Відновлено</span><span class="en">Restored</span></div>
       <div class="cc-body">
-        <div class="cc-oblast">Kyiv Oblast</div>
+        <div class="cc-oblast"><span class="ua">Київська область</span><span class="en">Kyiv Oblast</span></div>
         <div class="cc-ms"><span class="ua">ЖИТЛОВИЙ РАЙОН ВІДНОВЛЕНО</span><span class="en">RESIDENTIAL DISTRICT RESTORED</span></div>
         <div class="cc-name">Irpin</div>
-        <div class="cc-detail">12 buildings rebuilt, 340 families returned to permanent housing.</div>
+        <div class="cc-detail"><span class="ua">12 будинків відбудовано, 340 родин повернулись до постійного житла.</span><span class="en">12 buildings rebuilt, 340 families returned to permanent housing.</span></div>
       </div>
     </div>
     <div class="cc">
@@ -617,10 +612,10 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
       <div class="cc-num">06</div>
       <div class="cc-status wip"><span class="ua">В процесі</span><span class="en">In Progress</span></div>
       <div class="cc-body">
-        <div class="cc-oblast">Kharkiv Oblast</div>
+        <div class="cc-oblast"><span class="ua">Харківська область</span><span class="en">Kharkiv Oblast</span></div>
         <div class="cc-ms"><span class="ua">ВІДРОДЖЕННЯ АПК</span><span class="en">AGRICULTURAL REVIVAL</span></div>
         <div class="cc-name">Balakliya</div>
-        <div class="cc-detail">2,400 ha returned to use. Grain storage rebuilt with EU funding.</div>
+        <div class="cc-detail"><span class="ua">2 400 га повернуто в обробіток. Зернові сховища відбудовано за кошти ЄС.</span><span class="en">2,400 ha returned to use. Grain storage rebuilt with EU funding.</span></div>
       </div>
     </div>
   </div>
