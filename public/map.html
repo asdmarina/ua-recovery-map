@@ -1,1124 +1,364 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UA Rebuild — Карта відновлення України</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Unbounded:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>UA Rebuild — Recovery Map</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-:root {
-  --bg:#0a0e1a; --surface:#111827; --surface2:#1a2235;
-  --border:rgba(255,255,255,0.08); --text:#e8edf5; --muted:#6b7a99;
-  --accent:#3b82f6; --accent2:#60a5fa;
-  --d-none:#1a3a2e; --d-low:#2d6a4f; --d-moderate:#f59e0b;
-  --d-high:#ef4444; --d-critical:#7f1d1d; --d-occupied:#374151;
-}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+:root{--bg:#E8E8E6;--bg2:#DDDCDA;--surface:#F2F2F0;--gold:#B8960C;--gold2:#C9A84C;--ink:#0A0A0A;--ink2:#2A2A2A;--muted:#5A5855;--muted2:#8A8880;--border:#C8C8C4;--dark:#1A1A18;}
+html,body{font-family:'Inter',sans-serif;height:100%;overflow:hidden;color:var(--ink);background:var(--bg);}
+.en{display:none;}.ua{display:inline;}
+body.en .en{display:inline;} body.en .ua{display:none;}
 
-header{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:52px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;z-index:200;gap:12px;}
-.header-left{display:flex;align-items:center;gap:12px;}
-.back-btn{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--muted);text-decoration:none;transition:all .15s;flex-shrink:0;}
-.back-btn:hover{background:rgba(255,255,255,0.09);color:var(--text);border-color:rgba(255,255,255,0.15);}
-.header-divider{width:1px;height:20px;background:var(--border);flex-shrink:0;}
-.logo{display:flex;align-items:center;text-decoration:none;}
-.header-right{display:flex;align-items:center;gap:10px;}
-
-.acled-badge{display:flex;align-items:center;gap:5px;padding:3px 9px;border-radius:4px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.22);font-family:'IBM Plex Mono',monospace;font-size:9px;color:#fca5a5;letter-spacing:.4px;white-space:nowrap;}
-.acled-badge::before{content:'';width:5px;height:5px;border-radius:50%;background:#ef4444;animation:pulse 2s infinite;flex-shrink:0;}
-
-.updated-badge{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);display:flex;align-items:center;gap:5px;}
-.updated-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:#22c55e;animation:pulse 2s infinite;}
-
-.lang-toggle{display:flex;background:var(--surface2);border-radius:6px;padding:2px;gap:2px;}
-.lang-toggle button{background:none;border:none;color:var(--muted);font-size:11px;font-weight:600;padding:4px 8px;border-radius:4px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;}
-.lang-toggle button.active{background:var(--accent);color:white;}
-
-.hamburger{display:none;flex-direction:column;justify-content:center;align-items:center;gap:4px;width:36px;height:36px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;cursor:pointer;padding:0;}
-.hamburger span{display:block;width:16px;height:1.5px;background:var(--text);border-radius:2px;}
-
+/* TOP BAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:44px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;z-index:100;position:relative;}
+.topbar-left{display:flex;align-items:center;gap:12px;}
+.back-btn{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .15s;}
+.back-btn:hover{color:var(--ink);}
+.back-btn svg{width:13px;height:13px;}
+.breadcrumb-sep{font-size:11px;color:var(--border);}
+.breadcrumb-cur{font-size:11px;color:var(--muted);}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+.live-badge{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold);padding:3px 10px;}
+.live-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.layers-btn{display:flex;align-items:center;gap:5px;padding:4px 10px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-family:'Inter',sans-serif;border:none;cursor:pointer;transition:all .15s;}
+.layers-btn.active{background:var(--gold);color:var(--ink);border:1px solid var(--gold);}
+.layers-btn:not(.active){background:transparent;color:var(--muted);border:1px solid var(--border);}
+.lang-tog{display:flex;border:1px solid var(--border);}
+.lang-tog button{padding:3px 8px;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-family:'Inter',sans-serif;border:none;background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;}
+.lang-tog button.on{background:var(--gold);color:var(--ink);}
 
-.main{display:flex;flex:1;overflow:hidden;}
+/* LAYOUT */
+.layout{display:flex;height:calc(100vh - 44px);}
 
-.left-panel{width:320px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
-.panel-tabs{display:flex;border-bottom:1px solid var(--border);padding:0 2px;flex-shrink:0;}
-.panel-tab{flex:1;background:none;border:none;color:var(--muted);font-size:9.5px;font-weight:500;padding:11px 4px;cursor:pointer;border-bottom:2px solid transparent;font-family:'Inter',sans-serif;transition:all .15s;letter-spacing:.2px;text-transform:uppercase;}
-.panel-tab.active{color:var(--accent2);border-bottom-color:var(--accent2);}
+/* MAP */
+#map{flex:1;background:var(--bg);}
+.leaflet-container{background:#D8D8D6!important;}
 
-.panel-content{flex:1;overflow-y:auto;padding:16px;}
-.panel-content::-webkit-scrollbar{width:4px;}
-.panel-content::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+/* LAYER SWITCHER */
+.layer-sw{position:absolute;top:10px;left:10px;z-index:1000;background:var(--surface);border:1px solid var(--border);padding:6px;}
+.lsw-btn{display:block;width:100%;text-align:left;padding:7px 12px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-family:'Inter',sans-serif;border:none;cursor:pointer;transition:all .15s;border-left:2px solid transparent;white-space:nowrap;}
+.lsw-btn.on{color:var(--ink);background:var(--gold);border-left-color:var(--gold);}
+.lsw-btn:not(.on){color:var(--muted);background:transparent;}
+.lsw-btn:not(.on):hover{color:var(--ink2);}
 
-.section-label{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:10px;}
+/* LEGEND */
+.legend{position:absolute;bottom:16px;left:10px;z-index:1000;background:var(--surface);border:1px solid var(--border);padding:14px;}
+.leg-title{font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+.leg-item{display:flex;align-items:center;gap:7px;margin-bottom:6px;}
+.leg-item:last-child{margin-bottom:0;}
+.leg-dot{width:10px;height:10px;flex-shrink:0;}
+.leg-lbl{font-size:10px;color:var(--muted);}
 
-.layer-list{display:flex;flex-direction:column;gap:6px;margin-bottom:20px;}
-.layer-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--surface2);border-radius:8px;cursor:pointer;border:1px solid transparent;transition:all .15s;}
-.layer-item:hover{border-color:var(--border);}
-.layer-item.active{border-color:var(--accent);background:rgba(59,130,246,.08);}
-.layer-item-left{display:flex;align-items:center;gap:10px;}
-.layer-dot{width:10px;height:10px;border-radius:50%;}
-.layer-name{font-size:13px;font-weight:500;}
-.layer-check{width:18px;height:18px;border-radius:4px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;transition:all .15s;}
-.layer-item.active .layer-check{background:var(--accent);border-color:var(--accent);}
-.layer-item.active .layer-check::after{content:'✓';font-size:11px;color:white;font-weight:700;}
+/* SIDEBAR */
+.sidebar{width:300px;flex-shrink:0;background:var(--surface);border-left:1px solid var(--border);overflow-y:auto;transition:width .2s;}
+.sidebar.closed{width:0;overflow:hidden;}
+.sidebar::-webkit-scrollbar{width:3px;}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);}
+.sb-inner{min-width:300px;padding:16px;}
 
-.legend{margin-bottom:20px;}
-.legend-scale{display:flex;flex-direction:column;gap:5px;}
-.legend-row{display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:6px;cursor:pointer;transition:background .1s;}
-.legend-row:hover{background:var(--surface2);}
-.legend-color{width:14px;height:14px;border-radius:3px;flex-shrink:0;}
-.legend-label{font-size:12px;color:var(--text);}
-.legend-count{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);}
+/* STATS */
+.sb-stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);margin-bottom:16px;}
+.sb-stat{background:var(--surface);padding:12px;}
+.sb-stat-n{font-family:'Bebas Neue',sans-serif;font-size:20px;line-height:1;margin-bottom:2px;}
+.sb-stat-l{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
 
-.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;}
-.stat-card{background:var(--surface2);border-radius:8px;padding:12px;border:1px solid var(--border);}
-.stat-label{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;}
-.stat-value{font-family:'Unbounded',sans-serif;font-size:18px;font-weight:600;line-height:1;}
-.stat-value.red{color:#ef4444;} .stat-value.amber{color:#f59e0b;} .stat-value.green{color:#22c55e;} .stat-value.blue{color:var(--accent2);}
-.stat-sub{font-size:10px;color:var(--muted);margin-top:3px;}
+/* COMMUNITY DETAIL */
+.sb-empty{padding:24px;text-align:center;border:1px solid var(--border);margin-bottom:14px;}
+.sb-empty-txt{font-size:11px;color:var(--muted);}
+.sb-detail{margin-bottom:14px;}
+.sb-gold-bar{height:2px;background:var(--gold);margin-bottom:14px;}
+.sb-detail-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;gap:8px;}
+.sb-name{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--ink);letter-spacing:.02em;}
+.sb-region{font-size:10px;color:var(--muted);margin-top:2px;}
+.sb-close{background:none;border:none;cursor:pointer;color:var(--muted);font-size:18px;line-height:1;transition:color .15s;}
+.sb-close:hover{color:var(--ink);}
+.sb-metrics{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);margin-bottom:14px;}
+.sb-metric{background:var(--surface);padding:10px 12px;}
+.sb-metric-v{font-family:'Bebas Neue',sans-serif;font-size:18px;line-height:1;margin-bottom:2px;}
+.sb-metric-l{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
 
-/* ACLED source line */
-.acled-source-line{display:flex;align-items:center;gap:6px;margin-bottom:14px;padding:6px 10px;border-radius:6px;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.15);}
-.acled-source-line .dot{width:5px;height:5px;border-radius:50%;background:#ef4444;animation:pulse 2s infinite;flex-shrink:0;}
-.acled-source-line span{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#fca5a5;letter-spacing:.5px;}
+/* PROGRESS BARS */
+.sb-prog-label{font-size:10px;color:var(--muted);margin-bottom:4px;display:flex;justify-content:space-between;}
+.sb-prog-bar{height:4px;background:var(--bg2);margin-bottom:10px;}
+.sb-prog-fill{height:100%;background:var(--gold);transition:width .5s;}
 
-/* mini bars for ACLED conflict tab */
-.acled-bar-row{display:flex;flex-direction:column;gap:4px;margin-bottom:8px;}
-.acled-bar-header{display:flex;justify-content:space-between;align-items:center;}
-.acled-bar-name{font-size:11px;color:var(--text);}
-.acled-bar-val{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);}
-.acled-minibar{height:4px;background:var(--surface2);border-radius:2px;overflow:hidden;margin-top:2px;}
-.acled-minibar-fill{height:100%;border-radius:2px;transition:width .8s ease;}
+/* ON-CHAIN LINK */
+.sb-chain{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border:1px solid var(--gold);background:rgba(184,150,12,.04);text-decoration:none;transition:background .15s;margin-bottom:14px;}
+.sb-chain:hover{background:rgba(184,150,12,.09);}
+.sb-chain-label{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:2px;}
+.sb-chain-hash{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);}
+.sb-chain-icon{color:var(--gold);}
 
-.map-wrapper{flex:1;position:relative;overflow:hidden;}
-#map{width:100%;height:100%;background:var(--bg)!important;}
-.leaflet-container{background:#0d1420!important;font-family:'Inter',sans-serif!important;}
+/* RECENT UPDATES */
+.sb-section-title{font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+.sb-update{padding:10px 12px;background:var(--bg2);margin-bottom:6px;}
+.sb-update-hdr{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+.sb-update-type{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;}
+.sb-update-date{font-size:9px;color:var(--muted);}
+.sb-update-txt{font-size:10px;color:var(--ink2);line-height:1.5;}
 
-.map-controls{position:absolute;top:14px;left:14px;z-index:1000;display:flex;flex-direction:column;gap:6px;}
-.map-search{display:flex;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;gap:8px;width:260px;backdrop-filter:blur(10px);}
-.map-search input{background:none;border:none;outline:none;color:var(--text);font-size:13px;font-family:'Inter',sans-serif;flex:1;}
-.map-search input::placeholder{color:var(--muted);}
-.search-icon{color:var(--muted);font-size:14px;}
+/* SOURCES */
+.sb-sources{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
+.sb-source{font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--border);color:var(--muted);}
 
-.zoom-hint{background:rgba(17,24,39,.85);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);backdrop-filter:blur(8px);width:fit-content;}
-
-.map-breadcrumb{position:absolute;top:14px;right:14px;z-index:1000;display:flex;align-items:center;gap:6px;background:rgba(17,24,39,.9);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:12px;backdrop-filter:blur(10px);}
-.breadcrumb-item{color:var(--muted);cursor:pointer;}
-.breadcrumb-item:hover{color:var(--accent2);}
-.breadcrumb-item.current{color:var(--text);font-weight:500;}
-.breadcrumb-sep{color:var(--border);}
-
-.right-panel{width:300px;flex-shrink:0;background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;transition:transform .25s ease;}
-.right-panel.hidden{transform:translateX(300px);display:none;}
-
-.detail-header{padding:16px 16px 14px;border-bottom:1px solid rgba(255,255,255,0.1);flex-shrink:0;}
-.detail-region{font-size:9px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-bottom:6px;text-transform:uppercase;letter-spacing:1.2px;}
-.detail-name{font-family:'Unbounded',sans-serif;font-size:16px;font-weight:600;margin-bottom:10px;line-height:1.3;}
-
-.status-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;font-family:'IBM Plex Mono',monospace;}
-.status-badge.critical{background:rgba(127,29,29,.4);color:#fca5a5;border:1px solid rgba(239,68,68,.3);}
-.status-badge.high{background:rgba(180,60,0,.3);color:#fdba74;border:1px solid rgba(245,158,11,.3);}
-.status-badge.moderate{background:rgba(161,98,7,.25);color:#fcd34d;border:1px solid rgba(245,158,11,.2);}
-.status-badge.low{background:rgba(20,83,45,.3);color:#86efac;border:1px solid rgba(34,197,94,.2);}
-.status-badge.occupied{background:rgba(55,65,81,.5);color:#9ca3af;border:1px solid rgba(107,114,128,.3);}
-
-.detail-scroll{flex:1;overflow-y:auto;padding:20px 16px;}
-.detail-scroll::-webkit-scrollbar{width:3px;}
-.detail-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:2px;}
-
-.metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;}
-.metric-card{background:var(--surface2);border-radius:10px;padding:14px;border:1px solid rgba(255,255,255,0.1);}
-.metric-label{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
-.metric-value{font-family:'Unbounded',sans-serif;font-size:22px;font-weight:600;line-height:1;}
-.metric-value.danger{color:#ef4444;} .metric-value.warning{color:#f59e0b;} .metric-value.success{color:#22c55e;} .metric-value.info{color:var(--accent2);}
-
-/* ACLED conflict block in right panel */
-.conflict-section{margin-bottom:20px;}
-.conflict-3grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px;}
-.conflict-card{background:var(--surface2);border-radius:8px;padding:10px 8px;border:1px solid rgba(255,255,255,0.1);text-align:center;}
-.conflict-card-val{font-family:'Unbounded',sans-serif;font-size:14px;font-weight:600;line-height:1;margin-bottom:4px;}
-.conflict-card-lbl{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;}
-.conflict-type-row{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:var(--surface2);border-radius:6px;margin-bottom:4px;border:1px solid rgba(255,255,255,0.05);}
-.conflict-type-left{display:flex;align-items:center;gap:7px;font-size:11px;}
-.ctype-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
-.conflict-type-pct{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);}
-
-.progress-section{margin-bottom:20px;}
-.progress-section .section-label{margin-bottom:10px;}
-.progress-item{margin-bottom:12px;}
-.progress-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
-.progress-name{font-size:12px;color:var(--text);font-weight:500;}
-.progress-pct{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);}
-.progress-bar{height:4px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden;}
-.progress-fill{height:100%;border-radius:3px;transition:width .6s ease;}
-
-.blockchain-badge{display:flex;align-items:flex-start;gap:10px;padding:11px 12px;background:rgba(22,163,74,.06);border:1px solid rgba(22,163,74,.2);border-radius:8px;margin-bottom:16px;cursor:pointer;text-decoration:none;transition:background .15s;}
-.blockchain-badge:hover{background:rgba(22,163,74,.11);}
-.chain-icon{width:28px;height:28px;border-radius:6px;background:rgba(22,163,74,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#4ade80;}
-.chain-meta{flex:1;min-width:0;}
-.chain-label{font-size:10px;color:#4ade80;font-family:'IBM Plex Mono',monospace;font-weight:600;letter-spacing:.4px;text-transform:uppercase;margin-bottom:2px;display:flex;align-items:center;gap:5px;}
-.chain-verified-dot{width:5px;height:5px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite;flex-shrink:0;}
-.chain-hash{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--accent2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.chain-hint{font-size:9px;color:var(--muted);margin-top:3px;}
-
-.ai-panel{position:absolute;bottom:16px;right:16px;z-index:1000;width:300px;}
-.ai-toggle{display:flex;align-items:center;gap:8px;background:var(--accent);border:none;border-radius:10px;padding:10px 14px;cursor:pointer;color:white;font-size:12px;font-weight:600;font-family:'Inter',sans-serif;width:100%;justify-content:space-between;transition:background .15s;box-shadow:0 4px 20px rgba(59,130,246,.35);}
-.ai-toggle:hover{background:#2563eb;}
-.ai-status{display:flex;align-items:center;gap:6px;}
-.ai-dot{width:6px;height:6px;border-radius:50%;background:#86efac;animation:pulse 2s infinite;}
-.ai-chat-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden;display:none;flex-direction:column;max-height:320px;}
-.ai-chat-box.open{display:flex;}
-.ai-chat-header{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-.ai-chat-title{font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;}
-.ai-messages{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px;min-height:120px;max-height:200px;}
-.ai-messages::-webkit-scrollbar{width:3px;}
-.ai-messages::-webkit-scrollbar-thumb{background:var(--border);}
-.ai-msg{font-size:12px;line-height:1.5;padding:8px 10px;border-radius:8px;max-width:90%;animation:fadeUp .2s ease;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
-.ai-msg.user{background:var(--accent);color:white;align-self:flex-end;border-bottom-right-radius:2px;}
-.ai-msg.assistant{background:var(--surface2);color:var(--text);align-self:flex-start;border-bottom-left-radius:2px;}
-.ai-quick-prompts{padding:8px 12px;display:flex;flex-wrap:wrap;gap:5px;border-top:1px solid var(--border);}
-.quick-prompt{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:4px 10px;font-size:10px;color:var(--muted);cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif;}
-.quick-prompt:hover{color:var(--accent2);border-color:var(--accent2);background:rgba(59,130,246,.08);}
-.ai-input-row{display:flex;gap:6px;padding:10px 12px;border-top:1px solid var(--border);}
-.ai-input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-size:12px;font-family:'Inter',sans-serif;outline:none;transition:border-color .15s;}
-.ai-input:focus{border-color:var(--accent);}
-.ai-input::placeholder{color:var(--muted);}
-.ai-send{background:var(--accent);border:none;border-radius:6px;padding:7px 10px;color:white;cursor:pointer;font-size:12px;transition:background .15s;}
-.ai-send:hover{background:#2563eb;}
-
-.typing-indicator{display:flex;gap:4px;align-items:center;padding:8px 12px;}
-.typing-dot{width:5px;height:5px;border-radius:50%;background:var(--muted);animation:typingBounce 1.2s infinite;}
-.typing-dot:nth-child(2){animation-delay:.15s;} .typing-dot:nth-child(3){animation-delay:.3s;}
-@keyframes typingBounce{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-5px);}}
-
-.leaflet-tooltip{background:var(--surface)!important;border:1px solid var(--border)!important;border-radius:8px!important;color:var(--text)!important;font-family:'Inter',sans-serif!important;padding:0!important;box-shadow:0 8px 32px rgba(0,0,0,.5)!important;}
+/* TOOLTIP */
+.leaflet-tooltip{background:var(--surface)!important;border:1px solid var(--border)!important;border-radius:0!important;color:var(--ink)!important;font-family:'Inter',sans-serif!important;padding:7px 10px!important;font-size:12px!important;font-weight:600!important;box-shadow:0 4px 16px rgba(0,0,0,.12)!important;}
 .leaflet-tooltip::before{display:none!important;}
-.tooltip-inner{padding:10px 12px;min-width:180px;}
-.tooltip-name{font-weight:600;font-size:13px;margin-bottom:4px;color:var(--text);}
-.tooltip-region{font-size:10px;color:var(--muted);margin-bottom:8px;font-family:'IBM Plex Mono',monospace;}
-.tooltip-metrics{display:flex;gap:10px;margin-bottom:0;}
-.tooltip-metric{text-align:center;}
-.tooltip-metric-val{font-family:'Unbounded',sans-serif;font-size:14px;font-weight:600;line-height:1;}
-.tooltip-metric-lbl{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
-.tooltip-divider{height:1px;background:var(--border);margin:7px 0;}
-.tooltip-acled-row{display:flex;gap:10px;}
-.tooltip-acled-item{text-align:center;}
-.tooltip-acled-val{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;}
-.tooltip-acled-lbl{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-top:1px;}
-.tooltip-acled-src{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--muted);margin-top:5px;opacity:.6;}
-
-.statusbar{height:28px;background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:20px;flex-shrink:0;}
-.statusbar-item{display:flex;align-items:center;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);}
-.statusbar-item strong{color:var(--text);}
-
-.panel-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:299;backdrop-filter:blur(2px);}
-.panel-overlay.open{display:block;}
-
-@media(max-width:768px){
-  .hamburger{display:flex;} .updated-badge,.acled-badge{display:none;}
-  .left-panel{position:fixed;top:52px;left:0;bottom:0;width:280px;z-index:300;transform:translateX(-100%);transition:transform .25s ease;box-shadow:4px 0 24px rgba(0,0,0,.4);}
-  .left-panel.open{transform:translateX(0);}
-  .right-panel{position:fixed;bottom:0;left:0;right:0;width:100%!important;max-height:55vh;border-left:none;border-top:1px solid var(--border);border-radius:16px 16px 0 0;transform:translateY(100%);transition:transform .3s ease;z-index:301;}
-  .right-panel:not(.hidden){transform:translateY(0);display:flex;}
-  .ai-panel{bottom:12px;right:12px;left:12px;width:auto;} .ai-chat-box{max-height:260px;}
-  .map-search{width:200px;} .map-breadcrumb{font-size:11px;padding:6px 10px;}
-  .statusbar{overflow-x:auto;} .statusbar::-webkit-scrollbar{display:none;}
-}
-@media(max-width:480px){header{padding:0 14px;} .map-search{width:160px;} .map-breadcrumb{display:none;} .ai-panel{right:8px;left:8px;bottom:8px;}}
 </style>
 </head>
 <body>
 
-<header>
-  <div class="header-left">
-    <a href="/" class="back-btn"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-    <div class="header-divider"></div>
-    <a href="/" class="logo"><img src="/logo.svg" alt="UA Rebuild" height="28" style="display:block"/></a>
+<div class="topbar">
+  <div class="topbar-left">
+    <a class="back-btn" href="index.html">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+      <span class="ua">Назад</span><span class="en">Back</span>
+    </a>
+    <span class="breadcrumb-sep">›</span>
+    <span class="breadcrumb-cur"><span class="ua">Карта відновлення</span><span class="en">Recovery Map</span></span>
   </div>
-  <div class="header-right">
-    <div class="acled-badge" id="hdr-acled">ACLED · HDX · 12 трав 2026</div>
-    <div class="updated-badge" data-i18n="updated_badge">Оновлено: 12 трав 2026</div>
-    <div class="lang-toggle">
-      <button class="active" onclick="setLang('uk')">UA</button>
-      <button onclick="setLang('en')">EN</button>
-    </div>
-    <button class="hamburger" onclick="toggleMobilePanel()"><span></span><span></span><span></span></button>
-  </div>
-</header>
-
-<div class="panel-overlay" id="panelOverlay" onclick="closeMobilePanel()"></div>
-
-<div class="main">
-  <!-- LEFT PANEL -->
-  <div class="left-panel">
-    <div class="panel-tabs">
-      <button class="panel-tab active" onclick="switchTab('layers')" data-i18n="tab_layers">Шари</button>
-      <button class="panel-tab" onclick="switchTab('conflict')" data-i18n="tab_conflict">Конфлікт</button>
-      <button class="panel-tab" onclick="switchTab('stats')" data-i18n="tab_stats">Статистика</button>
-      <button class="panel-tab" onclick="switchTab('alerts')" data-i18n="tab_alerts">Сповіщення</button>
-    </div>
-
-    <!-- LAYERS TAB -->
-    <div class="panel-content" id="tab-layers">
-      <div class="section-label" data-i18n="display_mode">Режим відображення</div>
-      <div class="layer-list">
-        <div class="layer-item active" data-layer="destruction" onclick="setLayer('destruction')">
-          <div class="layer-item-left"><div class="layer-dot" style="background:#ef4444"></div><div class="layer-name" data-i18n="layer_destruction">Рівень руйнувань</div></div>
-          <div class="layer-check"></div>
-        </div>
-        <div class="layer-item" data-layer="conflict" onclick="setLayer('conflict')">
-          <div class="layer-item-left"><div class="layer-dot" style="background:#f97316"></div><div class="layer-name" data-i18n="layer_conflict">Події конфлікту · ACLED</div></div>
-          <div class="layer-check"></div>
-        </div>
-        <div class="layer-item" data-layer="recovery" onclick="setLayer('recovery')">
-          <div class="layer-item-left"><div class="layer-dot" style="background:#22c55e"></div><div class="layer-name" data-i18n="layer_recovery">Прогрес відновлення</div></div>
-          <div class="layer-check"></div>
-        </div>
-        <div class="layer-item" data-layer="funding" onclick="setLayer('funding')">
-          <div class="layer-item-left"><div class="layer-dot" style="background:#3b82f6"></div><div class="layer-name" data-i18n="layer_funding">Отримана допомога</div></div>
-          <div class="layer-check"></div>
-        </div>
-        <div class="layer-item" data-layer="needs" onclick="setLayer('needs')">
-          <div class="layer-item-left"><div class="layer-dot" style="background:#a855f7"></div><div class="layer-name" data-i18n="layer_needs">Потреби громад</div></div>
-          <div class="layer-check"></div>
-        </div>
-      </div>
-
-      <div class="legend" id="legend-destruction">
-        <div class="section-label" data-i18n="legend_title">Легенда — Руйнування</div>
-        <div class="legend-scale">
-          <div class="legend-row" onclick="filterByLevel('critical')"><div class="legend-color" style="background:var(--d-critical)"></div><div class="legend-label" data-i18n="legend_critical">Критичні (&gt;70%)</div><div class="legend-count">47</div></div>
-          <div class="legend-row" onclick="filterByLevel('high')"><div class="legend-color" style="background:var(--d-high)"></div><div class="legend-label" data-i18n="legend_high">Високі (50–70%)</div><div class="legend-count">89</div></div>
-          <div class="legend-row" onclick="filterByLevel('moderate')"><div class="legend-color" style="background:var(--d-moderate)"></div><div class="legend-label" data-i18n="legend_moderate">Помірні (20–50%)</div><div class="legend-count">214</div></div>
-          <div class="legend-row" onclick="filterByLevel('low')"><div class="legend-color" style="background:var(--d-low)"></div><div class="legend-label" data-i18n="legend_low">Низькі (&lt;20%)</div><div class="legend-count">612</div></div>
-          <div class="legend-row"><div class="legend-color" style="background:var(--d-none)"></div><div class="legend-label" data-i18n="legend_none">Немає даних / безпечна</div><div class="legend-count">711</div></div>
-          <div class="legend-row"><div class="legend-color" style="background:var(--d-occupied)"></div><div class="legend-label" data-i18n="legend_occupied">Окуповані</div><div class="legend-count">—</div></div>
-        </div>
-      </div>
-
-      <div class="legend" id="legend-conflict" style="display:none">
-        <div class="section-label" data-i18n="legend_conflict_title">Легенда — Конфлікт (ACLED)</div>
-        <div class="legend-scale">
-          <div class="legend-row"><div class="legend-color" style="background:#7f1d1d"></div><div class="legend-label" data-i18n="lc_extreme">&gt;20 000 подій</div></div>
-          <div class="legend-row"><div class="legend-color" style="background:#c2410c"></div><div class="legend-label" data-i18n="lc_high">10 000–20 000</div></div>
-          <div class="legend-row"><div class="legend-color" style="background:#f97316"></div><div class="legend-label" data-i18n="lc_moderate">3 000–10 000</div></div>
-          <div class="legend-row"><div class="legend-color" style="background:#fcd34d"></div><div class="legend-label" data-i18n="lc_low">&lt;3 000</div></div>
-          <div class="legend-row"><div class="legend-color" style="background:var(--d-none)"></div><div class="legend-label" data-i18n="lc_none">Мінімальні дані</div></div>
-        </div>
-      </div>
-
-      <div class="section-label" data-i18n="summary_stats">Зведена статистика</div>
-      <div class="stats-grid">
-        <div class="stat-card"><div class="stat-label" data-i18n="stat_communities">Громад</div><div class="stat-value blue">1 673</div><div class="stat-sub" data-i18n="stat_communities_sub">всього</div></div>
-        <div class="stat-card"><div class="stat-label" data-i18n="stat_affected">Постраждало</div><div class="stat-value red">962</div><div class="stat-sub" data-i18n="stat_affected_sub">потребують допомоги</div></div>
-        <div class="stat-card"><div class="stat-label" data-i18n="stat_restored">Відновлено</div><div class="stat-value green">23%</div><div class="stat-sub" data-i18n="stat_restored_sub">від потреби</div></div>
-        <div class="stat-card"><div class="stat-label" data-i18n="stat_aid">Допомога</div><div class="stat-value amber">$4.2B</div><div class="stat-sub" data-i18n="stat_aid_sub">розподілено</div></div>
-      </div>
-    </div>
-
-    <!-- CONFLICT TAB (ACLED) -->
-    <div class="panel-content" id="tab-conflict" style="display:none">
-      <div class="acled-source-line">
-        <div class="dot"></div>
-        <span data-i18n="acled_source">ACLED · HDX · Оновлено 12 трав 2026</span>
-      </div>
-      <div class="section-label" data-i18n="acled_national">Загальнонаціональна статистика</div>
-      <div class="stats-grid">
-        <div class="stat-card"><div class="stat-label" data-i18n="acled_s1">Подій 2025</div><div class="stat-value red">204K+</div><div class="stat-sub" data-i18n="acled_s1b">найбільше у світі</div></div>
-        <div class="stat-card"><div class="stat-label" data-i18n="acled_s2">Жертви 2025</div><div class="stat-value amber">78 000</div><div class="stat-sub" data-i18n="acled_s2b">рекорд ACLED</div></div>
-        <div class="stat-card"><div class="stat-label" data-i18n="acled_s3">Цивільні події</div><div class="stat-value red">+30%</div><div class="stat-sub" data-i18n="acled_s3b">vs 2024</div></div>
-        <div class="stat-card"><div class="stat-label" data-i18n="acled_s4">Оновлення</div><div class="stat-value green">7d</div><div class="stat-sub" data-i18n="acled_s4b">щотижня</div></div>
-      </div>
-      <div class="section-label" style="margin-bottom:12px" data-i18n="acled_by_oblast">За областями · 2025</div>
-      <div id="acled-oblast-bars" style="margin-bottom:18px"></div>
-      <div class="section-label" style="margin-bottom:12px" data-i18n="acled_event_types">Типи подій</div>
-      <div id="acled-event-types" style="margin-bottom:16px"></div>
-      <div style="padding:10px 12px;background:var(--surface2);border-radius:8px;border:1px solid var(--border)">
-        <div class="section-label" style="margin-bottom:6px" data-i18n="acled_meth_label">Методологія</div>
-        <div style="font-size:11px;color:var(--muted);line-height:1.6" data-i18n="acled_meth_text">Дані ACLED (HRP-файли: political violence, civilian targeting, demonstrations) агрегуються до рівня громади (ADM3). Кожен знімок хешується у BNB Chain для аудиту.</div>
-      </div>
-    </div>
-
-    <!-- STATS TAB -->
-    <div class="panel-content" id="tab-stats" style="display:none">
-      <div class="section-label" data-i18n="top_oblasts">Топ областей за руйнуваннями</div>
-      <div style="margin-bottom:20px"><div id="top-regions"></div></div>
-    </div>
-
-    <!-- ALERTS TAB -->
-    <div class="panel-content" id="tab-alerts" style="display:none">
-      <div class="section-label" data-i18n="latest_updates">Останні оновлення</div>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <div style="background:var(--surface2);border-radius:8px;padding:12px;border-left:3px solid #ef4444">
-          <div style="font-size:11px;color:var(--muted);margin-bottom:4px" data-i18n="alert1_meta">18 квіт 2026 · Критично</div>
-          <div style="font-size:12px" data-i18n="alert1_text">Авдіївська громада — новий удар по інфраструктурі, потреба $12M</div>
-        </div>
-        <div style="background:var(--surface2);border-radius:8px;padding:12px;border-left:3px solid #f59e0b">
-          <div style="font-size:11px;color:var(--muted);margin-bottom:4px" data-i18n="alert2_meta">17 квіт 2026 · Оновлення</div>
-          <div style="font-size:12px" data-i18n="alert2_text">Херсон — завершено 3 об'єкти відновлення житла (240 родин)</div>
-        </div>
-        <div style="background:var(--surface2);border-radius:8px;padding:12px;border-left:3px solid #22c55e">
-          <div style="font-size:11px;color:var(--muted);margin-bottom:4px" data-i18n="alert3_meta">16 квіт 2026 · Фінансування</div>
-          <div style="font-size:12px" data-i18n="alert3_text">ЄС виділив €180M для Харківської обл. — 67 громад</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- MAP -->
-  <div class="map-wrapper">
-    <div class="map-controls">
-      <div class="map-search">
-        <span class="search-icon">⌕</span>
-        <input type="text" id="searchInput" data-i18n-placeholder="search_placeholder" placeholder="Знайти громаду або область..." oninput="handleSearch(this.value)">
-      </div>
-      <div class="zoom-hint" id="zoomHint">Клікніть на область для перегляду громад</div>
-    </div>
-    <div class="map-breadcrumb" id="breadcrumb" style="display:none">
-      <span class="breadcrumb-item" onclick="resetView()" data-i18n="breadcrumb_ukraine">Україна</span>
-      <span class="breadcrumb-sep">›</span>
-      <span class="breadcrumb-item current" id="breadcrumb-region"></span>
-    </div>
-    <div id="map"></div>
-
-    <!-- AI -->
-    <div class="ai-panel">
-      <div class="ai-chat-box" id="aiChatBox">
-        <div class="ai-chat-header">
-          <div class="ai-chat-title"><span>🤖</span> UA Rebuild AI</div>
-          <button onclick="toggleAI()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px">×</button>
-        </div>
-        <div class="ai-messages" id="aiMessages">
-          <div class="ai-msg assistant" data-i18n="ai_greeting">Привіт. Я можу проаналізувати дані ACLED, знайти недофінансування або порівняти регіони. Що цікавить?</div>
-        </div>
-        <div class="ai-quick-prompts">
-          <div class="quick-prompt" onclick="sendQuick(T('qp_underfunding'))"><span data-i18n="qp_underfunding_label">Недофінансування?</span></div>
-          <div class="quick-prompt" onclick="sendQuick(T('qp_conflict'))"><span data-i18n="qp_conflict_label">Топ конфлікт</span></div>
-          <div class="quick-prompt" onclick="sendQuick(T('qp_progress'))"><span data-i18n="qp_progress_label">Прогрес</span></div>
-        </div>
-        <div class="ai-input-row">
-          <input class="ai-input" id="aiInput" data-i18n-placeholder="ai_input_placeholder" placeholder="Задай питання..." onkeydown="if(event.key==='Enter')sendAI()">
-          <button class="ai-send" onclick="sendAI()">→</button>
-        </div>
-      </div>
-      <button class="ai-toggle" onclick="toggleAI()">
-        <div class="ai-status"><div class="ai-dot"></div> UA Rebuild AI</div>
-        <span style="font-size:10px;opacity:.7" data-i18n="ai_analytics">Аналітика ↑</span>
-      </button>
-    </div>
-  </div>
-
-  <!-- RIGHT DETAIL PANEL -->
-  <div class="right-panel hidden" id="detailPanel">
-    <div class="detail-header">
-      <div class="detail-region" id="detail-region">Область · Район</div>
-      <div class="detail-name" id="detail-name">Громада</div>
-      <span class="status-badge critical" id="detail-badge">Критична</span>
-    </div>
-    <div class="detail-scroll">
-      <div class="metrics-grid">
-        <div class="metric-card"><div class="metric-label" data-i18n="metric_destruction">Руйнування</div><div class="metric-value danger" id="detail-destruction">—</div></div>
-        <div class="metric-card"><div class="metric-label" data-i18n="metric_recovery">Відновлено</div><div class="metric-value success" id="detail-recovery">—</div></div>
-        <div class="metric-card"><div class="metric-label" data-i18n="metric_need">Потреба</div><div class="metric-value warning" id="detail-need">—</div></div>
-        <div class="metric-card"><div class="metric-label" data-i18n="metric_aid">Допомога</div><div class="metric-value info" id="detail-aid">—</div></div>
-      </div>
-
-      <!-- ACLED CONFLICT BLOCK -->
-      <div class="conflict-section" id="detail-conflict-wrap">
-        <div class="section-label" data-i18n="detail_conflict_label">Конфліктні події · ACLED</div>
-        <div class="conflict-3grid">
-          <div class="conflict-card"><div class="conflict-card-val" style="color:#ef4444" id="dc-events">—</div><div class="conflict-card-lbl" data-i18n="acled_col_events">події</div></div>
-          <div class="conflict-card"><div class="conflict-card-val" style="color:#f59e0b" id="dc-fatalities">—</div><div class="conflict-card-lbl" data-i18n="acled_col_fat">жертви</div></div>
-          <div class="conflict-card"><div class="conflict-card-val" style="color:#fca5a5" id="dc-civilian">—</div><div class="conflict-card-lbl" data-i18n="acled_col_civ">цивільні</div></div>
-        </div>
-        <div id="dc-types"></div>
-      </div>
-
-      <div class="progress-section">
-        <div class="section-label" data-i18n="sectoral_progress">Секторальний прогрес</div>
-        <div class="progress-item">
-          <div class="progress-header"><span class="progress-name" data-i18n="prog_infra">Інфраструктура</span><span class="progress-pct" id="prog-infra">—%</span></div>
-          <div class="progress-bar"><div class="progress-fill" id="fill-infra" style="background:#ef4444;width:0%"></div></div>
-        </div>
-        <div class="progress-item">
-          <div class="progress-header"><span class="progress-name" data-i18n="prog_housing">Житло</span><span class="progress-pct" id="prog-housing">—%</span></div>
-          <div class="progress-bar"><div class="progress-fill" id="fill-housing" style="background:#f59e0b;width:0%"></div></div>
-        </div>
-        <div class="progress-item">
-          <div class="progress-header"><span class="progress-name" data-i18n="prog_social">Соц. сервіси</span><span class="progress-pct" id="prog-social">—%</span></div>
-          <div class="progress-bar"><div class="progress-fill" id="fill-social" style="background:#3b82f6;width:0%"></div></div>
-        </div>
-        <div class="progress-item">
-          <div class="progress-header"><span class="progress-name" data-i18n="prog_edu">Освіта</span><span class="progress-pct" id="prog-edu">—%</span></div>
-          <div class="progress-bar"><div class="progress-fill" id="fill-edu" style="background:#a855f7;width:0%"></div></div>
-        </div>
-      </div>
-
-      <a class="blockchain-badge" href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener">
-        <div class="chain-icon"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="chain-meta">
-          <div class="chain-label"><span class="chain-verified-dot"></span><span data-i18n="chain_label">BNB Chain · Верифіковано</span></div>
-          <div class="chain-hash" id="detail-hash">0x93f529...947fcd</div>
-          <div class="chain-hint" data-i18n="chain_hint">Клікніть щоб перевірити на BscScan →</div>
-        </div>
-      </a>
-
-      <div style="margin-bottom:12px">
-        <div class="section-label" style="margin-bottom:8px" data-i18n="data_sources">Джерела даних</div>
-        <div style="display:flex;flex-wrap:wrap;gap:5px">
-          <span style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);border-radius:4px;padding:3px 7px;font-size:10px;color:#fca5a5">ACLED</span>
-          <span style="background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:3px 7px;font-size:10px;color:var(--muted)">OCHA</span>
-          <span style="background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:3px 7px;font-size:10px;color:var(--muted)">UNDP</span>
-          <span style="background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:3px 7px;font-size:10px;color:var(--muted)">DREAM</span>
-          <span style="background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:3px 7px;font-size:10px;color:var(--muted)">World Bank</span>
-        </div>
-      </div>
+  <div class="topbar-right">
+    <span class="live-badge"><span class="live-dot"></span><span id="commCount">8</span> <span class="ua">громад</span><span class="en">communities</span> · May 2026</span>
+    <button class="layers-btn active" id="layersBtn" onclick="toggleSidebar()">
+      <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      <span class="ua">Шари</span><span class="en">Layers</span>
+    </button>
+    <div class="lang-tog">
+      <button id="bua" class="on" onclick="setLang('ua')">UA</button>
+      <button id="ben" onclick="setLang('en')">EN</button>
     </div>
   </div>
 </div>
 
-<div class="statusbar">
-  <div class="statusbar-item"><span data-i18n="status_communities">Громад на карті:</span>&nbsp;<strong>1 673</strong></div>
-  <div class="statusbar-item"><span data-i18n="status_active_layer">Активний шар:</span>&nbsp;<strong id="activeLayerName">Руйнування</strong></div>
-  <div class="statusbar-item"><span data-i18n="status_scale">Масштаб:</span>&nbsp;<strong id="zoomLevel">6</strong></div>
-  <div class="statusbar-item"><span style="color:#fca5a5">ACLED 2025:</span>&nbsp;<strong style="color:#fca5a5">204K+ <span data-i18n="sb_events">подій</span></strong></div>
-  <div class="statusbar-item" style="margin-left:auto"><span data-i18n="status_pilot">Пілот v0.1 · Дані умовні</span></div>
+<div class="layout">
+  <div id="mapWrap" style="flex:1;position:relative;">
+    <div id="map"></div>
+
+    <!-- Layer switcher -->
+    <div class="layer-sw" id="layerSw">
+      <button class="lsw-btn on" onclick="setLayer('destruction',this)"><span class="ua">Рівень руйнувань</span><span class="en">Destruction level</span></button>
+      <button class="lsw-btn" onclick="setLayer('aid',this)"><span class="ua">Отримана допомога</span><span class="en">Aid received</span></button>
+      <button class="lsw-btn" onclick="setLayer('recovery',this)"><span class="ua">Прогрес відновлення</span><span class="en">Recovery progress</span></button>
+      <button class="lsw-btn" onclick="setLayer('conflict',this)"><span class="ua">Конфліктні події</span><span class="en">Conflict events</span></button>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend" id="legend"></div>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="sb-inner">
+      <!-- Stats -->
+      <div class="sb-stats">
+        <div class="sb-stat"><div class="sb-stat-n" style="color:var(--ink);">1,673</div><div class="sb-stat-l"><span class="ua">Громад</span><span class="en">Communities</span></div></div>
+        <div class="sb-stat"><div class="sb-stat-n" style="color:#C1121F;">962</div><div class="sb-stat-l"><span class="ua">Потребують підтримки</span><span class="en">Need support</span></div></div>
+        <div class="sb-stat"><div class="sb-stat-n" style="color:var(--gold);">23%</div><div class="sb-stat-l"><span class="ua">Відновлено</span><span class="en">Restored</span></div></div>
+        <div class="sb-stat"><div class="sb-stat-n" style="color:var(--gold);">$4.2B</div><div class="sb-stat-l"><span class="ua">Допомога</span><span class="en">Aid distributed</span></div></div>
+      </div>
+
+      <!-- Community detail -->
+      <div id="detailPanel">
+        <div class="sb-empty"><div class="sb-empty-txt"><span class="ua">Клікніть на громаду на карті</span><span class="en">Click a community on the map</span></div></div>
+      </div>
+
+      <!-- Recent updates -->
+      <div class="sb-section-title"><span class="ua">Останні оновлення</span><span class="en">Recent updates</span></div>
+      <div class="sb-update" style="border-left:2px solid #C1121F;">
+        <div class="sb-update-hdr"><span class="sb-update-type" style="color:#C1121F;"><span class="ua">Критично</span><span class="en">Critical</span></span><span class="sb-update-date">18 Apr 2026</span></div>
+        <div class="sb-update-txt">Avdiivska Hromada — new infrastructure strike, $12M needed</div>
+      </div>
+      <div class="sb-update" style="border-left:2px solid var(--gold);">
+        <div class="sb-update-hdr"><span class="sb-update-type" style="color:var(--gold);"><span class="ua">Оновлення</span><span class="en">Update</span></span><span class="sb-update-date">17 Apr 2026</span></div>
+        <div class="sb-update-txt">Kherson — 3 housing restoration projects completed (240 families)</div>
+      </div>
+      <div class="sb-update" style="border-left:2px solid var(--ink2);">
+        <div class="sb-update-hdr"><span class="sb-update-type" style="color:var(--ink2);"><span class="ua">Фінансування</span><span class="en">Funding</span></span><span class="sb-update-date">16 Apr 2026</span></div>
+        <div class="sb-update-txt">EU allocated €180M for Kharkiv Oblast — 67 communities</div>
+      </div>
+
+      <!-- Sources -->
+      <div class="sb-section-title" style="margin-top:14px;"><span class="ua">Джерела даних</span><span class="en">Data sources</span></div>
+      <div class="sb-sources">
+        <span class="sb-source">ACLED</span>
+        <span class="sb-source">OCHA</span>
+        <span class="sb-source">UNDP</span>
+        <span class="sb-source">World Bank</span>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
-// ============================================================
-// ACLED DATA (real oblast-level, 2025, source: ACLED / HDX HRP)
-// ============================================================
-const ACLED = {
-  kherson:     {events:24100,fatalities:7800, civilian:3400,pct:41},
-  zaporizhia:  {events:28600,fatalities:9400, civilian:2200,pct:49},
-  donetsk:     {events:58400,fatalities:24200,civilian:3100,pct:100},
-  luhansk:     {events:31200,fatalities:12800,civilian:890, pct:53},
-  kharkiv:     {events:21800,fatalities:6200, civilian:2800,pct:37},
-  mykolaiv:    {events:9400, fatalities:2100, civilian:980, pct:16},
-  odesa:       {events:1900, fatalities:280,  civilian:210, pct:3},
-  dnipro:      {events:2800, fatalities:510,  civilian:390, pct:5},
-  poltava:     {events:800,  fatalities:120,  civilian:80,  pct:1},
-  sumy:        {events:8200, fatalities:1800, civilian:710, pct:14},
-  chernihiv:   {events:4100, fatalities:820,  civilian:440, pct:7},
-  kyiv:        {events:1200, fatalities:190,  civilian:310, pct:2},
-  zhytomyr:    {events:200,  fatalities:30,   civilian:20,  pct:0},
-  vinnytsia:   {events:300,  fatalities:40,   civilian:25,  pct:0},
-  khmelnytsk:  {events:150,  fatalities:20,   civilian:15,  pct:0},
-  cherkasy:    {events:250,  fatalities:35,   civilian:20,  pct:0},
-  kirovohrad:  {events:180,  fatalities:25,   civilian:18,  pct:0},
-  lviv:        {events:400,  fatalities:60,   civilian:50,  pct:1},
-  ivanofrankiv:{events:100,  fatalities:12,   civilian:8,   pct:0},
-  ternopil:    {events:80,   fatalities:10,   civilian:6,   pct:0},
-  rivne:       {events:90,   fatalities:12,   civilian:7,   pct:0},
-  volyn:       {events:70,   fatalities:8,    civilian:5,   pct:0},
-  zakarpattia: {events:60,   fatalities:7,    civilian:4,   pct:0},
-  chernivtsi:  {events:65,   fatalities:8,    civilian:5,   pct:0},
-};
-
-const ACLED_TYPES = [
-  {name_uk:'Вибухи / Дистанційне насильство', name_en:'Explosions / Remote violence', pct:100, color:'#ef4444'},
-  {name_uk:'Бойові зіткнення',                name_en:'Battles',                      pct:57,  color:'#f97316'},
-  {name_uk:'Удари по цивільних',              name_en:'Violence against civilians',   pct:14,  color:'#f59e0b'},
-  {name_uk:'Стратегічні події',               name_en:'Strategic developments',       pct:10,  color:'#3b82f6'},
-  {name_uk:'Демонстрації',                    name_en:'Demonstrations',               pct:1,   color:'#a855f7'},
+const communities = [
+  {id:1,name:'Kakhovska Hromada',region:'Kherson Oblast',district:'Beryslavskyi Raion',lat:46.82,lng:33.48,destruction:71,recovered:18,need:53,aid:2.1,conflict:1240,infra:18,housing:24,social:35,education:12,hash:'0x93f529...947fcd'},
+  {id:2,name:'Irpinska Hromada',region:'Kyiv Oblast',district:'Bucha Raion',lat:50.52,lng:30.25,destruction:45,recovered:78,need:22,aid:8.4,conflict:430,infra:82,housing:76,social:91,education:88,hash:'0x2d4e...91ab'},
+  {id:3,name:'Khersonska Hromada',region:'Kherson Oblast',district:'Kherson Raion',lat:46.64,lng:32.61,destruction:58,recovered:34,need:46,aid:5.2,conflict:2100,infra:41,housing:28,social:47,education:32,hash:'0x5f12...7d8c'},
+  {id:4,name:'Avdiivska Hromada',region:'Donetsk Oblast',district:'Pokrovskyi Raion',lat:48.13,lng:37.75,destruction:89,recovered:4,need:85,aid:1.1,conflict:4800,infra:6,housing:3,social:8,education:2,hash:'0xab3c...e4f2'},
+  {id:5,name:'Iziumska Hromada',region:'Kharkiv Oblast',district:'Iziumskyi Raion',lat:49.21,lng:37.27,destruction:62,recovered:41,need:38,aid:3.7,conflict:1890,infra:44,housing:38,social:52,education:48,hash:'0x71d9...2a5f'},
+  {id:6,name:'Chernihivska Hromada',region:'Chernihiv Oblast',district:'Chernihiv Raion',lat:51.49,lng:31.29,destruction:18,recovered:91,need:12,aid:4.1,conflict:210,infra:89,housing:94,social:88,education:96,hash:'0xc8e4...b7d3'},
+  {id:7,name:'Mykolaivska Hromada',region:'Mykolaiv Oblast',district:'Mykolaiv Raion',lat:46.97,lng:32.00,destruction:44,recovered:52,need:35,aid:6.8,conflict:890,infra:55,housing:49,social:63,education:58,hash:'0xd5f2...8e9a'},
+  {id:8,name:'Bucha Hromada',region:'Kyiv Oblast',district:'Bucha Raion',lat:50.55,lng:30.23,destruction:52,recovered:71,need:28,aid:7.2,conflict:380,infra:74,housing:68,social:79,education:82,hash:'0x3a6b...f1c8'},
 ];
 
-function getConflictColor(id){
-  const d=ACLED[id]; if(!d) return '#1a3a2e';
-  if(d.events>20000) return '#7f1d1d';
-  if(d.events>10000) return '#c2410c';
-  if(d.events>3000)  return '#f97316';
-  if(d.events>500)   return '#fcd34d';
-  return '#2d6a4f';
-}
-
-function fmtK(n){ return n>=1000 ? (n/1000).toFixed(1)+'K' : String(n); }
-
-// ============================================================
-// I18N
-// ============================================================
-const i18n = {
-  uk:{
-    updated_badge:'Оновлено: 12 трав 2026',
-    'hdr-acled':'ACLED · HDX · 12 трав 2026',
-    tab_layers:'Шари', tab_conflict:'Конфлікт', tab_stats:'Стат.', tab_alerts:'Сповіщ.',
-    display_mode:'Режим відображення',
-    layer_destruction:'Рівень руйнувань', layer_conflict:'Події конфлікту · ACLED',
-    layer_recovery:'Прогрес відновлення', layer_funding:'Отримана допомога', layer_needs:'Потреби громад',
-    legend_title:'Легенда — Руйнування',
-    legend_critical:'Критичні (>70%)', legend_high:'Високі (50–70%)', legend_moderate:'Помірні (20–50%)',
-    legend_low:'Низькі (<20%)', legend_none:'Немає даних / безпечна', legend_occupied:'Окуповані',
-    legend_conflict_title:'Легенда — Конфлікт (ACLED)',
-    lc_extreme:'>20 000 подій', lc_high:'10 000–20 000', lc_moderate:'3 000–10 000', lc_low:'<3 000', lc_none:'Мінімальні дані',
-    summary_stats:'Зведена статистика',
-    stat_communities:'Громад', stat_communities_sub:'всього', stat_affected:'Постраждало',
-    stat_affected_sub:'потребують допомоги', stat_restored:'Відновлено', stat_restored_sub:'від потреби',
-    stat_aid:'Допомога', stat_aid_sub:'розподілено',
-    acled_source:'ACLED · HDX · Оновлено 12 трав 2026',
-    acled_national:'Загальнонаціональна статистика',
-    acled_s1:'Подій 2025', acled_s1b:'найбільше у світі',
-    acled_s2:'Жертви 2025', acled_s2b:'рекорд ACLED',
-    acled_s3:'Цивільні події', acled_s3b:'vs 2024',
-    acled_s4:'Оновлення', acled_s4b:'щотижня',
-    acled_by_oblast:'За областями · 2025',
-    acled_event_types:'Типи подій',
-    acled_meth_label:'Методологія',
-    acled_meth_text:'Дані ACLED (HRP-файли: political violence, civilian targeting, demonstrations) агрегуються до рівня громади (ADM3). Кожен знімок хешується у BNB Chain для аудиту.',
-    top_oblasts:'Топ областей за руйнуваннями',
-    latest_updates:'Останні оновлення',
-    alert1_meta:'18 квіт 2026 · Критично', alert1_text:'Авдіївська громада — новий удар по інфраструктурі, потреба $12M',
-    alert2_meta:'17 квіт 2026 · Оновлення', alert2_text:'Херсон — завершено 3 об\'єкти відновлення житла (240 родин)',
-    alert3_meta:'16 квіт 2026 · Фінансування', alert3_text:'ЄС виділив €180M для Харківської обл. — 67 громад',
-    search_placeholder:'Знайти громаду або область...',
-    zoom_hint_initial:'Клікніть на область для перегляду громад',
-    zoom_hint_oblast:'Клікніть на громаду для деталей',
-    breadcrumb_ukraine:'Україна',
-    metric_destruction:'Руйнування', metric_recovery:'Відновлено', metric_need:'Потреба', metric_aid:'Допомога',
-    detail_conflict_label:'Конфліктні події · ACLED',
-    acled_col_events:'події', acled_col_fat:'жертви', acled_col_civ:'цивільні',
-    sectoral_progress:'Секторальний прогрес',
-    prog_infra:'Інфраструктура', prog_housing:'Житло', prog_social:'Соц. сервіси', prog_edu:'Освіта',
-    chain_label:'BNB Chain · Верифіковано', chain_hint:'Клікніть щоб перевірити на BscScan →',
-    data_sources:'Джерела даних',
-    status_communities:'Громад на карті:', status_active_layer:'Активний шар:',
-    status_scale:'Масштаб:', status_pilot:'Пілот v0.1 · Дані умовні', sb_events:'подій',
-    ai_greeting:'Привіт. Я можу проаналізувати дані ACLED, знайти недофінансування або порівняти регіони. Що цікавить?',
-    qp_underfunding:'Де найбільше недофінансування?', qp_underfunding_label:'Недофінансування?',
-    qp_conflict:'Топ-3 по конфлікту ACLED', qp_conflict_label:'Топ конфлікт',
-    qp_progress:'Прогрес відновлення за регіонами', qp_progress_label:'Прогрес',
-    ai_input_placeholder:'Задай питання...', ai_analytics:'Аналітика ↑',
-    layer_names:{destruction:'Руйнування',conflict:'Конфлікт',recovery:'Відновлення',funding:'Фінансування',needs:'Потреби'},
-    destruction_labels:{critical:'Критичний',high:'Високий',moderate:'Помірний',low:'Низький',none:'Безпечна',occupied:'Окупована'},
-    status_labels:{critical:'Критична',high:'Високий ризик',moderate:'Помірна',low:'Стабілізується',occupied:'Окупована'},
-    tt_dmg:'Руйн.', tt_rec:'Відн.', tt_aid:'Допом.', tt_comm:'Громад',
-    tt_ev:'події', tt_fat:'жертви',
-    ai_resp_underfunding:'Найбільший розрив між потребами та отриманою допомогою — у Херсонській (82% gap) та Запорізькій (74% gap). Разом потребують ще ~$1.8B непокритих коштів.',
-    ai_resp_conflict:'За даними ACLED 2025: Донецька — 58K подій, 24K жертв. Луганська — 31K подій. Запорізька — 28K. Найбільше ударів по цивільних — Херсонська (3.4K) та Харківська (2.8K).',
-    ai_resp_progress:'Найкращий прогрес: Полтавська (38%), Київська (31%), Чернігівська (27%).\nНайгірший: Луганська (окупована), Херсонська (8%), Запорізька (11%).',
-    ai_fallback:(t)=>`Запит "${t}" отримано. У повній версії тут буде відповідь AI з аналізом даних по громадах, регіонах і джерелах фінансування.`,
-  },
-  en:{
-    updated_badge:'Updated: May 12, 2026',
-    'hdr-acled':'ACLED · HDX · May 12, 2026',
-    tab_layers:'Layers', tab_conflict:'Conflict', tab_stats:'Stats', tab_alerts:'Alerts',
-    display_mode:'Display mode',
-    layer_destruction:'Damage level', layer_conflict:'Conflict events · ACLED',
-    layer_recovery:'Recovery progress', layer_funding:'Aid received', layer_needs:'Community needs',
-    legend_title:'Legend — Damage',
-    legend_critical:'Critical (>70%)', legend_high:'High (50–70%)', legend_moderate:'Moderate (20–50%)',
-    legend_low:'Low (<20%)', legend_none:'No data / safe', legend_occupied:'Occupied',
-    legend_conflict_title:'Legend — Conflict (ACLED)',
-    lc_extreme:'>20,000 events', lc_high:'10,000–20,000', lc_moderate:'3,000–10,000', lc_low:'<3,000', lc_none:'Minimal data',
-    summary_stats:'Summary statistics',
-    stat_communities:'Communities', stat_communities_sub:'total', stat_affected:'Affected',
-    stat_affected_sub:'need assistance', stat_restored:'Restored', stat_restored_sub:'of need',
-    stat_aid:'Aid', stat_aid_sub:'distributed',
-    acled_source:'ACLED · HDX · Updated May 12, 2026',
-    acled_national:'National statistics',
-    acled_s1:'Events 2025', acled_s1b:'most globally',
-    acled_s2:'Fatalities 2025', acled_s2b:'ACLED record',
-    acled_s3:'Civilian events', acled_s3b:'vs 2024',
-    acled_s4:'Data refresh', acled_s4b:'weekly',
-    acled_by_oblast:'By oblast · 2025',
-    acled_event_types:'Event types',
-    acled_meth_label:'Methodology',
-    acled_meth_text:'ACLED data (HRP files: political violence, civilian targeting, demonstrations) is aggregated to hromada (ADM3) level. Each weekly snapshot is hashed to BNB Chain for audit.',
-    top_oblasts:'Top regions by damage',
-    latest_updates:'Latest updates',
-    alert1_meta:'Apr 18, 2026 · Critical', alert1_text:'Avdiivka community — new infrastructure strike, need $12M',
-    alert2_meta:'Apr 17, 2026 · Update', alert2_text:'Kherson — 3 housing recovery projects completed (240 families)',
-    alert3_meta:'Apr 16, 2026 · Funding', alert3_text:'EU allocated €180M for Kharkiv region — 67 communities',
-    search_placeholder:'Search community or region...',
-    zoom_hint_initial:'Click region to view communities',
-    zoom_hint_oblast:'Click a community for details',
-    breadcrumb_ukraine:'Ukraine',
-    metric_destruction:'Damage', metric_recovery:'Restored', metric_need:'Need', metric_aid:'Aid',
-    detail_conflict_label:'Conflict events · ACLED',
-    acled_col_events:'events', acled_col_fat:'fatalities', acled_col_civ:'civilian',
-    sectoral_progress:'Sectoral progress',
-    prog_infra:'Infrastructure', prog_housing:'Housing', prog_social:'Social services', prog_edu:'Education',
-    chain_label:'BNB Chain · Verified', chain_hint:'Click to verify on BscScan →',
-    data_sources:'Data sources',
-    status_communities:'Communities on map:', status_active_layer:'Active layer:',
-    status_scale:'Scale:', status_pilot:'Pilot v0.1 · Illustrative data', sb_events:'events',
-    ai_greeting:'Hi. I can analyze ACLED conflict data, identify funding gaps, or compare regions. What do you need?',
-    qp_underfunding:'Where is the biggest funding gap?', qp_underfunding_label:'Funding gap?',
-    qp_conflict:'Top 3 by ACLED conflict', qp_conflict_label:'Top conflict',
-    qp_progress:'Recovery progress by region', qp_progress_label:'Progress',
-    ai_input_placeholder:'Ask a question...', ai_analytics:'Analytics ↑',
-    layer_names:{destruction:'Damage',conflict:'Conflict',recovery:'Recovery',funding:'Funding',needs:'Needs'},
-    destruction_labels:{critical:'Critical',high:'High',moderate:'Moderate',low:'Low',none:'Safe',occupied:'Occupied'},
-    status_labels:{critical:'Critical',high:'High risk',moderate:'Moderate',low:'Stabilizing',occupied:'Occupied'},
-    tt_dmg:'Dmg.', tt_rec:'Rec.', tt_aid:'Aid', tt_comm:'Comm.',
-    tt_ev:'events', tt_fat:'fatal.',
-    ai_resp_underfunding:'Largest gap between needs and aid: Kherson (82% gap), Zaporizhia (74% gap). Together need ~$1.8B in uncovered funding.',
-    ai_resp_conflict:'ACLED 2025 data: Donetsk — 58K events, 24K fatalities. Luhansk — 31K events. Zaporizhia — 28K. Highest civilian targeting: Kherson (3.4K) and Kharkiv (2.8K).',
-    ai_resp_progress:'Best progress: Poltava (38%), Kyiv (31%), Chernihiv (27%).\nWorst: Luhansk (occupied), Kherson (8%), Zaporizhia (11%).',
-    ai_fallback:(t)=>`Query "${t}" received. In the full version, AI will respond with analysis of community, regional, and funding data.`,
-  }
+const LEGENDS = {
+  destruction:{title:'Destruction level',items:[['#C1121F','Critical (>70%)'],['#E05C1A','High (50–70%)'],['#D4A017','Moderate (20–50%)'],['#2D6A4F','Low (<20%)']]},
+  recovery:{title:'Recovery progress',items:[['#2D6A4F','>80% Recovered'],['#5A9A6F','50–80%'],['#D4A017','30–50%'],['#C1121F','<30%']]},
+  conflict:{title:'Conflict events',items:[['#7A0C12','>3000 events'],['#C1121F','1000–3000'],['#E05C1A','500–1000'],['#D4A017','<500']]},
+  aid:{title:'Aid received',items:[['#1B4F9E','>$7M'],['#3A72C4','$4–7M'],['#6B9FD4','$2–4M'],['#A8C4E4','<$2M']]},
 };
 
-let currentLang='uk';
-function T(k){ return i18n[currentLang][k]||i18n.uk[k]||k; }
-
-function applyTranslations(){
-  const lang=i18n[currentLang];
-  document.querySelectorAll('[data-i18n]').forEach(el=>{
-    const k=el.getAttribute('data-i18n');
-    if(lang[k]!==undefined) el.textContent=lang[k];
-  });
-  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
-    const k=el.getAttribute('data-i18n-placeholder');
-    if(lang[k]!==undefined) el.placeholder=lang[k];
-  });
-  const activeL=document.querySelector('.layer-item.active');
-  if(activeL) document.getElementById('activeLayerName').textContent=lang.layer_names[activeL.dataset.layer]||activeL.dataset.layer;
-  document.getElementById('zoomHint').textContent=currentOblast?T('zoom_hint_oblast'):T('zoom_hint_initial');
-  // Refresh conflict tab if visible
-  const ct=document.getElementById('tab-conflict');
-  if(ct&&ct.style.display!=='none') renderConflictTab();
-  else renderConflictTab(); // pre-render for when tab opens
-  // Refresh detail panel if open
-  if(_lastHromada && !document.getElementById('detailPanel').classList.contains('hidden')){
-    _renderDetail(_lastHromada);
+function getColor(c, layer) {
+  if(layer==='destruction'){
+    if(c.destruction>70) return '#C1121F';
+    if(c.destruction>50) return '#E05C1A';
+    if(c.destruction>20) return '#D4A017';
+    return '#2D6A4F';
   }
-}
-
-function setLang(lang){
-  currentLang=lang;
-  document.querySelectorAll('.lang-toggle button').forEach(b=>b.classList.toggle('active',b.textContent===lang.toUpperCase()));
-  applyTranslations();
-  if(currentOblast) document.getElementById('breadcrumb-region').textContent=getOblastName(currentOblast);
-  const st=document.getElementById('tab-stats');
-  if(st&&st.style.display!=='none') renderStatsTab();
-}
-
-// ============================================================
-// MAP DATA
-// ============================================================
-const OBLASTS=[
-  {id:"kherson",    name:"Херсонська обл.",  nameEn:"Kherson region",        color:"#7f1d1d",level:"critical",cx:34.0,cy:46.5},
-  {id:"zaporizhia", name:"Запорізька обл.",   nameEn:"Zaporizhia region",      color:"#b45309",level:"high",    cx:35.5,cy:47.5},
-  {id:"donetsk",    name:"Донецька обл.",     nameEn:"Donetsk region",         color:"#7f1d1d",level:"critical",cx:37.8,cy:48.0},
-  {id:"luhansk",    name:"Луганська обл.",    nameEn:"Luhansk region",         color:"#374151",level:"occupied",cx:39.3,cy:48.8},
-  {id:"kharkiv",    name:"Харківська обл.",   nameEn:"Kharkiv region",         color:"#b45309",level:"high",    cx:36.2,cy:49.8},
-  {id:"mykolaiv",   name:"Миколаївська обл.", nameEn:"Mykolaiv region",        color:"#b45309",level:"high",    cx:32.0,cy:47.1},
-  {id:"odesa",      name:"Одеська обл.",      nameEn:"Odesa region",           color:"#d97706",level:"moderate",cx:30.7,cy:46.5},
-  {id:"dnipro",     name:"Дніпропетровська",  nameEn:"Dnipropetrovsk region",  color:"#d97706",level:"moderate",cx:34.9,cy:48.5},
-  {id:"poltava",    name:"Полтавська обл.",   nameEn:"Poltava region",         color:"#2d6a4f",level:"low",     cx:33.8,cy:49.6},
-  {id:"sumy",       name:"Сумська обл.",      nameEn:"Sumy region",            color:"#d97706",level:"moderate",cx:34.2,cy:50.9},
-  {id:"chernihiv",  name:"Чернігівська обл.", nameEn:"Chernihiv region",       color:"#d97706",level:"moderate",cx:31.5,cy:51.5},
-  {id:"kyiv",       name:"Київська обл.",     nameEn:"Kyiv region",            color:"#2d6a4f",level:"low",     cx:30.9,cy:50.4},
-  {id:"zhytomyr",   name:"Житомирська обл.",  nameEn:"Zhytomyr region",        color:"#1a3a2e",level:"none",    cx:28.5,cy:50.3},
-  {id:"vinnytsia",  name:"Вінницька обл.",    nameEn:"Vinnytsia region",       color:"#1a3a2e",level:"none",    cx:28.3,cy:49.2},
-  {id:"khmelnytsk", name:"Хмельницька обл.",  nameEn:"Khmelnytsk region",      color:"#1a3a2e",level:"none",    cx:26.9,cy:49.4},
-  {id:"cherkasy",   name:"Черкаська обл.",    nameEn:"Cherkasy region",        color:"#2d6a4f",level:"low",     cx:31.5,cy:49.4},
-  {id:"kirovohrad", name:"Кіровоградська",    nameEn:"Kirovohrad region",      color:"#2d6a4f",level:"low",     cx:32.3,cy:48.5},
-  {id:"lviv",       name:"Львівська обл.",    nameEn:"Lviv region",            color:"#1a3a2e",level:"none",    cx:24.0,cy:49.8},
-  {id:"ivanofrankiv",name:"Івано-Франківська",nameEn:"Ivano-Frankivsk region", color:"#1a3a2e",level:"none",    cx:24.7,cy:48.9},
-  {id:"ternopil",   name:"Тернопільська обл.",nameEn:"Ternopil region",        color:"#1a3a2e",level:"none",    cx:25.6,cy:49.5},
-  {id:"rivne",      name:"Рівненська обл.",   nameEn:"Rivne region",           color:"#1a3a2e",level:"none",    cx:26.3,cy:50.6},
-  {id:"volyn",      name:"Волинська обл.",    nameEn:"Volyn region",           color:"#1a3a2e",level:"none",    cx:25.3,cy:51.0},
-  {id:"zakarpattia",name:"Закарпатська обл.", nameEn:"Zakarpattia region",     color:"#1a3a2e",level:"none",    cx:23.3,cy:48.4},
-  {id:"chernivtsi", name:"Чернівецька обл.",  nameEn:"Chernivtsi region",      color:"#1a3a2e",level:"none",    cx:25.9,cy:48.3},
-];
-
-function generateHromadas(oblast){
-  const byLevel={critical:[72,78,81,65,88,74,69],high:[52,58,61,55,64,57,53],moderate:[25,32,38,28,42,35,29],low:[8,12,15,9,18,11,7],none:[2,4,3,1,5,2,3],occupied:[0,0,0,0,0,0,0]};
-  const names={kherson:["Каховська","Херсонська","Скадовська","Бериславська","Нова Каховка"],zaporizhia:["Мелітопольська","Запорізька","Енергодарська","Василівська","Пологівська"],donetsk:["Авдіївська","Маріупольська","Краматорська","Слов'янська","Бахмутська"],kharkiv:["Харківська","Ізюмська","Куп'янська","Балаклійська","Вовчанська"],mykolaiv:["Миколаївська","Вознесенська","Первомайська","Очаківська","Баштанська"],luhansk:["Сєвєродонецька","Лисичанська","Рубіжанська","Стаханівська","Луганська"],default:["Центральна","Північна","Південна","Східна","Західна"]};
-  const namesEn={kherson:["Kakhovka","Kherson","Skadovsk","Beryslav","Nova Kakhovka"],zaporizhia:["Melitopol","Zaporizhia","Enerhodar","Vasylivka","Polohy"],donetsk:["Avdiivka","Mariupol","Kramatorsk","Sloviansk","Bakhmut"],kharkiv:["Kharkiv","Izium","Kupyansk","Balakliia","Vovchansk"],mykolaiv:["Mykolaiv","Voznesensk","Pervomaisk","Ochakiv","Bashtanka"],luhansk:["Sievierodonetsk","Lysychansk","Rubizhne","Stakhanov","Luhansk"],default:["Central","Northern","Southern","Eastern","Western"]};
-  const oblastNames=names[oblast.id]||names.default;
-  const oblastNamesEn=namesEn[oblast.id]||namesEn.default;
-  const destVals=byLevel[oblast.level];
-  const acledData=ACLED[oblast.id]||{events:100,fatalities:10,civilian:5};
-  return oblastNames.map((n,i)=>{
-    const dest=destVals[i%destVals.length];
-    const recovery=Math.round(dest*(0.1+Math.random()*0.3));
-    const need=Math.round(dest*0.6+Math.random()*20);
-    const aid=(Math.random()*5+0.5).toFixed(1);
-    const infra=Math.round(recovery*(0.5+Math.random()*0.5));
-    const housing=Math.round(recovery*(0.6+Math.random()*0.4));
-    const social=Math.round(recovery*(0.7+Math.random()*0.3));
-    const edu=Math.round(recovery*(0.4+Math.random()*0.6));
-    const lvl=dest>=70?'critical':dest>=50?'high':dest>=20?'moderate':'low';
-    const colors={critical:'#7f1d1d',high:'#b45309',moderate:'#d97706',low:'#2d6a4f',occupied:'#374151'};
-    // ACLED data proportionally distributed across hromadas
-    const share=1/oblastNames.length;
-    return {
-      name:n+" громада", nameEn:oblastNamesEn[i]+" community",
-      oblast:oblast.name, oblastEn:oblast.nameEn,
-      level:oblast.level==='occupied'?'occupied':lvl,
-      color:oblast.level==='occupied'?'#374151':colors[lvl],
-      destruction:dest, recovery, need, aid:`$${aid}M`,
-      infra, housing, social, edu,
-      hash:'0x'+Math.random().toString(16).substr(2,4)+'...'+Math.random().toString(16).substr(2,4),
-      lat:oblast.cy+(Math.random()-0.5)*1.5,
-      lng:oblast.cx+(Math.random()-0.5)*1.5,
-      acled_events:Math.round(acledData.events*share*(0.5+Math.random())),
-      acled_fatalities:Math.round(acledData.fatalities*share*(0.5+Math.random())),
-      acled_civilian:Math.round(acledData.civilian*share*(0.5+Math.random())),
-    };
-  });
-}
-
-const HROMADAS={};
-OBLASTS.forEach(o=>{HROMADAS[o.id]=generateHromadas(o);});
-
-// ============================================================
-// MAP INIT
-// ============================================================
-const map=L.map('map',{center:[48.5,31.5],zoom:6,zoomControl:false,attributionControl:false,minZoom:5,maxZoom:12});
-L.control.zoom({position:'bottomleft'}).addTo(map);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19}).addTo(map);
-L.rectangle([[44.2,22.0],[52.4,40.2]],{color:'rgba(59,130,246,0.3)',weight:1,fillColor:'transparent',fillOpacity:0,dashArray:'4,4'}).addTo(map);
-
-let oblastLayers=[], hromadaLayers=[], currentOblast=null;
-
-function getOblastName(o){return currentLang==='en'?o.nameEn:o.name;}
-function getHromadaName(h){return currentLang==='en'?h.nameEn:h.name;}
-function getHromadaOblast(h){return currentLang==='en'?h.oblastEn:h.oblast;}
-
-function buildOblastTooltip(oblast){
-  const hromadas=HROMADAS[oblast.id];
-  const avgDest=Math.round(hromadas.reduce((a,h)=>a+h.destruction,0)/hromadas.length);
-  const lang=i18n[currentLang];
-  const label=lang.destruction_labels[oblast.level]||oblast.level;
-  const acled=ACLED[oblast.id];
-  const activeL=document.querySelector('.layer-item.active')?.dataset?.layer||'destruction';
-  let acledBlock='';
-  if(acled){
-    acledBlock=`
-      <div class="tooltip-divider"></div>
-      <div class="tooltip-acled-row">
-        <div class="tooltip-acled-item"><div class="tooltip-acled-val" style="color:#ef4444">${fmtK(acled.events)}</div><div class="tooltip-acled-lbl">${lang.tt_ev}</div></div>
-        <div class="tooltip-acled-item"><div class="tooltip-acled-val" style="color:#f59e0b">${fmtK(acled.fatalities)}</div><div class="tooltip-acled-lbl">${lang.tt_fat}</div></div>
-        <div class="tooltip-acled-item"><div class="tooltip-acled-val" style="color:#fca5a5">${fmtK(acled.civilian)}</div><div class="tooltip-acled-lbl">${lang.acled_col_civ}</div></div>
-      </div>
-      <div class="tooltip-acled-src">ACLED 2025</div>`;
+  if(layer==='recovery'){
+    if(c.recovered>80) return '#2D6A4F';
+    if(c.recovered>50) return '#5A9A6F';
+    if(c.recovered>30) return '#D4A017';
+    return '#C1121F';
   }
-  return `<div class="tooltip-inner">
-    <div class="tooltip-name">${getOblastName(oblast)}</div>
-    <div class="tooltip-region">${label.toUpperCase()}</div>
-    <div class="tooltip-metrics">
-      <div class="tooltip-metric"><div class="tooltip-metric-val" style="color:#ef4444">${avgDest}%</div><div class="tooltip-metric-lbl">${lang.tt_dmg}</div></div>
-      <div class="tooltip-metric"><div class="tooltip-metric-val" style="color:#22c55e">${Math.round(avgDest*0.2)}%</div><div class="tooltip-metric-lbl">${lang.tt_rec}</div></div>
-      <div class="tooltip-metric"><div class="tooltip-metric-val" style="color:#3b82f6">${hromadas.length}</div><div class="tooltip-metric-lbl">${lang.tt_comm}</div></div>
-    </div>${acledBlock}
-  </div>`;
+  if(layer==='conflict'){
+    if(c.conflict>3000) return '#7A0C12';
+    if(c.conflict>1000) return '#C1121F';
+    if(c.conflict>500) return '#E05C1A';
+    return '#D4A017';
+  }
+  if(layer==='aid'){
+    if(c.aid>7) return '#1B4F9E';
+    if(c.aid>4) return '#3A72C4';
+    if(c.aid>2) return '#6B9FD4';
+    return '#A8C4E4';
+  }
+  return '#B8960C';
 }
 
-function buildHromadaTooltip(h){
-  const lang=i18n[currentLang];
-  return `<div class="tooltip-inner">
-    <div class="tooltip-name">${getHromadaName(h)}</div>
-    <div class="tooltip-region">${getHromadaOblast(h)}</div>
-    <div class="tooltip-metrics">
-      <div class="tooltip-metric"><div class="tooltip-metric-val" style="color:#ef4444">${h.destruction}%</div><div class="tooltip-metric-lbl">${lang.tt_dmg}</div></div>
-      <div class="tooltip-metric"><div class="tooltip-metric-val" style="color:#22c55e">${h.recovery}%</div><div class="tooltip-metric-lbl">${lang.tt_rec}</div></div>
-      <div class="tooltip-metric"><div class="tooltip-metric-val" style="color:#3b82f6">${h.aid}</div><div class="tooltip-metric-lbl">${lang.tt_aid}</div></div>
-    </div>
-    <div class="tooltip-divider"></div>
-    <div class="tooltip-acled-row">
-      <div class="tooltip-acled-item"><div class="tooltip-acled-val" style="color:#ef4444">${fmtK(h.acled_events)}</div><div class="tooltip-acled-lbl">${lang.tt_ev}</div></div>
-      <div class="tooltip-acled-item"><div class="tooltip-acled-val" style="color:#f59e0b">${fmtK(h.acled_fatalities)}</div><div class="tooltip-acled-lbl">${lang.tt_fat}</div></div>
-    </div>
-    <div class="tooltip-acled-src">ACLED 2025</div>
-  </div>`;
-}
+let activeLayer = 'destruction';
+let selectedId = null;
+let markers = {};
 
-OBLASTS.forEach(oblast=>{
-  const circle=L.circleMarker([oblast.cy,oblast.cx],{radius:18,fillColor:oblast.color,color:'rgba(255,255,255,0.15)',weight:1.5,fillOpacity:0.8});
-  circle.bindTooltip(()=>buildOblastTooltip(oblast),{permanent:false,direction:'top',opacity:1});
-  circle.on('click',()=>drillIntoOblast(oblast));
-  circle.on('mouseover',function(){this.setStyle({radius:22,fillOpacity:1});});
-  circle.on('mouseout',function(){this.setStyle({radius:18,fillOpacity:0.8});});
-  circle.addTo(map);
-  oblastLayers.push(circle);
+const map = L.map('map', {
+  center:[48.5,31.5], zoom:6,
+  zoomControl:true, attributionControl:false
 });
 
-// ============================================================
-// COLOR MAPS
-// ============================================================
-const colorMaps={
-  destruction:(h)=>h.color,
-  conflict:(h,oblast)=>{
-    const v=h.acled_events;
-    return v>3000?'#7f1d1d':v>1500?'#c2410c':v>500?'#f97316':v>100?'#fcd34d':'#2d6a4f';
-  },
-  recovery:(h)=>{const v=h.recovery;return v<10?'#7f1d1d':v<25?'#b45309':v<50?'#2d6a4f':'#166534';},
-  funding:(h)=>{const v=parseFloat(h.aid);return v<1?'#374151':v<2?'#1e3a5f':v<4?'#1d4ed8':'#3b82f6';},
-  needs:(h)=>{const v=h.need;return v<20?'#1a3a2e':v<40?'#d97706':'#ef4444';},
-};
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png',{
+  subdomains:'abcd', maxZoom:19
+}).addTo(map);
 
-// ============================================================
-// DRILL INTO OBLAST
-// ============================================================
-function drillIntoOblast(oblast){
-  currentOblast=oblast;
-  oblastLayers.forEach(l=>map.removeLayer(l));
-  hromadaLayers.forEach(l=>map.removeLayer(l));
-  hromadaLayers=[];
-  map.fitBounds([[oblast.cy-1.2,oblast.cx-1.8],[oblast.cy+1.2,oblast.cx+1.8]],{padding:[40,40]});
-  const activeType=document.querySelector('.layer-item.active')?.dataset?.layer||'destruction';
-  const getColor=colorMaps[activeType]||colorMaps.destruction;
-  HROMADAS[oblast.id].forEach(h=>{
-    const circle=L.circleMarker([h.lat,h.lng],{radius:14,fillColor:getColor(h,oblast),color:'rgba(255,255,255,0.2)',weight:1.5,fillOpacity:0.85});
-    circle.bindTooltip(()=>buildHromadaTooltip(h),{permanent:false,direction:'top',opacity:1});
-    circle.on('click',()=>showHromadaDetail(h));
-    circle.on('mouseover',function(){this.setStyle({radius:18,fillOpacity:1});});
-    circle.on('mouseout',function(){this.setStyle({radius:14,fillOpacity:0.85});});
-    circle.addTo(map);
-    hromadaLayers.push(circle);
-  });
-  document.getElementById('breadcrumb').style.display='flex';
-  document.getElementById('breadcrumb-region').textContent=getOblastName(oblast);
-  document.getElementById('zoomHint').textContent=T('zoom_hint_oblast');
-}
-
-function resetView(){
-  currentOblast=null;
-  hromadaLayers.forEach(l=>map.removeLayer(l));
-  hromadaLayers=[];
-  oblastLayers.forEach(l=>l.addTo(map));
-  map.setView([48.5,31.5],6);
-  document.getElementById('breadcrumb').style.display='none';
-  document.getElementById('detailPanel').classList.add('hidden');
-  document.getElementById('zoomHint').textContent=T('zoom_hint_initial');
-}
-
-// ============================================================
-// DETAIL PANEL
-// ============================================================
-let _lastHromada = null;
-
-function showHromadaDetail(h){
-  _lastHromada = h;
-  _renderDetail(h);
-}
-
-function _renderDetail(h){
-  const panel=document.getElementById('detailPanel');
-  panel.classList.remove('hidden');
-  const lang=i18n[currentLang];
-  document.getElementById('detail-region').textContent=getHromadaOblast(h);
-  document.getElementById('detail-name').textContent=getHromadaName(h);
-  const badge=document.getElementById('detail-badge');
-  badge.textContent=lang.status_labels[h.level]||h.level;
-  badge.className='status-badge '+(h.level||'moderate');
-  document.getElementById('detail-destruction').textContent=h.destruction+'%';
-  document.getElementById('detail-recovery').textContent=h.recovery+'%';
-  document.getElementById('detail-need').textContent=h.need+'%';
-  document.getElementById('detail-aid').textContent=h.aid;
-  document.getElementById('detail-hash').textContent=h.hash;
-  // ACLED block
-  document.getElementById('dc-events').textContent=fmtK(h.acled_events);
-  document.getElementById('dc-fatalities').textContent=fmtK(h.acled_fatalities);
-  document.getElementById('dc-civilian').textContent=fmtK(h.acled_civilian);
-  // Conflict type breakdown — always use current lang
-  document.getElementById('dc-types').innerHTML=ACLED_TYPES.slice(0,3).map(t=>`
-    <div class="conflict-type-row">
-      <div class="conflict-type-left"><div class="ctype-dot" style="background:${t.color}"></div>${currentLang==='en'?t.name_en:t.name_uk}</div>
-      <div class="conflict-type-pct">${t.pct}%</div>
-    </div>`).join('');
-  // Progress bars
-  ['fill-infra','fill-housing','fill-social','fill-edu'].forEach(id=>{document.getElementById(id).style.width='0%';});
-  const sp=(id,fid,val,col)=>{document.getElementById(id).textContent=val+'%';const el=document.getElementById(fid);el.style.background=col;setTimeout(()=>el.style.width=val+'%',50);};
-  setTimeout(()=>{
-    sp('prog-infra','fill-infra',h.infra,'#ef4444');
-    sp('prog-housing','fill-housing',h.housing,'#f59e0b');
-    sp('prog-social','fill-social',h.social,'#3b82f6');
-    sp('prog-edu','fill-edu',h.edu,'#a855f7');
-  },100);
-}
-
-// ============================================================
-// MAP EVENTS
-// ============================================================
-map.on('zoomend',()=>{document.getElementById('zoomLevel').textContent=map.getZoom();});
-map.on('click',()=>{if(window.innerWidth<=768)closeMobilePanel();});
-
-// ============================================================
-// LAYER SWITCHING
-// ============================================================
-function setLayer(type){
-  document.querySelectorAll('.layer-item').forEach(el=>el.classList.toggle('active',el.dataset.layer===type));
-  document.getElementById('activeLayerName').textContent=i18n[currentLang].layer_names[type]||type;
-  // toggle legends
-  document.getElementById('legend-destruction').style.display=type==='conflict'?'none':'block';
-  document.getElementById('legend-conflict').style.display=type==='conflict'?'block':'none';
-  if(currentOblast&&hromadaLayers.length>0){
-    const getColor=colorMaps[type]||colorMaps.destruction;
-    hromadaLayers.forEach((layer,i)=>{
-      const h=HROMADAS[currentOblast.id][i];
-      if(h) layer.setStyle({fillColor:getColor(h,currentOblast)});
+function drawMarkers() {
+  communities.forEach(c => {
+    if(markers[c.id]) map.removeLayer(markers[c.id]);
+    const color = getColor(c, activeLayer);
+    const isSelected = c.id === selectedId;
+    const m = L.circleMarker([c.lat, c.lng], {
+      radius: isSelected ? 14 : 10,
+      fillColor: color,
+      color: isSelected ? '#B8960C' : color,
+      weight: isSelected ? 2 : 1,
+      fillOpacity: 0.85,
     });
-  }
+    m.bindTooltip(c.name, {permanent:false, direction:'top', offset:[0,-6]});
+    m.on('click', () => selectCommunity(c.id));
+    m.addTo(map);
+    markers[c.id] = m;
+  });
 }
 
-// ============================================================
-// CONFLICT TAB RENDER
-// ============================================================
-function renderConflictTab(){
-  // Oblast bars
-  const top=OBLASTS.filter(o=>ACLED[o.id]&&ACLED[o.id].events>500)
-    .sort((a,b)=>ACLED[b.id].events-ACLED[a.id].events).slice(0,8);
-  const maxEv=top[0]?ACLED[top[0].id].events:1;
-  document.getElementById('acled-oblast-bars').innerHTML=top.map(o=>{
-    const d=ACLED[o.id];
-    const pct=Math.round(d.events/maxEv*100);
-    const name=currentLang==='en'?o.nameEn:o.name;
-    return `<div class="acled-bar-row">
-      <div class="acled-bar-header">
-        <div class="acled-bar-name">${name}</div>
-        <div class="acled-bar-val">${fmtK(d.events)}</div>
+function updateLegend() {
+  const leg = LEGENDS[activeLayer];
+  const el = document.getElementById('legend');
+  el.innerHTML = `<div class="leg-title">${leg.title}</div>` +
+    leg.items.map(([c,l]) => `<div class="leg-item"><div class="leg-dot" style="background:${c};"></div><div class="leg-lbl">${l}</div></div>`).join('');
+}
+
+function setLayer(layer, btn) {
+  activeLayer = layer;
+  document.querySelectorAll('.lsw-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  drawMarkers();
+  updateLegend();
+}
+
+function selectCommunity(id) {
+  selectedId = id;
+  drawMarkers();
+  const c = communities.find(x => x.id === id);
+  const isUa = document.body.className === 'ua';
+
+  const detailHtml = `
+    <div class="sb-detail">
+      <div class="sb-gold-bar"></div>
+      <div class="sb-detail-hdr">
+        <div>
+          <div class="sb-name">${c.name}</div>
+          <div class="sb-region">${c.region} · ${c.district}</div>
+        </div>
+        <button class="sb-close" onclick="closeCommunity()">×</button>
       </div>
-      <div class="acled-minibar"><div class="acled-minibar-fill" style="width:0%;background:${getConflictColor(o.id)}" data-w="${pct}"></div></div>
+      <div class="sb-metrics">
+        <div class="sb-metric"><div class="sb-metric-v" style="color:#C1121F;">${c.destruction}%</div><div class="sb-metric-l">${isUa?'Руйнування':'Destruction'}</div></div>
+        <div class="sb-metric"><div class="sb-metric-v" style="color:#2D6A4F;">${c.recovered}%</div><div class="sb-metric-l">${isUa?'Відновлено':'Recovered'}</div></div>
+        <div class="sb-metric"><div class="sb-metric-v" style="color:#D4A017;">${c.need}%</div><div class="sb-metric-l">${isUa?'Потреба':'Need gap'}</div></div>
+        <div class="sb-metric"><div class="sb-metric-v" style="color:var(--gold);">$${c.aid}M</div><div class="sb-metric-l">${isUa?'Допомога':'Aid received'}</div></div>
+      </div>
+      <div style="margin-bottom:12px;">
+        <div><div class="sb-prog-label"><span>${isUa?'Інфраструктура':'Infrastructure'}</span><span>${c.infra}%</span></div><div class="sb-prog-bar"><div class="sb-prog-fill" style="width:${c.infra}%;"></div></div></div>
+        <div><div class="sb-prog-label"><span>${isUa?'Житло':'Housing'}</span><span>${c.housing}%</span></div><div class="sb-prog-bar"><div class="sb-prog-fill" style="width:${c.housing}%;"></div></div></div>
+        <div><div class="sb-prog-label"><span>${isUa?'Соц. сервіси':'Social services'}</span><span>${c.social}%</span></div><div class="sb-prog-bar"><div class="sb-prog-fill" style="width:${c.social}%;"></div></div></div>
+        <div><div class="sb-prog-label"><span>${isUa?'Освіта':'Education'}</span><span>${c.education}%</span></div><div class="sb-prog-bar"><div class="sb-prog-fill" style="width:${c.education}%;"></div></div></div>
+      </div>
+      <a class="sb-chain" href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener">
+        <div>
+          <div class="sb-chain-label">${isUa?'On-chain · Верифіковано':'On-chain · Verified'}</div>
+          <div class="sb-chain-hash">${c.hash}</div>
+        </div>
+        <svg class="sb-chain-icon" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+      </a>
     </div>`;
-  }).join('');
-  // Event types
-  document.getElementById('acled-event-types').innerHTML=ACLED_TYPES.map(t=>`
-    <div class="acled-bar-row">
-      <div class="acled-bar-header">
-        <div class="acled-bar-name" style="display:flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;background:${t.color};flex-shrink:0;display:inline-block"></span>${currentLang==='en'?t.name_en:t.name_uk}</div>
-        <div class="acled-bar-val">${t.pct}%</div>
-      </div>
-      <div class="acled-minibar"><div class="acled-minibar-fill" style="width:0%;background:${t.color}" data-w="${t.pct}"></div></div>
-    </div>`).join('');
-  // Animate bars
-  requestAnimationFrame(()=>{
-    document.querySelectorAll('.acled-minibar-fill').forEach(b=>{
-      const w=b.getAttribute('data-w');
-      setTimeout(()=>b.style.width=w+'%',80);
-    });
-  });
+  document.getElementById('detailPanel').innerHTML = detailHtml;
 }
 
-// ============================================================
-// SEARCH
-// ============================================================
-function handleSearch(val){
-  if(!val||val.length<2) return;
-  const v=val.toLowerCase();
-  const match=OBLASTS.find(o=>o.name.toLowerCase().includes(v)||o.nameEn.toLowerCase().includes(v));
-  if(match) drillIntoOblast(match);
+function closeCommunity() {
+  selectedId = null;
+  drawMarkers();
+  const isUa = document.body.className === 'ua';
+  document.getElementById('detailPanel').innerHTML = `<div class="sb-empty"><div class="sb-empty-txt">${isUa?'Клікніть на громаду на карті':'Click a community on the map'}</div></div>`;
 }
 
-// ============================================================
-// TAB SWITCHING
-// ============================================================
-function switchTab(tab){
-  ['layers','conflict','stats','alerts'].forEach(t=>{
-    const el=document.getElementById('tab-'+t);
-    if(el) el.style.display=t===tab?'block':'none';
-  });
-  document.querySelectorAll('.panel-tab').forEach((btn,i)=>{
-    const tabs=['layers','conflict','stats','alerts'];
-    btn.classList.toggle('active',tabs[i]===tab);
-  });
-  if(tab==='stats') renderStatsTab();
-  if(tab==='conflict') renderConflictTab();
+function toggleSidebar() {
+  const sb = document.getElementById('sidebar');
+  const btn = document.getElementById('layersBtn');
+  const isOpen = !sb.classList.contains('closed');
+  sb.classList.toggle('closed', isOpen);
+  btn.classList.toggle('active', !isOpen);
+  setTimeout(() => map.invalidateSize(), 250);
 }
 
-function renderStatsTab(){
-  const lang=i18n[currentLang];
-  const data=OBLASTS.filter(o=>o.level!=='none').sort((a,b)=>{
-    const lvlOrder={critical:4,occupied:3,high:2,moderate:1,low:0};
-    return (lvlOrder[b.level]||0)-(lvlOrder[a.level]||0);
-  }).slice(0,7);
-  document.getElementById('top-regions').innerHTML=data.map(o=>{
-    const hromadas=HROMADAS[o.id];
-    const avg=Math.round(hromadas.reduce((a,h)=>a+h.destruction,0)/hromadas.length);
-    const name=currentLang==='en'?o.nameEn:o.name;
-    const acled=ACLED[o.id];
-    const acledStr=acled?` · ${fmtK(acled.events)} ACLED`:'';
-    return `<div style="background:var(--surface2);border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:10px;margin-bottom:6px;cursor:pointer" onclick='drillIntoOblast(${JSON.stringify(o).replace(/'/g,"\\'")} )'>
-      <div style="width:10px;height:10px;border-radius:50%;background:${o.color};flex-shrink:0"></div>
-      <div style="flex:1">
-        <div style="font-size:12px;font-weight:500">${name}</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:2px">${hromadas.length} ${lang.tt_comm.toLowerCase()}${acledStr}</div>
-      </div>
-      <div style="font-family:'Unbounded',sans-serif;font-size:14px;color:${o.color}">${avg}%</div>
-    </div>`;
-  }).join('');
+function setLang(l) {
+  document.body.className = l;
+  document.getElementById('bua').classList.toggle('on', l==='ua');
+  document.getElementById('ben').classList.toggle('on', l==='en');
+  localStorage.setItem('lang', l);
+  if(selectedId) selectCommunity(selectedId);
 }
 
-// ============================================================
-// FILTER
-// ============================================================
-function filterByLevel(level){
-  if(!currentOblast){
-    oblastLayers.forEach((layer,i)=>layer.setStyle({fillOpacity:OBLASTS[i].level===level?1:0.2}));
-    setTimeout(()=>oblastLayers.forEach(l=>l.setStyle({fillOpacity:0.8})),2000);
-  }
-}
-
-// ============================================================
-// AI CHAT
-// ============================================================
-let aiOpen=false;
-function toggleAI(){aiOpen=!aiOpen;document.getElementById('aiChatBox').classList.toggle('open',aiOpen);}
-
-function sendQuick(text){
-  addMessage(text,'user');
-  const lang=i18n[currentLang];
-  let resp;
-  if(text===T('qp_underfunding')) resp=lang.ai_resp_underfunding;
-  else if(text===T('qp_conflict'))    resp=lang.ai_resp_conflict;
-  else if(text===T('qp_progress'))    resp=lang.ai_resp_progress;
-  else resp=lang.ai_fallback(text);
-  setTimeout(()=>addMessage(resp,'assistant'),700);
-}
-
-function sendAI(){
-  const input=document.getElementById('aiInput');
-  const text=input.value.trim();
-  if(!text) return;
-  addMessage(text,'user');
-  input.value='';
-  const typingEl=document.createElement('div');
-  typingEl.className='typing-indicator';
-  typingEl.innerHTML='<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
-  document.getElementById('aiMessages').appendChild(typingEl);
-  scrollAI();
-  setTimeout(()=>{typingEl.remove();addMessage(i18n[currentLang].ai_fallback(text),'assistant');},1200);
-}
-
-function addMessage(text,role){
-  const msgs=document.getElementById('aiMessages');
-  const el=document.createElement('div');
-  el.className='ai-msg '+role;
-  el.textContent=text;
-  msgs.appendChild(el);
-  scrollAI();
-}
-function scrollAI(){const msgs=document.getElementById('aiMessages');msgs.scrollTop=msgs.scrollHeight;}
-
-// ============================================================
-// MOBILE
-// ============================================================
-function toggleMobilePanel(){
-  const panel=document.querySelector('.left-panel');
-  const overlay=document.getElementById('panelOverlay');
-  const isOpen=panel.classList.contains('open');
-  panel.classList.toggle('open',!isOpen);
-  overlay.classList.toggle('open',!isOpen);
-}
-function closeMobilePanel(){
-  document.querySelector('.left-panel').classList.remove('open');
-  document.getElementById('panelOverlay').classList.remove('open');
-}
-
-// ============================================================
-// INIT
-// ============================================================
-document.getElementById('zoomHint').textContent=T('zoom_hint_initial');
-renderConflictTab();
+// Init
+drawMarkers();
+updateLegend();
+const saved = localStorage.getItem('lang') || 'ua';
+setLang(saved);
 </script>
 </body>
 </html>
