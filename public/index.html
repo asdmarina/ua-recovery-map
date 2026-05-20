@@ -51,9 +51,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--bg2);border
 
 /* ── HERO ── */
 .hero{margin-top:46px;position:relative;min-height:100vh;display:flex;flex-direction:column;}
-.hero-img{position:relative;flex:1;min-height:76vh;overflow:hidden;}
+.hero-img{position:relative;flex:1;min-height:55vh;overflow:hidden;}
 .hero-bg{position:absolute;inset:0;background-image:url('hero.jpg');background-size:cover;background-position:center 40%;}
-.hero-fade{position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 0%,rgba(14,14,12,.3) 45%,rgba(14,14,12,.15) 100%);}
+.hero-fade{position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 0%,rgba(10,10,10,.55) 35%,rgba(10,10,10,.35) 70%,rgba(10,10,10,.2) 100%);}
 .hero-kicker{position:absolute;top:22px;left:32px;font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);text-shadow:0 1px 8px rgba(0,0,0,.6);}
 .hero-card{display:none;}
 .dpulse{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:gpulse 2s infinite;display:inline-block;margin-right:5px;vertical-align:middle;}
@@ -68,11 +68,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--bg2);border
 .hero-hl{position:absolute;bottom:0;left:0;right:0;padding:0 32px;}
 .h1{font-family:'Oswald',sans-serif;font-weight:700;line-height:.96;color:#F4F2EE;font-size:clamp(36px,7vw,88px);letter-spacing:-.02em;text-shadow:0 2px 24px rgba(0,0,0,.5);}
 .h1g{color:var(--gold);}
-.h1sub{font-family:'Oswald',sans-serif;font-size:clamp(13px,2vw,20px);letter-spacing:.04em;color:var(--muted);margin-bottom:18px;margin-top:4px;}
+.h1sub{font-family:'Oswald',sans-serif;font-size:clamp(12px,3vw,20px);letter-spacing:.04em;color:var(--muted);margin-bottom:14px;margin-top:4px;}
 .hero-below{background:var(--bg);padding:40px 32px 0;}
 .hb-in{max-width:1280px;margin:0 auto;}
 .hero-p{font-size:15px;color:var(--ink2);line-height:1.78;max-width:520px;margin-bottom:22px;}
 .hbtns{display:flex;gap:10px;flex-wrap:wrap;}
+@media(max-width:480px){.hbtns{flex-direction:column;gap:8px;}.btn-g,.btn-o{text-align:center;}.hero-img{min-height:38vh;}.h1{font-size:clamp(28px,9vw,44px);}}
 
 /* ── STATS ── */
 .stats{max-width:1280px;margin:40px auto 0;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--gold);}
@@ -108,16 +109,19 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--bg2);border
 .wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:2px;margin-top:28px;}
 .wc{background:var(--surface);padding:22px;border:1px solid var(--border);transition:border-color .2s;display:flex;flex-direction:column;}
 .wc:hover{border-color:var(--gold);}
-.wc-bar{height:2px;background:var(--gold);margin-bottom:14px;}
-.wc-name{font-family:'Oswald',sans-serif;font-size:20px;font-weight:600;color:var(--ink);margin-bottom:7px;letter-spacing:.02em;}
+.wc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;}
+.wc-num{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted2);font-weight:400;letter-spacing:.05em;padding-top:2px;}
+.wc-name{font-family:'Oswald',sans-serif;font-size:20px;font-weight:600;color:var(--ink);margin-bottom:12px;letter-spacing:.01em;line-height:1.1;}
 .wc-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:11px;align-items:center;}
 .tag{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border:1px solid var(--gold);color:var(--gold);}
 .tag-uk{font-size:9px;color:var(--muted2);margin-left:2px;}
-.wc-impact{font-size:11px;color:var(--ink2);line-height:1.68;flex:1;margin-bottom:13px;}
+.wc-impact{font-size:12px;color:var(--ink2);line-height:1.7;flex:1;margin-bottom:16px;}
 .wc-foot{padding-top:10px;border-top:1px solid var(--border);margin-top:auto;}
 .vbadge{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:3px;}
 .vbadge svg{width:12px;height:12px;}
 .wc-hash{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted2);}
+.wc-hash-link{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gold);text-decoration:none;letter-spacing:.03em;}
+.wc-hash-link:hover{opacity:.7;}
 .wc-link{font-size:9px;color:var(--gold);text-decoration:none;display:block;margin-top:3px;letter-spacing:.06em;}
 .wc-link:hover{opacity:.7;}
 .wall-cta{padding:22px 0;text-align:center;border-top:1px solid var(--gold);margin-top:6px;}
@@ -205,7 +209,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--bg2);border
 
 /* ── CTA DARK ── */
 .cta-dark{position:relative;overflow:hidden;margin-top:48px;}
-.cta-bg-img{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1527525443983-6e60c75fff46?w=1600&q=80');background-size:cover;background-position:center 40%;}
+.cta-bg-img{position:absolute;inset:0;background-image:url('alice-kotlyarenko-urt5o3L9gNo-unsplash.jpg');background-size:cover;background-position:center 30%;}
 .cta-overlay{position:absolute;inset:0;background:rgba(10,10,10,.84);}
 .cta-content{position:relative;max-width:1280px;margin:0 auto;padding:80px 32px;text-align:center;}
 .cta-h{font-family:'Oswald',sans-serif;font-size:clamp(40px,7vw,80px);line-height:.95;margin-bottom:18px;color:#F2F2F0;}
@@ -221,7 +225,9 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
 .ft-logo span{color:var(--gold);}
 .ft-desc{font-size:11px;color:var(--muted2);line-height:1.72;max-width:200px;}
 .ft-col h4{font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+
 .ft-col a,.ft-col span{display:block;font-size:12px;color:var(--muted2);text-decoration:none;margin-bottom:6px;transition:color .15s;cursor:pointer;}
+
 .ft-col a:hover{color:#F2F2F0;}
 .ft-bot{display:flex;justify-content:space-between;align-items:center;padding-top:16px;flex-wrap:wrap;gap:6px;}
 .ft-copy{font-size:10px;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;}
@@ -233,16 +239,23 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
   .nav-links{display:none;}
   .burger{display:block;margin-left:auto;}
   .hero-card{display:none;}
+  .hero-img{min-height:45vh;}
+  .hero{min-height:auto;}
   .hero-hl,.hero-kicker{padding-left:20px;padding-right:20px;}
-  .hero-below{padding:28px 20px 0;}
+  .hero-below{padding:24px 20px 0;}
+  .h1{font-size:clamp(32px,10vw,56px);}
+  .hero-p{font-size:14px;}
   .stats{grid-template-columns:1fr 1fr;}
   .stat:nth-child(2n){border-right:none;}
   .stat{border-bottom:1px solid var(--border);}
   .ch-grid,.vsteps{grid-template-columns:1fr;}
+  .wgrid{grid-template-columns:repeat(2,1fr);gap:12px;}
+  .ch-grid{grid-template-columns:1fr;}
   .ch-col,.vs{border-right:none;border-bottom:1px solid var(--border);}
   .ch-col:last-child,.vs:last-child{border-bottom:none;}
   .challenge,.how-sec{padding:48px 20px;}
   .wall-sec,.roadmap-sec{padding:48px 20px 0;}
+  .wgrid{grid-template-columns:1fr;gap:10px;}
   .comm-hdr{padding:48px 20px 0;}
   .comm-grid{grid-template-columns:1fr 1fr;}
   .dform-in{padding:48px 20px;}
@@ -256,19 +269,24 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
   .ft-grid{grid-template-columns:1fr 1fr;gap:20px;}
 }
 @media(max-width:600px){
-  .stats{grid-template-columns:1fr;}
+  .stats{grid-template-columns:1fr 1fr;}
   .stat{border-right:none;}
+  .stat-n{font-size:28px;}
+  .stat-l{font-size:9px;}
+  .stat-s{font-size:9px;}
   .comm-grid{grid-template-columns:1fr;}
   .rm-grid{grid-template-columns:1fr;}
   .rmc{border-right:none!important;border-top:1px solid var(--border);}
   .rmc:first-child{border-top:none;}
-  .ft-grid{grid-template-columns:1fr;}
+  .ft-grid{grid-template-columns:1fr 1fr;}
   .f2{grid-template-columns:1fr;}
+  .ft-logo-col{grid-column:1/-1;}
+  .ft-stgeorge{display:none;}
   .cta-btns{flex-direction:column;align-items:center;}
 }
 </style>
 </head>
-<body>
+<body class="ua">
 
 <!-- NAV -->
 <nav>
@@ -283,7 +301,7 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
       <a href="#how"><span class="ua">Як це працює</span><span class="en">How it works</span></a>
       <a href="map.html"><span class="ua">Карта</span><span class="en">Map</span></a>
     </div>
-    <div class="ltog">
+    <div class="ltog" id="ltog">
       <button class="on" onclick="setLang('ua')">UA</button>
       <button onclick="setLang('en')">EN</button>
     </div>
@@ -293,8 +311,9 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
   </div>
   <div class="mobnav" id="mobnav">
     <a href="#challenge" onclick="toggleNav()"><span class="ua">Проблема</span><span class="en">Challenge</span></a>
-    <a href="#wall" onclick="toggleNav()"><span class="ua">Стіна відбудовників</span><span class="en">Wall of Rebuilders</span></a>
+    <a href="wall.html" onclick="toggleNav()"><span class="ua">Стіна відбудовників</span><span class="en">Wall of Rebuilders</span></a>
     <a href="#how" onclick="toggleNav()"><span class="ua">Як це працює</span><span class="en">How it works</span></a>
+    <a href="map.html" onclick="toggleNav()"><span class="ua">Карта</span><span class="en">Map</span></a>
   </div>
 </nav>
 
@@ -306,15 +325,6 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
     <div class="hero-kicker">
       <span class="ua">Система публічної пам'яті для України</span>
       <span class="en">Public memory system for Ukraine</span>
-    </div>
-      <div class="card-n">9</div>
-      <div class="card-sub"><span class="ua">Записів on-chain</span><span class="en">On-chain records</span></div>
-      <hr class="card-hr"/>
-      <div class="card-d">Smart contract</div>
-      <div class="card-hash">0x93f5...47fcd</div>
-      <a class="card-lnk" href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener">
-        View on BscScan →
-      </a>
     </div>
     <div class="hero-hl">
       <div class="h1">
@@ -358,10 +368,6 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
         <div class="stat-s"><span class="ua">Травень · Київ</span><span class="en">May · Kyiv</span></div>
       </div>
     </div>
-    <div class="pilot-n">
-      <span class="ua">Дані пілоту · Травень 2026</span>
-      <span class="en">Pilot data · May 2026</span>
-    </div>
   </div>
 </div>
 
@@ -400,134 +406,83 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
 <!-- WALL OF REBUILDERS -->
 <section class="wall-sec" id="wall">
   <div class="wall-sec-in">
-    <div class="sec-lbl"><span class="ua">Визнані учасники</span><span class="en">Recognized Contributors</span></div>
-    <div class="sec-h2">
-      <span class="ua">СТІНА<br>ВІДБУДОВНИКІВ</span>
-      <span class="en">WALL OF<br>REBUILDERS</span>
-    </div>
-    <p style="font-size:13px;color:var(--muted);max-width:460px;line-height:1.7;margin-top:8px;">
-      <span class="ua">Кожен бейдж — верифікований внесок on-chain. Не рейтинг — постійний незмінний запис тих хто прийшов допомогти Україні.</span>
-      <span class="en">Each badge represents a verified contribution. Not a ranking — a permanent record of those who showed up.</span>
-    </p>
-    <div class="wgrid">
-      <!-- Card 1 -->
-      <div class="wc">
-        <div class="wc-bar"></div>
-        <div class="wc-name">ACTED Ukraine</div>
-        <div class="wc-tags">
-          <span class="tag">Shelter</span>
-          <span class="tag">Reconstruction</span>
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:40px;">
+      <div>
+        <div class="sec-lbl"><span class="ua">Визнані учасники</span><span class="en">Recognized Contributors</span></div>
+        <div class="sec-h2" style="margin-bottom:8px;">
+          <span class="ua">СТІНА<br>ВІДБУДОВНИКІВ</span>
+          <span class="en">WALL OF<br>REBUILDERS</span>
         </div>
-        <p class="wc-impact">Restored 1,200 damaged homes and winterized 4 community centers in Mykolaiv region.</p>
-        <div class="wc-foot">
-          <div class="vbadge">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span class="ua">Верифіковано on-chain</span><span class="en">Verified on-chain</span>
-          </div>
-          <div class="wc-hash">0x7b…c114 · BNB Chain</div>
-          <a class="wc-link" href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener">View on BscScan →</a>
-        </div>
+        <p style="font-size:13px;color:var(--muted);max-width:400px;line-height:1.7;">
+          <span class="ua">Верифікований внесок on-chain. Не рейтинг — постійний запис.</span>
+          <span class="en">Verified contribution on-chain. Not a ranking — a permanent record.</span>
+        </p>
       </div>
-      <!-- Card 2 -->
-      <div class="wc">
-        <div class="wc-bar"></div>
-        <div class="wc-name">UNHCR Ukraine</div>
-        <div class="wc-tags">
-          <span class="tag">Displacement</span>
-          <span class="tag">Emergency Aid</span>
-        </div>
-        <p class="wc-impact">Reached 1.4M internally displaced persons with emergency cash assistance and protection services.</p>
-        <div class="wc-foot">
-          <div class="vbadge">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span class="ua">Верифіковано on-chain</span><span class="en">Verified on-chain</span>
-          </div>
-          <div class="wc-hash">0x9d…e330 · BNB Chain</div>
-          <a class="wc-link" href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener">View on BscScan →</a>
-        </div>
-      </div>
-      <!-- Card 3 -->
-      <div class="wc">
-        <div class="wc-bar"></div>
-        <div class="wc-name">Rebuild Ukraine Alliance</div>
-        <div class="wc-tags">
-          <span class="tag">Infrastructure</span>
-          <span class="tag">Education</span>
-        </div>
-        <p class="wc-impact">Coordinated reconstruction of 18 schools and 6 water treatment facilities across Donetsk frontline communities.</p>
-        <div class="wc-foot">
-          <div class="vbadge">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span class="ua">Верифіковано on-chain</span><span class="en">Verified on-chain</span>
-          </div>
-          <div class="wc-hash">0x2a…f701 · BNB Chain</div>
-          <a class="wc-link" href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener">View on BscScan →</a>
-        </div>
-      </div>
-      <!-- Card 4 -->
-      <div class="wc">
-        <div class="wc-bar"></div>
-        <div class="wc-name">Caritas Ukraine</div>
-        <div class="wc-tags">
-          <span class="tag">Food</span>
-          <span class="tag">Social Support</span>
-        </div>
-        <p class="wc-impact">Distributed food packages to 280,000 vulnerable households; running 12 day centers for displaced elderly.</p>
-        <div class="wc-foot">
-          <div class="vbadge">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span class="ua">Верифіковано on-chain</span><span class="en">Verified on-chain</span>
-          </div>
-          <div class="wc-hash">0x5c…b229 · BNB Chain</div>
-          <a class="wc-link" href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener">View on BscScan →</a>
-        </div>
-      </div>
-      <!-- Card 5 -->
-      <div class="wc">
-        <div class="wc-bar"></div>
-        <div class="wc-name">World Central Kitchen</div>
-        <div class="wc-tags">
-          <span class="tag">Food</span>
-          <span class="tag">Frontline</span>
-        </div>
-        <p class="wc-impact">8.4M meals served in frontline communities. 23 field kitchens operational across eastern Ukraine.</p>
-        <div class="wc-foot">
-          <div class="vbadge">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span class="ua">Верифіковано on-chain</span><span class="en">Verified on-chain</span>
-          </div>
-          <div class="wc-hash">0xd5…8e9a · BNB Chain</div>
-          <a class="wc-link" href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener">View on BscScan →</a>
-        </div>
-      </div>
-      <!-- Card 6 -->
-      <div class="wc">
-        <div class="wc-bar"></div>
-        <div class="wc-name">Nova Ukraine</div>
-        <div class="wc-tags">
-          <span class="tag">Humanitarian</span>
-          <span class="tag">Diaspora</span>
-        </div>
-        <p class="wc-impact">$28M in aid delivered via 40+ partner organizations; generator program serving 210 critical facilities.</p>
-        <div class="wc-foot">
-          <div class="vbadge">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span class="ua">Верифіковано on-chain</span><span class="en">Verified on-chain</span>
-          </div>
-          <div class="wc-hash">0x1e…d445 · BNB Chain</div>
-          <a class="wc-link" href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener">View on BscScan →</a>
-        </div>
-      </div>
-    </div>
-    <div class="wall-cta">
-      <div class="wall-note">
-        <span class="ua">Всі записи закріплені на BNB Chain · Незмінні · Публічно перевіряються</span>
-        <span class="en">All records anchored on BNB Chain · Immutable · Publicly auditable</span>
-      </div>
-      <a class="btn-go" href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener">
-        <span class="ua">Переглянути контракт на BscScan →</span>
-        <span class="en">View contract on BscScan →</span>
+      <a href="wall.html" class="btn-o" style="flex-shrink:0;align-self:flex-end;">
+        <span class="ua">Всі відбудовники →</span>
+        <span class="en">All Rebuilders →</span>
       </a>
+    </div>
+
+    <div class="wgrid">
+
+      <div class="wc">
+        <div class="wc-top">
+          <div class="wc-num">01</div>
+          <div class="wc-tags">
+            <span class="tag">Shelter</span>
+            <span class="tag">Reconstruction</span>
+          </div>
+        </div>
+        <div class="wc-name">ACTED Ukraine</div>
+        <p class="wc-impact"><span class="ua">Відновила 1 200 пошкоджених будинків та утеплила 4 громадські центри в Миколаївській області.</span><span class="en">Restored 1,200 damaged homes and winterized 4 community centers in Mykolaiv region.</span></p>
+        <div class="wc-foot">
+          <div class="vbadge">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="ua">Верифіковано on-chain</span><span class="en">Verified on-chain</span>
+          </div>
+          <a class="wc-hash-link" href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener">0x7b…c114 ↗</a>
+        </div>
+      </div>
+
+      <div class="wc">
+        <div class="wc-top">
+          <div class="wc-num">02</div>
+          <div class="wc-tags">
+            <span class="tag">Displacement</span>
+            <span class="tag">Emergency Aid</span>
+          </div>
+        </div>
+        <div class="wc-name">UNHCR Ukraine</div>
+        <p class="wc-impact"><span class="ua">Охопила 1,4M внутрішньо переміщених осіб екстреною грошовою допомогою та захистом.</span><span class="en">Reached 1.4M internally displaced persons with emergency cash assistance and protection services.</span></p>
+        <div class="wc-foot">
+          <div class="vbadge">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="ua">Верифіковано on-chain</span><span class="en">Verified on-chain</span>
+          </div>
+          <a class="wc-hash-link" href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener">0x9d…e330 ↗</a>
+        </div>
+      </div>
+
+      <div class="wc">
+        <div class="wc-top">
+          <div class="wc-num">03</div>
+          <div class="wc-tags">
+            <span class="tag">Infrastructure</span>
+            <span class="tag">Education</span>
+          </div>
+        </div>
+        <div class="wc-name">Rebuild Ukraine Alliance</div>
+        <p class="wc-impact"><span class="ua">Координувала відбудову 18 шкіл та 6 водоочисних станцій у громадах на лінії фронту Донеччини.</span><span class="en">Coordinated reconstruction of 18 schools and 6 water treatment facilities across Donetsk frontline communities.</span></p>
+        <div class="wc-foot">
+          <div class="vbadge">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="ua">Верифіковано on-chain</span><span class="en">Verified on-chain</span>
+          </div>
+          <a class="wc-hash-link" href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener">0x2a…f701 ↗</a>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -554,7 +509,7 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
       <div class="cc-body">
         <div class="cc-oblast"><span class="ua">Миколаївська область</span><span class="en">Mykolaiv Oblast</span></div>
         <div class="cc-ms"><span class="ua">ШКОЛА №3 ВІДБУДОВАНА</span><span class="en">SCHOOL №3 REBUILT</span></div>
-        <div class="cc-name">Snihurivka</div>
+        <div class="cc-name"><span class="ua">Снігурівка</span><span class="en">Snihurivka</span></div>
         <div class="cc-detail"><span class="ua">840 учнів повернулись. Водопостачання відновлено на 78% домогосподарств.</span><span class="en">840 students returned. Water supply restored to 78% of households.</span></div>
       </div>
     </div>
@@ -566,7 +521,7 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
       <div class="cc-body">
         <div class="cc-oblast"><span class="ua">Харківська область</span><span class="en">Kharkiv Oblast</span></div>
         <div class="cc-ms"><span class="ua">ВОДОПОСТАЧАННЯ</span><span class="en">WATER INFRASTRUCTURE</span></div>
-        <div class="cc-name">Izium</div>
+        <div class="cc-name"><span class="ua">Ізюм</span><span class="en">Izium</span></div>
         <div class="cc-detail"><span class="ua">60% відновлено. 3 НГО активні. Ремонт системи опалення тривaє.</span><span class="en">60% restored. 3 NGOs active. Heating system repair ongoing.</span></div>
       </div>
     </div>
@@ -578,7 +533,7 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
       <div class="cc-body">
         <div class="cc-oblast"><span class="ua">Харківська область</span><span class="en">Kharkiv Oblast</span></div>
         <div class="cc-ms"><span class="ua">МЕДЦЕНТР ВІДБУДОВАНО</span><span class="en">MEDICAL CENTER REBUILT</span></div>
-        <div class="cc-name">Kupiansk</div>
+        <div class="cc-name"><span class="ua">Куп'янськ</span><span class="en">Kupiansk</span></div>
         <div class="cc-detail"><span class="ua">Обслуговує 12 000 мешканців. Генератор встановлено, працює.</span><span class="en">Serving 12,000 residents. Generator installed, operational.</span></div>
       </div>
     </div>
@@ -590,7 +545,7 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
       <div class="cc-body">
         <div class="cc-oblast"><span class="ua">Донецька область</span><span class="en">Donetsk Oblast</span></div>
         <div class="cc-ms"><span class="ua">ЕЛЕКТРОМЕРЕЖА</span><span class="en">POWER GRID</span></div>
-        <div class="cc-name">Velyka Novosilka</div>
+        <div class="cc-name"><span class="ua">Велика Новосілка</span><span class="en">Velyka Novosilka</span></div>
         <div class="cc-detail"><span class="ua">30% відновлено. Високий пріоритет. 4 донорські організації координують зусилля.</span><span class="en">30% restored. High priority. 4 donor organizations coordinating.</span></div>
       </div>
     </div>
@@ -614,7 +569,7 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
       <div class="cc-body">
         <div class="cc-oblast"><span class="ua">Харківська область</span><span class="en">Kharkiv Oblast</span></div>
         <div class="cc-ms"><span class="ua">ВІДРОДЖЕННЯ АПК</span><span class="en">AGRICULTURAL REVIVAL</span></div>
-        <div class="cc-name">Balakliya</div>
+        <div class="cc-name"><span class="ua">Балаклія</span><span class="en">Balakliya</span></div>
         <div class="cc-detail"><span class="ua">2 400 га повернуто в обробіток. Зернові сховища відбудовано за кошти ЄС.</span><span class="en">2,400 ha returned to use. Grain storage rebuilt with EU funding.</span></div>
       </div>
     </div>
@@ -881,12 +836,11 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
       </div>
       <div class="ft-col">
         <h4><span class="ua">Платформа</span><span class="en">Platform</span></h4>
-        <a href="#wall"><span class="ua">Стіна відбудовників</span><span class="en">Wall of Rebuilders</span></a>
-        <a href="map.html"><span class="ua">Карта громад</span><span class="en">Community Map</span></a>
-        <a href="#how"><span class="ua">Верифікація</span><span class="en">Verification</span></a>
-        <a href="wall.html"><span class="ua">Стіна відбудовників</span><span class="en">Wall of Rebuilders</span></a>
+        <a href="wall.html" class="ft-link" data-ua="Стіна відбудовників" data-en="Wall of Rebuilders"></a>
+        <a href="map.html" class="ft-link" data-ua="Карта громад" data-en="Community Map"></a>
+        <a href="#how" class="ft-link" data-ua="Верифікація" data-en="Verification"></a>
       </div>
-      <div style="display:flex;align-items:flex-end;justify-content:center;">
+      <div class="ft-stgeorge" style="display:flex;align-items:flex-end;justify-content:center;">
         <img src="st-george.svg" alt="" style="height:90px;width:auto;opacity:0.35;filter:brightness(0) invert(1);" onerror="this.style.display='none'"/>
       </div>
       <div class="ft-col">
@@ -912,6 +866,7 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
 function setLang(l){
   document.body.classList.toggle('en', l==='en');
   document.querySelectorAll('.ltog button').forEach((b,i)=>b.classList.toggle('on', i===(l==='ua'?0:1)));
+  document.querySelectorAll('.ft-link').forEach(a=>{a.textContent=l==='ua'?a.dataset.ua:a.dataset.en;});
   document.documentElement.lang = l;
   document.title = l==='ua'
     ? 'UA Rebuild — Україна пам\'ятає кожен внесок'
@@ -961,6 +916,9 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
     if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth'}); }
   });
 });
+
+// Init — UA default, populate ft-links
+document.querySelectorAll('.ft-link').forEach(a=>{a.textContent=a.dataset.ua||''});
 </script>
 </body>
 </html>

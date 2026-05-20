@@ -86,37 +86,60 @@ footer{background:var(--dark);padding:32px 24px 18px;border-top:1px solid rgba(1
   .wall{padding:16px 20px 0;}
   .sf-row{grid-template-columns:1fr;}
 }
+
+/* ── NAV (shared) ── */
+:root{--nav-h:46px;}
+nav{position:fixed;top:0;left:0;right:0;z-index:500;background:var(--surface,#F4F3F1);border-bottom:1px solid var(--border,#C8C8C4);}
+.nav-gold{height:2px;background:var(--gold,#B8960C);}
+.nav-in{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:44px;gap:20px;}
+.nav-logo{display:flex;align-items:center;text-decoration:none;margin-right:auto;}
+.nav-logo img{height:24px;width:auto;}
+.nav-logo-text{font-family:'Oswald',sans-serif;font-size:20px;font-weight:600;letter-spacing:.04em;color:var(--ink,#0A0A0A);}
+.nav-logo-text span{color:var(--gold,#B8960C);}
+.nav-links{display:flex;align-items:center;gap:20px;}
+.nav-links a{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted,#5A5855);text-decoration:none;transition:color .15s;white-space:nowrap;}
+.nav-links a:hover{color:var(--gold,#B8960C);}
+.nav-links a.active{color:var(--gold,#B8960C);}
+.ltog{display:flex;border:1px solid var(--border,#C8C8C4);overflow:hidden;margin-left:4px;}
+.ltog button{padding:4px 9px;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-family:'Inter',sans-serif;border:none;background:transparent;color:var(--muted,#5A5855);cursor:pointer;transition:all .15s;}
+.ltog button.on{background:var(--gold,#B8960C);color:#0A0A0A;}
+.burger{display:none;background:none;border:none;cursor:pointer;padding:4px;flex-shrink:0;}
+.burger span{display:block;width:18px;height:1.5px;background:var(--ink,#0A0A0A);margin:4px 0;}
+.mobnav{display:none;padding:12px 24px;background:var(--surface,#F4F3F1);border-top:1px solid var(--border,#C8C8C4);}
+.mobnav.open{display:block;}
+.mobnav a{display:block;padding:9px 0;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2,#2A2A2A);text-decoration:none;border-bottom:1px solid var(--border,#C8C8C4);}
+.mobnav a:last-child{border-bottom:none;}
+@media(max-width:768px){.nav-links{display:none;}.burger{display:block;}}
+
+body{padding-top:var(--nav-h);}
 </style>
 </head>
-<body>
+<body class="ua">
 <nav>
   <div class="nav-gold"></div>
   <div class="nav-in">
-    <a class="back" href="index.html">
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
-      <span class="ua">Назад</span><span class="en">Back</span>
-    </a>
     <a class="nav-logo" href="index.html">
-      <svg width="120" height="22" viewBox="0 0 235 44" fill="none">
-        <path d="M0 22L20.53 0L33.73 10.27L19.07 22H0Z" fill="url(#wl0)"/>
-        <path d="M0 22L20.53 44L33.73 33.73L19.07 22H0Z" fill="url(#wl1)"/>
-        <path d="M67.47 22L46.93 0L33.73 10.27L48.4 22H67.47Z" fill="#D4B56E"/>
-        <path d="M67.47 22L46.93 44L33.73 33.73L48.4 22H67.47Z" fill="#8D630D"/>
-        <path d="M94.55 37.23L101.06 6.39H104.11L110.66 37.23H107.8L106.28 28.97H98.93L97.37 37.23H94.55Z" fill="white"/>
-        <path d="M83.35 37.61C81.27 37.61 79.64 37.24 78.48 36.51C77.33 35.75 76.55 34.71 76.11 33.39C75.68 32.04 75.47 30.52 75.47 28.82V6.39H78.28V28.89C78.94 33.13 79.45 33.89 80.19 34.45C80.92 35.01 81.98 35.29 83.35 35.29C84.67 35.29 85.7 35.01 86.43 34.45C87.17 33.87 87.68 33.09 87.96 32.13C88.26 31.16 88.41 30.09 88.41 28.89V6.39H91.19V28.82C91.19 30.52 90.97 32.04 90.51 33.39C90.05 34.71 89.25 35.75 88.11 36.51C86.97 37.24 85.38 37.61 83.35 37.61Z" fill="white"/>
-        <path d="M138.41 37.25V6.41H150.36V9.6H142.71V19.81H148.92V22.86H142.71V34.17H150.44V37.25H138.41Z" fill="white"/>
-        <path d="M194.79 37.25V6.41H199.01V37.25H194.79Z" fill="white"/>
-        <path d="M204 37.25V6.41H208.31V34.17H216.19V37.25H204Z" fill="white"/>
-        <defs>
-          <linearGradient id="wl0" x1="-4.4" y1="-10.27" x2="66" y2="54.27" gradientUnits="userSpaceOnUse"><stop stop-color="#C9900A"/><stop offset="0.5" stop-color="#A67310"/><stop offset="1" stop-color="#6B4E0A"/></linearGradient>
-          <linearGradient id="wl1" x1="-4.4" y1="54.27" x2="66" y2="-10.27" gradientUnits="userSpaceOnUse"><stop stop-color="#8A6010" stop-opacity="0.45"/><stop offset="1" stop-color="#C9900A" stop-opacity="0.65"/></linearGradient>
-        </defs>
-      </svg>
+      <img src="logo_white.svg" alt="UA Rebuild" onerror="this.outerHTML='&lt;span class=nav-logo-text&gt;&lt;span&gt;UA&lt;/span&gt; Rebuild&lt;/span&gt;'"/>
     </a>
+    <div class="nav-links">
+      <a href="index.html#challenge"><span class="ua">Проблема</span><span class="en">Challenge</span></a>
+      <a href="wall.html" class="active"><span class="ua">Стіна відбудовників</span><span class="en">Wall of Rebuilders</span></a>
+      <a href="index.html#how"><span class="ua">Як це працює</span><span class="en">How it works</span></a>
+      <a href="map.html"><span class="ua">Карта</span><span class="en">Map</span></a>
+    </div>
     <div class="ltog">
-      <button id="bua" class="on" onclick="setLang('ua')">UA</button>
+      <button class="on" id="bua" onclick="setLang('ua')">UA</button>
       <button id="ben" onclick="setLang('en')">EN</button>
     </div>
+    <button class="burger" onclick="toggleNav()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mobnav" id="mobnav">
+    <a href="index.html#challenge" onclick="toggleNav()"><span class="ua">Проблема</span><span class="en">Challenge</span></a>
+    <a href="wall.html" onclick="toggleNav()"><span class="ua">Стіна відбудовників</span><span class="en">Wall of Rebuilders</span></a>
+    <a href="index.html#how" onclick="toggleNav()"><span class="ua">Як це працює</span><span class="en">How it works</span></a>
+    <a href="map.html" onclick="toggleNav()"><span class="ua">Карта</span><span class="en">Map</span></a>
   </div>
 </nav>
 

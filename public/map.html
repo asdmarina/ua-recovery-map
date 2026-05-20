@@ -3,360 +3,470 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>UA Rebuild — Recovery Map</title>
-<link rel="icon" href="favicon-32.png" type="image/png"/>
+<title>UA Rebuild — Карта відновлення</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-:root{--bg:#EDECEA;--bg2:#E2E0DD;--surface:#F4F3F1;--gold:#B8960C;--gold2:#C9A84C;--ink:#0A0A0A;--ink2:#2A2A2A;--muted:#5A5855;--muted2:#8A8880;--border:#C8C8C4;--dark:#1A1A18;}
+:root{
+  --bg:#E8E8E6;--bg2:#DDDCDA;--surface:#F2F2F0;
+  --gold:#B8960C;--gold2:#C9A227;
+  --ink:#0A0A0A;--ink2:#2A2A2A;
+  --muted:#5A5855;--muted2:#8A8880;
+  --border:#C8C8C4;--dark:#1A1A18;
+  --red:#C1121F;--green:#2D6A4F;
+  --nav-h:46px;
+}
 html,body{font-family:'Inter',sans-serif;height:100%;overflow:hidden;color:var(--ink);background:var(--bg);}
-.en{display:none;}.ua{display:inline;}
-body.en .en{display:inline;} body.en .ua{display:none;}
+.en{display:none!important;}.ua{display:inline!important;}
+body.en .en{display:inline!important;}body.en .ua{display:none!important;}
 
-/* TOP BAR */
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:44px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;z-index:100;position:relative;}
-.topbar-left{display:flex;align-items:center;gap:12px;}
-.back-btn{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .15s;}
-.back-btn:hover{color:var(--ink);}
-.back-btn svg{width:13px;height:13px;}
-.breadcrumb-sep{font-size:11px;color:var(--border);}
-.breadcrumb-cur{font-size:11px;color:var(--muted);}
-.topbar-right{display:flex;align-items:center;gap:10px;}
-.live-badge{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold);padding:3px 10px;}
+/* NAV — matches landing */
+#nav{
+  position:relative;height:var(--nav-h);flex-shrink:0;
+  background:var(--bg2);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 24px;gap:0;z-index:500;
+}
+#nav::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold);}
+.nav-logo{display:flex;align-items:center;text-decoration:none;margin-right:auto;}
+.nav-links{display:flex;align-items:center;gap:24px;margin-right:16px;}
+.nav-link{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);text-decoration:none;background:none;border:none;cursor:pointer;font-family:'Inter',sans-serif;transition:color .15s;padding:0;}
+.nav-link:hover,.nav-link.active{color:var(--gold);}
+.nav-divider{width:1px;height:14px;background:var(--border);margin:0 4px;}
+.live-pill{display:flex;align-items:center;gap:5px;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(184,150,12,.4);padding:3px 8px;white-space:nowrap;margin-right:10px;}
 .live-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
-.layers-btn{display:flex;align-items:center;gap:5px;padding:4px 10px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-family:'Inter',sans-serif;border:none;cursor:pointer;transition:all .15s;}
-.layers-btn.active{background:var(--gold);color:var(--ink);border:1px solid var(--gold);}
-.layers-btn:not(.active){background:transparent;color:var(--muted);border:1px solid var(--border);}
+.layers-btn{display:flex;align-items:center;gap:5px;padding:4px 10px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s;margin-right:10px;}
+.layers-btn.open{background:var(--gold);color:var(--ink);border:1px solid var(--gold);}
+.layers-btn.closed{background:transparent;color:var(--muted);border:1px solid var(--border);}
 .lang-tog{display:flex;border:1px solid var(--border);}
-.lang-tog button{padding:3px 8px;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-family:'Inter',sans-serif;border:none;background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;}
-.lang-tog button.on{background:var(--gold);color:var(--ink);}
+.lang-btn{padding:4px 9px;font-size:9px;font-weight:700;letter-spacing:.1em;font-family:'Inter',sans-serif;border:none;background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;}
+.lang-btn.on{background:var(--gold);color:var(--ink);}
 
 /* LAYOUT */
-.layout{display:flex;height:calc(100vh - 44px);}
+#wrap{display:flex;height:calc(100vh - var(--nav-h));position:relative;}
 
 /* MAP */
-#map{flex:1;background:var(--bg);}
-.leaflet-container{background:#D8D8D6!important;}
+#mapEl{position:absolute;inset:0;z-index:1;}
+.leaflet-container{background:#D0CEC9!important;}
+.leaflet-tooltip{background:var(--surface)!important;border:1px solid var(--border)!important;border-radius:0!important;color:var(--ink)!important;font-family:'Inter',sans-serif!important;padding:6px 10px!important;font-size:11px!important;font-weight:600!important;box-shadow:0 4px 16px rgba(0,0,0,.12)!important;}
+.leaflet-tooltip::before{display:none!important;}
+.leaflet-control-zoom{border:1px solid var(--border)!important;border-radius:0!important;}
+.leaflet-control-zoom a{border-radius:0!important;background:var(--surface)!important;color:var(--ink)!important;border-bottom:1px solid var(--border)!important;}
+.leaflet-control-zoom a:hover{background:var(--gold)!important;color:var(--ink)!important;}
 
 /* LAYER SWITCHER */
-.layer-sw{position:absolute;top:10px;left:10px;z-index:1000;background:var(--surface);border:1px solid var(--border);padding:6px;}
-.lsw-btn{display:block;width:100%;text-align:left;padding:7px 12px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-family:'Inter',sans-serif;border:none;cursor:pointer;transition:all .15s;border-left:2px solid transparent;white-space:nowrap;}
-.lsw-btn.on{color:var(--ink);background:var(--gold);border-left-color:var(--gold);}
-.lsw-btn:not(.on){color:var(--muted);background:transparent;}
-.lsw-btn:not(.on):hover{color:var(--ink2);}
+#layerSw{position:absolute;top:12px;left:12px;z-index:400;background:var(--surface);border:1px solid var(--border);}
+.lsw-btn{display:block;width:100%;text-align:left;padding:7px 14px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-family:'Inter',sans-serif;border:none;border-left:2px solid transparent;cursor:pointer;background:transparent;color:var(--muted);white-space:nowrap;transition:all .15s;}
+.lsw-btn.on{color:var(--ink);background:rgba(184,150,12,.1);border-left-color:var(--gold);}
+.lsw-btn:not(.on):hover{color:var(--ink2);background:var(--bg2);}
 
 /* LEGEND */
-.legend{position:absolute;bottom:16px;left:10px;z-index:1000;background:var(--surface);border:1px solid var(--border);padding:14px;}
-.leg-title{font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
-.leg-item{display:flex;align-items:center;gap:7px;margin-bottom:6px;}
+#legend{position:absolute;bottom:16px;left:12px;z-index:400;background:var(--surface);border:1px solid var(--border);padding:12px 14px;min-width:160px;}
+.leg-title{font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+.leg-item{display:flex;align-items:center;gap:7px;margin-bottom:5px;}
 .leg-item:last-child{margin-bottom:0;}
 .leg-dot{width:10px;height:10px;flex-shrink:0;}
 .leg-lbl{font-size:10px;color:var(--muted);}
 
-/* SIDEBAR */
-.sidebar{width:300px;flex-shrink:0;background:var(--surface);border-left:1px solid var(--border);overflow-y:auto;transition:width .2s;}
-.sidebar.closed{width:0;overflow:hidden;}
-.sidebar::-webkit-scrollbar{width:3px;}
-.sidebar::-webkit-scrollbar-thumb{background:var(--border);}
-.sb-inner{min-width:300px;padding:16px;}
+/* RIGHT PANEL */
+#panel{
+  position:absolute;top:0;right:0;bottom:0;
+  width:320px;z-index:300;
+  background:var(--surface);border-left:1px solid var(--border);
+  display:flex;flex-direction:column;
+  transition:transform .25s;
+}
+#panel.closed{transform:translateX(100%);}
+#panelToggle{
+  position:absolute;top:50%;left:-36px;transform:translateY(-50%);
+  width:36px;height:48px;background:var(--surface);
+  border:1px solid var(--border);border-right:none;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  z-index:10;color:var(--muted);font-size:18px;
+}
+#panelToggle:hover{color:var(--gold);}
+
+/* PANEL TABS */
+.p-tabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;}
+.p-tab{flex:1;padding:10px 0;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-family:'Inter',sans-serif;border:none;background:transparent;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;}
+.p-tab.on{color:var(--gold);border-bottom-color:var(--gold);}
+
+/* PANEL SCROLL */
+.p-scroll{flex:1;overflow-y:auto;padding:14px;}
+.p-scroll::-webkit-scrollbar{width:3px;}
+.p-scroll::-webkit-scrollbar-thumb{background:var(--border);}
 
 /* STATS */
-.sb-stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);margin-bottom:16px;}
-.sb-stat{background:var(--surface);padding:12px;}
-.sb-stat-n{font-family:'Oswald',sans-serif;font-size:20px;line-height:1;margin-bottom:2px;}
-.sb-stat-l{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);margin-bottom:14px;}
+.stat-cell{background:var(--surface);padding:10px 12px;}
+.stat-n{font-family:'Bebas Neue',sans-serif;font-size:22px;line-height:1;margin-bottom:2px;}
+.stat-l{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
 
 /* COMMUNITY DETAIL */
-.sb-empty{padding:24px;text-align:center;border:1px solid var(--border);margin-bottom:14px;}
-.sb-empty-txt{font-size:11px;color:var(--muted);}
-.sb-detail{margin-bottom:14px;}
-.sb-gold-bar{height:2px;background:var(--gold);margin-bottom:14px;}
-.sb-detail-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;gap:8px;}
-.sb-name{font-family:'Oswald',sans-serif;font-size:16px;color:var(--ink);letter-spacing:.02em;}
-.sb-region{font-size:10px;color:var(--muted);margin-top:2px;}
-.sb-close{background:none;border:none;cursor:pointer;color:var(--muted);font-size:18px;line-height:1;transition:color .15s;}
-.sb-close:hover{color:var(--ink);}
-.sb-metrics{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);margin-bottom:14px;}
-.sb-metric{background:var(--surface);padding:10px 12px;}
-.sb-metric-v{font-family:'Oswald',sans-serif;font-size:18px;line-height:1;margin-bottom:2px;}
-.sb-metric-l{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.detail-bar{height:2px;background:var(--gold);margin-bottom:12px;}
+.detail-name{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--ink);margin-bottom:2px;}
+.detail-region{font-size:10px;color:var(--muted);margin-bottom:12px;}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);margin-bottom:12px;}
+.metric{background:var(--surface);padding:9px 11px;}
+.metric-v{font-family:'Bebas Neue',sans-serif;font-size:18px;line-height:1;margin-bottom:2px;}
+.metric-l{font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+.prog-row{margin-bottom:8px;}
+.prog-label{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:4px;}
+.prog-bar{height:3px;background:var(--bg2);}
+.prog-fill{height:100%;background:var(--gold);transition:width .5s;}
+.chain-link{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border:1px solid rgba(184,150,12,.4);background:rgba(184,150,12,.04);text-decoration:none;margin-top:12px;transition:background .15s;}
+.chain-link:hover{background:rgba(184,150,12,.1);}
+.chain-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:2px;}
+.chain-hash{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);}
+.empty-tip{padding:20px;text-align:center;border:1px solid var(--border);font-size:11px;color:var(--muted2);}
+.close-btn{position:absolute;top:0;right:0;padding:8px;background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted);line-height:1;}
+.close-btn:hover{color:var(--ink);}
 
-/* PROGRESS BARS */
-.sb-prog-label{font-size:10px;color:var(--muted);margin-bottom:4px;display:flex;justify-content:space-between;}
-.sb-prog-bar{height:4px;background:var(--bg2);margin-bottom:10px;}
-.sb-prog-fill{height:100%;background:var(--gold);transition:width .5s;}
+/* UPDATES */
+.sec-label{font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;margin-top:14px;}
+.upd{padding:9px 12px;background:var(--bg2);margin-bottom:6px;border-left:2px solid var(--border);}
+.upd-hdr{display:flex;align-items:center;gap:6px;margin-bottom:3px;}
+.upd-type{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;}
+.upd-date{font-size:9px;color:var(--muted);}
+.upd-txt{font-size:11px;color:var(--ink2);line-height:1.5;}
+.src-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;}
+.src-tag{font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border:1px solid var(--border);color:var(--muted);}
 
-/* ON-CHAIN LINK */
-.sb-chain{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border:1px solid var(--gold);background:rgba(184,150,12,.04);text-decoration:none;transition:background .15s;margin-bottom:14px;}
-.sb-chain:hover{background:rgba(184,150,12,.09);}
-.sb-chain-label{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:2px;}
-.sb-chain-hash{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);}
-.sb-chain-icon{color:var(--gold);}
+/* AI CHAT */
+.ai-msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;}
+.ai-msgs::-webkit-scrollbar{width:3px;}
+.ai-msgs::-webkit-scrollbar-thumb{background:var(--border);}
+.msg-ai{background:var(--bg2);padding:10px 12px;font-size:12px;line-height:1.6;color:var(--ink2);border-left:2px solid var(--gold);}
+.msg-usr{background:var(--gold);padding:9px 12px;font-size:12px;line-height:1.6;color:var(--ink);align-self:flex-end;max-width:90%;}
+.msg-typing{background:var(--bg2);padding:10px 14px;display:flex;gap:4px;align-items:center;}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--muted2);animation:bounce .8s infinite;}
+.dot:nth-child(2){animation-delay:.15s;}.dot:nth-child(3){animation-delay:.3s;}
+@keyframes bounce{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-5px);}}
+.ai-sugs{padding:8px 12px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:4px;flex-shrink:0;}
+.sug-btn{text-align:left;background:transparent;border:1px solid var(--border);padding:6px 10px;font-size:10px;color:var(--muted);cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;}
+.sug-btn:hover{border-color:var(--gold);color:var(--ink);}
+.ai-inp-area{padding:10px 12px;border-top:1px solid var(--border);display:flex;gap:6px;flex-shrink:0;}
+.ai-inp{flex:1;background:var(--bg2);border:1px solid var(--border);padding:7px 10px;font-size:12px;color:var(--ink);font-family:'Inter',sans-serif;outline:none;transition:border-color .15s;}
+.ai-inp:focus{border-color:var(--gold);}
+.ai-inp::placeholder{color:var(--muted2);}
+.send-btn{width:34px;height:34px;background:var(--gold);border:none;cursor:pointer;color:var(--ink);font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s;}
+.send-btn:hover{background:var(--gold2);}
+.send-btn:disabled{background:var(--border);cursor:not-allowed;}
 
-/* RECENT UPDATES */
-.sb-section-title{font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
-.sb-update{padding:10px 12px;background:var(--bg2);margin-bottom:6px;}
-.sb-update-hdr{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
-.sb-update-type{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;}
-.sb-update-date{font-size:9px;color:var(--muted);}
-.sb-update-txt{font-size:10px;color:var(--ink2);line-height:1.5;}
+/* MOBILE */
+@media(max-width:768px){
+  #nav{padding:0 16px;}
+  .nav-links,.nav-divider{display:none;}
+  #panel{width:100%;top:auto;bottom:0;height:50vh;transform:translateY(100%);border-left:none;border-top:1px solid var(--border);}
+  #panel.closed{transform:translateY(100%);}
+  #panel.open{transform:translateY(0);}
+  #panelToggle{display:none;}
+  #mobBtn{display:flex!important;}
+}
+#mobBtn{display:none;position:absolute;bottom:16px;right:16px;z-index:400;background:var(--gold);color:var(--ink);border:none;padding:10px 16px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-family:'Inter',sans-serif;cursor:pointer;align-items:center;gap:6px;}
 
-/* SOURCES */
-.sb-sources{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
-.sb-source{font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--border);color:var(--muted);}
+/* ── NAV (shared) ── */
+:root{--nav-h:46px;}
+nav{position:fixed;top:0;left:0;right:0;z-index:500;background:var(--surface,#F4F3F1);border-bottom:1px solid var(--border,#C8C8C4);}
+.nav-gold{height:2px;background:var(--gold,#B8960C);}
+.nav-in{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:44px;gap:20px;}
+.nav-logo{display:flex;align-items:center;text-decoration:none;margin-right:auto;}
+.nav-logo img{height:24px;width:auto;}
+.nav-logo-text{font-family:'Oswald',sans-serif;font-size:20px;font-weight:600;letter-spacing:.04em;color:var(--ink,#0A0A0A);}
+.nav-logo-text span{color:var(--gold,#B8960C);}
+.nav-links{display:flex;align-items:center;gap:20px;}
+.nav-links a{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted,#5A5855);text-decoration:none;transition:color .15s;white-space:nowrap;}
+.nav-links a:hover{color:var(--gold,#B8960C);}
+.nav-links a.active{color:var(--gold,#B8960C);}
+.ltog{display:flex;border:1px solid var(--border,#C8C8C4);overflow:hidden;margin-left:4px;}
+.ltog button{padding:4px 9px;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-family:'Inter',sans-serif;border:none;background:transparent;color:var(--muted,#5A5855);cursor:pointer;transition:all .15s;}
+.ltog button.on{background:var(--gold,#B8960C);color:#0A0A0A;}
+.burger{display:none;background:none;border:none;cursor:pointer;padding:4px;flex-shrink:0;}
+.burger span{display:block;width:18px;height:1.5px;background:var(--ink,#0A0A0A);margin:4px 0;}
+.mobnav{display:none;padding:12px 24px;background:var(--surface,#F4F3F1);border-top:1px solid var(--border,#C8C8C4);}
+.mobnav.open{display:block;}
+.mobnav a{display:block;padding:9px 0;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2,#2A2A2A);text-decoration:none;border-bottom:1px solid var(--border,#C8C8C4);}
+.mobnav a:last-child{border-bottom:none;}
+@media(max-width:768px){.nav-links{display:none;}.burger{display:block;}}
 
-/* TOOLTIP */
-.leaflet-tooltip{background:var(--surface)!important;border:1px solid var(--border)!important;border-radius:0!important;color:var(--ink)!important;font-family:'Inter',sans-serif!important;padding:7px 10px!important;font-size:12px!important;font-weight:600!important;box-shadow:0 4px 16px rgba(0,0,0,.12)!important;}
-.leaflet-tooltip::before{display:none!important;}
 </style>
 </head>
-<body>
+<body class="ua">
 
-<nav style="position:relative;height:44px;flex-shrink:0;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:20px;z-index:200;">
-  <div style="height:2px;background:var(--gold);position:absolute;top:0;left:0;right:0;"></div>
-  <a href="index.html" style="display:flex;align-items:center;text-decoration:none;margin-right:auto;">
-    <img src="logo_white.svg" alt="UA Rebuild" style="height:24px;width:auto;filter:invert(0) sepia(1) saturate(2) brightness(0.5);" onerror="this.outerHTML='<span style=font-family:Oswald,sans-serif;font-size:18px;font-weight:600;color:var(--ink);letter-spacing:.04em>UA Rebuild</span>'"/>
-  </a>
-  <a href="index.html#challenge" style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .15s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'"><span class="ua">Проблема</span><span class="en">Challenge</span></a>
-  <a href="wall.html" style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .15s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'"><span class="ua">Стіна відбудовників</span><span class="en">Wall of Rebuilders</span></a>
-  <a href="index.html#how" style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .15s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'"><span class="ua">Як це працює</span><span class="en">How it works</span></a>
-  <span style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);">Карта</span>
-  <span class="live-badge" style="margin-left:8px;"><span class="live-dot"></span><span id="commCount">8</span> <span class="ua">громад</span><span class="en">communities</span></span>
-  <button class="layers-btn active" id="layersBtn" onclick="toggleSidebar()" style="margin-left:4px;">
-    <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
-    <span class="ua">Шари</span><span class="en">Layers</span>
-  </button>
-  <div class="lang-tog">
-    <button id="bua" class="on" onclick="setLang('ua')">UA</button>
-    <button id="ben" onclick="setLang('en')">EN</button>
+<nav>
+  <div class="nav-gold"></div>
+  <div class="nav-in">
+    <a class="nav-logo" href="index.html">
+      <img src="logo_white.svg" alt="UA Rebuild" onerror="this.outerHTML='&lt;span class=nav-logo-text&gt;&lt;span&gt;UA&lt;/span&gt; Rebuild&lt;/span&gt;'"/>
+    </a>
+    <div class="nav-links">
+      <a href="index.html#challenge"><span class="ua">Проблема</span><span class="en">Challenge</span></a>
+      <a href="wall.html"><span class="ua">Стіна відбудовників</span><span class="en">Wall of Rebuilders</span></a>
+      <a href="index.html#how"><span class="ua">Як це працює</span><span class="en">How it works</span></a>
+      <a href="map.html" class="active"><span class="ua">Карта</span><span class="en">Map</span></a>
+    </div>
+    <div class="ltog">
+      <button class="on" id="bua" onclick="setLang('ua')">UA</button>
+      <button id="ben" onclick="setLang('en')">EN</button>
+    </div>
+    <button class="burger" onclick="toggleNav()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mobnav" id="mobnav">
+    <a href="index.html#challenge" onclick="toggleNav()"><span class="ua">Проблема</span><span class="en">Challenge</span></a>
+    <a href="wall.html" onclick="toggleNav()"><span class="ua">Стіна відбудовників</span><span class="en">Wall of Rebuilders</span></a>
+    <a href="index.html#how" onclick="toggleNav()"><span class="ua">Як це працює</span><span class="en">How it works</span></a>
+    <a href="map.html" onclick="toggleNav()"><span class="ua">Карта</span><span class="en">Map</span></a>
   </div>
 </nav>
 
-<div class="layout">
-  <div id="mapWrap" style="flex:1;position:relative;">
-    <div id="map"></div>
+<div id="wrap">
+  <div id="mapEl"></div>
 
-    <!-- Layer switcher -->
-    <div class="layer-sw" id="layerSw">
-      <button class="lsw-btn on" onclick="setLayer('destruction',this)"><span class="ua">Рівень руйнувань</span><span class="en">Destruction level</span></button>
-      <button class="lsw-btn" onclick="setLayer('aid',this)"><span class="ua">Отримана допомога</span><span class="en">Aid received</span></button>
-      <button class="lsw-btn" onclick="setLayer('recovery',this)"><span class="ua">Прогрес відновлення</span><span class="en">Recovery progress</span></button>
-      <button class="lsw-btn" onclick="setLayer('conflict',this)"><span class="ua">Конфліктні події</span><span class="en">Conflict events</span></button>
-    </div>
-
-    <!-- Legend -->
-    <div class="legend" id="legend"></div>
+  <div id="layerSw">
+    <button class="lsw-btn on" onclick="setLayer('destruction',this)"><span class="ua">Рівень руйнувань</span><span class="en">Destruction</span></button>
+    <button class="lsw-btn" onclick="setLayer('recovery',this)"><span class="ua">Прогрес відновлення</span><span class="en">Recovery</span></button>
+    <button class="lsw-btn" onclick="setLayer('aid',this)"><span class="ua">Отримана допомога</span><span class="en">Aid received</span></button>
+    <button class="lsw-btn" onclick="setLayer('conflict',this)"><span class="ua">Конфліктні події</span><span class="en">Conflict events</span></button>
   </div>
 
-  <!-- Sidebar -->
-  <div class="sidebar" id="sidebar">
-    <div class="sb-inner">
-      <!-- Stats -->
-      <div class="sb-stats">
-        <div class="sb-stat"><div class="sb-stat-n" style="color:var(--ink);">1,673</div><div class="sb-stat-l"><span class="ua">Громад</span><span class="en">Communities</span></div></div>
-        <div class="sb-stat"><div class="sb-stat-n" style="color:#C1121F;">962</div><div class="sb-stat-l"><span class="ua">Потребують підтримки</span><span class="en">Need support</span></div></div>
-        <div class="sb-stat"><div class="sb-stat-n" style="color:var(--gold);">23%</div><div class="sb-stat-l"><span class="ua">Відновлено</span><span class="en">Restored</span></div></div>
-        <div class="sb-stat"><div class="sb-stat-n" style="color:var(--gold);">$4.2B</div><div class="sb-stat-l"><span class="ua">Допомога</span><span class="en">Aid distributed</span></div></div>
-      </div>
+  <div id="legend"></div>
 
-      <!-- Community detail -->
+  <button id="mobBtn" onclick="togglePanel()">
+    ☰ <span class="ua">Дані · AI</span><span class="en">Data · AI</span>
+  </button>
+
+  <div id="panel">
+    <button id="panelToggle" onclick="togglePanel()">
+      <span id="toggleArrow">›</span>
+    </button>
+    <div class="p-tabs">
+      <button class="p-tab on" id="tab-data" onclick="switchTab('data')"><span class="ua">Дані</span><span class="en">Data</span></button>
+      <button class="p-tab" id="tab-ai" onclick="switchTab('ai')">AI <span class="ua">Аналітика</span><span class="en">Assistant</span></button>
+    </div>
+
+    <!-- DATA TAB -->
+    <div id="pane-data" class="p-scroll">
+      <div class="stat-grid">
+        <div class="stat-cell"><div class="stat-n" style="color:var(--ink)">1,673</div><div class="stat-l"><span class="ua">Громад</span><span class="en">Communities</span></div></div>
+        <div class="stat-cell"><div class="stat-n" style="color:var(--red)">962</div><div class="stat-l"><span class="ua">Потребують підтримки</span><span class="en">Need support</span></div></div>
+        <div class="stat-cell"><div class="stat-n" style="color:var(--gold)">23%</div><div class="stat-l"><span class="ua">Відновлено</span><span class="en">Restored</span></div></div>
+        <div class="stat-cell"><div class="stat-n" style="color:var(--gold)">$4.2B</div><div class="stat-l"><span class="ua">Допомога</span><span class="en">Aid distributed</span></div></div>
+      </div>
       <div id="detailPanel">
-        <div class="sb-empty"><div class="sb-empty-txt"><span class="ua">Клікніть на громаду на карті</span><span class="en">Click a community on the map</span></div></div>
+        <div class="empty-tip"><span class="ua">← Клікніть на громаду на карті</span><span class="en">← Click a community on the map</span></div>
       </div>
+      <div class="sec-label"><span class="ua">Останні оновлення</span><span class="en">Recent updates</span></div>
+      <div class="upd" style="border-left-color:var(--red);"><div class="upd-hdr"><span class="upd-type" style="color:var(--red)"><span class="ua">Критично</span><span class="en">Critical</span></span><span class="upd-date">18 Apr 2026</span></div><div class="upd-txt"><span class="ua">Авдіївська громада — новий удар по інфраструктурі, потрібно $12M</span><span class="en">Avdiivska Hromada — new infrastructure strike, $12M needed</span></div></div>
+      <div class="upd" style="border-left-color:var(--gold);"><div class="upd-hdr"><span class="upd-type" style="color:var(--gold)"><span class="ua">Оновлення</span><span class="en">Update</span></span><span class="upd-date">17 Apr 2026</span></div><div class="upd-txt"><span class="ua">Херсон — 3 проєкти відновлення житла завершено (240 родин)</span><span class="en">Kherson — 3 housing restoration projects completed (240 families)</span></div></div>
+      <div class="upd" style="border-left-color:var(--ink2);"><div class="upd-hdr"><span class="upd-type" style="color:var(--ink2)"><span class="ua">Фінансування</span><span class="en">Funding</span></span><span class="upd-date">16 Apr 2026</span></div><div class="upd-txt"><span class="ua">ЄС виділив €180M для Харківської області — 67 громад</span><span class="en">EU allocated €180M for Kharkiv Oblast — 67 communities</span></div></div>
+      <div class="sec-label"><span class="ua">Джерела даних</span><span class="en">Data sources</span></div>
+      <div class="src-tags"><span class="src-tag">ACLED</span><span class="src-tag">OCHA</span><span class="src-tag">UNDP</span><span class="src-tag">World Bank</span></div>
+    </div>
 
-      <!-- Recent updates -->
-      <div class="sb-section-title"><span class="ua">Останні оновлення</span><span class="en">Recent updates</span></div>
-      <div class="sb-update" style="border-left:2px solid #C1121F;">
-        <div class="sb-update-hdr"><span class="sb-update-type" style="color:#C1121F;"><span class="ua">Критично</span><span class="en">Critical</span></span><span class="sb-update-date">18 Apr 2026</span></div>
-        <div class="sb-update-txt">Avdiivska Hromada — new infrastructure strike, $12M needed</div>
+    <!-- AI TAB -->
+    <div id="pane-ai" style="display:none;flex-direction:column;flex:1;height:0;">
+      <div class="ai-msgs" id="aiMsgs">
+        <div class="msg-ai"><span class="ua">Аналізую дані відновлення України. Оберіть громаду на карті або запитайте напряму.</span><span class="en">Analyzing Ukraine recovery data. Select a community on the map or ask directly.</span></div>
       </div>
-      <div class="sb-update" style="border-left:2px solid var(--gold);">
-        <div class="sb-update-hdr"><span class="sb-update-type" style="color:var(--gold);"><span class="ua">Оновлення</span><span class="en">Update</span></span><span class="sb-update-date">17 Apr 2026</span></div>
-        <div class="sb-update-txt">Kherson — 3 housing restoration projects completed (240 families)</div>
+      <div class="ai-sugs" id="aiSugs">
+        <button class="sug-btn" onclick="useSug(0)"><span class="ua">Де найбільша потреба зараз?</span><span class="en">Where is the greatest need now?</span></button>
+        <button class="sug-btn" onclick="useSug(1)"><span class="ua">Порівняй Харків та Херсон</span><span class="en">Compare Kharkiv and Kherson</span></button>
+        <button class="sug-btn" onclick="useSug(2)"><span class="ua">Які громади відновились найкраще?</span><span class="en">Which communities recovered best?</span></button>
       </div>
-      <div class="sb-update" style="border-left:2px solid var(--ink2);">
-        <div class="sb-update-hdr"><span class="sb-update-type" style="color:var(--ink2);"><span class="ua">Фінансування</span><span class="en">Funding</span></span><span class="sb-update-date">16 Apr 2026</span></div>
-        <div class="sb-update-txt">EU allocated €180M for Kharkiv Oblast — 67 communities</div>
-      </div>
-
-      <!-- Sources -->
-      <div class="sb-section-title" style="margin-top:14px;"><span class="ua">Джерела даних</span><span class="en">Data sources</span></div>
-      <div class="sb-sources">
-        <span class="sb-source">ACLED</span>
-        <span class="sb-source">OCHA</span>
-        <span class="sb-source">UNDP</span>
-        <span class="sb-source">World Bank</span>
+      <div class="ai-inp-area">
+        <input class="ai-inp" id="aiInp" placeholder="Запитайте про будь-яку громаду..." onkeydown="if(event.key==='Enter')sendAI()"/>
+        <button class="send-btn" id="sendBtn" onclick="sendAI()">→</button>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-const communities = [
-  {id:1,name:'Kakhovska Hromada',region:'Kherson Oblast',district:'Beryslavskyi Raion',lat:46.82,lng:33.48,destruction:71,recovered:18,need:53,aid:2.1,conflict:1240,infra:18,housing:24,social:35,education:12,hash:'0x93f529...947fcd'},
-  {id:2,name:'Irpinska Hromada',region:'Kyiv Oblast',district:'Bucha Raion',lat:50.52,lng:30.25,destruction:45,recovered:78,need:22,aid:8.4,conflict:430,infra:82,housing:76,social:91,education:88,hash:'0x2d4e...91ab'},
-  {id:3,name:'Khersonska Hromada',region:'Kherson Oblast',district:'Kherson Raion',lat:46.64,lng:32.61,destruction:58,recovered:34,need:46,aid:5.2,conflict:2100,infra:41,housing:28,social:47,education:32,hash:'0x5f12...7d8c'},
-  {id:4,name:'Avdiivska Hromada',region:'Donetsk Oblast',district:'Pokrovskyi Raion',lat:48.13,lng:37.75,destruction:89,recovered:4,need:85,aid:1.1,conflict:4800,infra:6,housing:3,social:8,education:2,hash:'0xab3c...e4f2'},
-  {id:5,name:'Iziumska Hromada',region:'Kharkiv Oblast',district:'Iziumskyi Raion',lat:49.21,lng:37.27,destruction:62,recovered:41,need:38,aid:3.7,conflict:1890,infra:44,housing:38,social:52,education:48,hash:'0x71d9...2a5f'},
-  {id:6,name:'Chernihivska Hromada',region:'Chernihiv Oblast',district:'Chernihiv Raion',lat:51.49,lng:31.29,destruction:18,recovered:91,need:12,aid:4.1,conflict:210,infra:89,housing:94,social:88,education:96,hash:'0xc8e4...b7d3'},
-  {id:7,name:'Mykolaivska Hromada',region:'Mykolaiv Oblast',district:'Mykolaiv Raion',lat:46.97,lng:32.00,destruction:44,recovered:52,need:35,aid:6.8,conflict:890,infra:55,housing:49,social:63,education:58,hash:'0xd5f2...8e9a'},
-  {id:8,name:'Bucha Hromada',region:'Kyiv Oblast',district:'Bucha Raion',lat:50.55,lng:30.23,destruction:52,recovered:71,need:28,aid:7.2,conflict:380,infra:74,housing:68,social:79,education:82,hash:'0x3a6b...f1c8'},
+const communities=[
+  {id:1,name:'Какховська громада',nameEn:'Kakhovska Hromada',region:'Херсонська область',regionEn:'Kherson Oblast',lat:46.82,lng:33.48,destruction:71,recovered:18,need:53,aid:2.1,conflict:1240,infra:18,housing:24,social:35,education:12,hash:'0x93f529...947fcd'},
+  {id:2,name:'Ірпінська громада',nameEn:'Irpinska Hromada',region:'Київська область',regionEn:'Kyiv Oblast',lat:50.52,lng:30.25,destruction:45,recovered:78,need:22,aid:8.4,conflict:430,infra:82,housing:76,social:91,education:88,hash:'0x2d4e...91ab'},
+  {id:3,name:'Херсонська громада',nameEn:'Khersonska Hromada',region:'Херсонська область',regionEn:'Kherson Oblast',lat:46.64,lng:32.61,destruction:58,recovered:34,need:46,aid:5.2,conflict:2100,infra:41,housing:28,social:47,education:32,hash:'0x5f12...7d8c'},
+  {id:4,name:'Авдіївська громада',nameEn:'Avdiivska Hromada',region:'Донецька область',regionEn:'Donetsk Oblast',lat:48.13,lng:37.75,destruction:89,recovered:4,need:85,aid:1.1,conflict:4800,infra:6,housing:3,social:8,education:2,hash:'0xab3c...e4f2'},
+  {id:5,name:'Ізюмська громада',nameEn:'Iziumska Hromada',region:'Харківська область',regionEn:'Kharkiv Oblast',lat:49.21,lng:37.27,destruction:62,recovered:41,need:38,aid:3.7,conflict:1890,infra:44,housing:38,social:52,education:48,hash:'0x71d9...2a5f'},
+  {id:6,name:'Чернігівська громада',nameEn:'Chernihivska Hromada',region:'Чернігівська область',regionEn:'Chernihiv Oblast',lat:51.49,lng:31.29,destruction:18,recovered:91,need:12,aid:4.1,conflict:210,infra:89,housing:94,social:88,education:96,hash:'0xc8e4...b7d3'},
+  {id:7,name:'Миколаївська громада',nameEn:'Mykolaivska Hromada',region:'Миколаївська область',regionEn:'Mykolaiv Oblast',lat:46.97,lng:32.00,destruction:44,recovered:52,need:35,aid:6.8,conflict:890,infra:55,housing:49,social:63,education:58,hash:'0xd5f2...8e9a'},
+  {id:8,name:'Бучанська громада',nameEn:'Bucha Hromada',region:'Київська область',regionEn:'Kyiv Oblast',lat:50.55,lng:30.23,destruction:52,recovered:71,need:28,aid:7.2,conflict:380,infra:74,housing:68,social:79,education:82,hash:'0x3a6b...f1c8'},
 ];
 
-const LEGENDS = {
-  destruction:{title:'Destruction level',items:[['#C1121F','Critical (>70%)'],['#E05C1A','High (50–70%)'],['#D4A017','Moderate (20–50%)'],['#2D6A4F','Low (<20%)']]},
-  recovery:{title:'Recovery progress',items:[['#2D6A4F','>80% Recovered'],['#5A9A6F','50–80%'],['#D4A017','30–50%'],['#C1121F','<30%']]},
-  conflict:{title:'Conflict events',items:[['#7A0C12','>3000 events'],['#C1121F','1000–3000'],['#E05C1A','500–1000'],['#D4A017','<500']]},
-  aid:{title:'Aid received',items:[['#1B4F9E','>$7M'],['#3A72C4','$4–7M'],['#6B9FD4','$2–4M'],['#A8C4E4','<$2M']]},
+const LEGENDS={
+  destruction:{ua:'Рівень руйнувань',en:'Destruction level',items:[['#C1121F','Critical (>70%)'],['#E05C1A','High (50–70%)'],['#D4A017','Moderate (20–50%)'],['#2D6A4F','Low (<20%)']]},
+  recovery:{ua:'Прогрес відновлення',en:'Recovery progress',items:[['#2D6A4F','>80% Recovered'],['#5A9A6F','50–80%'],['#D4A017','30–50%'],['#C1121F','<30%']]},
+  conflict:{ua:'Конфліктні події',en:'Conflict events',items:[['#7A0C12','>3000'],['#C1121F','1000–3000'],['#E05C1A','500–1000'],['#D4A017','<500']]},
+  aid:{ua:'Отримана допомога',en:'Aid received',items:[['#1B4F9E','>$7M'],['#3A72C4','$4–7M'],['#6B9FD4','$2–4M'],['#A8C4E4','<$2M']]},
 };
 
-function getColor(c, layer) {
-  if(layer==='destruction'){
-    if(c.destruction>70) return '#C1121F';
-    if(c.destruction>50) return '#E05C1A';
-    if(c.destruction>20) return '#D4A017';
-    return '#2D6A4F';
-  }
-  if(layer==='recovery'){
-    if(c.recovered>80) return '#2D6A4F';
-    if(c.recovered>50) return '#5A9A6F';
-    if(c.recovered>30) return '#D4A017';
-    return '#C1121F';
-  }
-  if(layer==='conflict'){
-    if(c.conflict>3000) return '#7A0C12';
-    if(c.conflict>1000) return '#C1121F';
-    if(c.conflict>500) return '#E05C1A';
-    return '#D4A017';
-  }
-  if(layer==='aid'){
-    if(c.aid>7) return '#1B4F9E';
-    if(c.aid>4) return '#3A72C4';
-    if(c.aid>2) return '#6B9FD4';
-    return '#A8C4E4';
-  }
-  return '#B8960C';
+function getColor(c,layer){
+  if(layer==='destruction'){if(c.destruction>70)return'#C1121F';if(c.destruction>50)return'#E05C1A';if(c.destruction>20)return'#D4A017';return'#2D6A4F';}
+  if(layer==='recovery'){if(c.recovered>80)return'#2D6A4F';if(c.recovered>50)return'#5A9A6F';if(c.recovered>30)return'#D4A017';return'#C1121F';}
+  if(layer==='conflict'){if(c.conflict>3000)return'#7A0C12';if(c.conflict>1000)return'#C1121F';if(c.conflict>500)return'#E05C1A';return'#D4A017';}
+  if(layer==='aid'){if(c.aid>7)return'#1B4F9E';if(c.aid>4)return'#3A72C4';if(c.aid>2)return'#6B9FD4';return'#A8C4E4';}
+  return'#B8960C';
 }
 
-let activeLayer = 'destruction';
-let selectedId = null;
-let markers = {};
+let activeLayer='destruction',selectedId=null,markers={},isUa=true,panelOpen=true;
 
-const map = L.map('map', {
-  center:[48.5,31.5], zoom:6,
-  zoomControl:true, attributionControl:false
-});
+const map=L.map('mapEl',{center:[48.5,31.5],zoom:6,zoomControl:true,attributionControl:false});
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19}).addTo(map);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19,opacity:0.6,pane:'overlayPane'}).addTo(map);
 
-L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png',{
-  subdomains:'abcd', maxZoom:19
-}).addTo(map);
-
-function drawMarkers() {
-  communities.forEach(c => {
-    if(markers[c.id]) map.removeLayer(markers[c.id]);
-    const color = getColor(c, activeLayer);
-    const isSelected = c.id === selectedId;
-    const m = L.circleMarker([c.lat, c.lng], {
-      radius: isSelected ? 14 : 10,
-      fillColor: color,
-      color: isSelected ? '#B8960C' : color,
-      weight: isSelected ? 2 : 1,
-      fillOpacity: 0.85,
-    });
-    m.bindTooltip(c.name, {permanent:false, direction:'top', offset:[0,-6]});
-    m.on('click', () => selectCommunity(c.id));
+function drawMarkers(){
+  communities.forEach(c=>{
+    if(markers[c.id])map.removeLayer(markers[c.id]);
+    const color=getColor(c,activeLayer);
+    const sel=c.id===selectedId;
+    const m=L.circleMarker([c.lat,c.lng],{radius:sel?14:9,fillColor:color,color:sel?'#0A0A0A':color,weight:sel?2:1,fillOpacity:0.9});
+    m.bindTooltip(isUa?c.name:c.nameEn,{permanent:false,direction:'top',offset:[0,-8]});
+    m.on('click',()=>selectCommunity(c.id));
     m.addTo(map);
-    markers[c.id] = m;
+    markers[c.id]=m;
   });
 }
 
-function updateLegend() {
-  const leg = LEGENDS[activeLayer];
-  const el = document.getElementById('legend');
-  el.innerHTML = `<div class="leg-title">${leg.title}</div>` +
-    leg.items.map(([c,l]) => `<div class="leg-item"><div class="leg-dot" style="background:${c};"></div><div class="leg-lbl">${l}</div></div>`).join('');
+function updateLegend(){
+  const leg=LEGENDS[activeLayer];
+  document.getElementById('legend').innerHTML=`<div class="leg-title">${isUa?leg.ua:leg.en}</div>`+leg.items.map(([c,l])=>`<div class="leg-item"><div class="leg-dot" style="background:${c};"></div><div class="leg-lbl">${l}</div></div>`).join('');
 }
 
-function setLayer(layer, btn) {
-  activeLayer = layer;
-  document.querySelectorAll('.lsw-btn').forEach(b => b.classList.remove('on'));
+function setLayer(layer,btn){
+  activeLayer=layer;
+  document.querySelectorAll('.lsw-btn').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
-  drawMarkers();
-  updateLegend();
+  drawMarkers();updateLegend();
 }
 
-function selectCommunity(id) {
-  selectedId = id;
-  drawMarkers();
-  const c = communities.find(x => x.id === id);
-  const isUa = document.body.className === 'ua';
-
-  const detailHtml = `
-    <div class="sb-detail">
-      <div class="sb-gold-bar"></div>
-      <div class="sb-detail-hdr">
-        <div>
-          <div class="sb-name">${c.name}</div>
-          <div class="sb-region">${c.region} · ${c.district}</div>
-        </div>
-        <button class="sb-close" onclick="closeCommunity()">×</button>
-      </div>
-      <div class="sb-metrics">
-        <div class="sb-metric"><div class="sb-metric-v" style="color:#C1121F;">${c.destruction}%</div><div class="sb-metric-l">${isUa?'Руйнування':'Destruction'}</div></div>
-        <div class="sb-metric"><div class="sb-metric-v" style="color:#2D6A4F;">${c.recovered}%</div><div class="sb-metric-l">${isUa?'Відновлено':'Recovered'}</div></div>
-        <div class="sb-metric"><div class="sb-metric-v" style="color:#D4A017;">${c.need}%</div><div class="sb-metric-l">${isUa?'Потреба':'Need gap'}</div></div>
-        <div class="sb-metric"><div class="sb-metric-v" style="color:var(--gold);">$${c.aid}M</div><div class="sb-metric-l">${isUa?'Допомога':'Aid received'}</div></div>
-      </div>
-      <div style="margin-bottom:12px;">
-        <div><div class="sb-prog-label"><span>${isUa?'Інфраструктура':'Infrastructure'}</span><span>${c.infra}%</span></div><div class="sb-prog-bar"><div class="sb-prog-fill" style="width:${c.infra}%;"></div></div></div>
-        <div><div class="sb-prog-label"><span>${isUa?'Житло':'Housing'}</span><span>${c.housing}%</span></div><div class="sb-prog-bar"><div class="sb-prog-fill" style="width:${c.housing}%;"></div></div></div>
-        <div><div class="sb-prog-label"><span>${isUa?'Соц. сервіси':'Social services'}</span><span>${c.social}%</span></div><div class="sb-prog-bar"><div class="sb-prog-fill" style="width:${c.social}%;"></div></div></div>
-        <div><div class="sb-prog-label"><span>${isUa?'Освіта':'Education'}</span><span>${c.education}%</span></div><div class="sb-prog-bar"><div class="sb-prog-fill" style="width:${c.education}%;"></div></div></div>
-      </div>
-      <a class="sb-chain" href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener">
-        <div>
-          <div class="sb-chain-label">${isUa?'On-chain · Верифіковано':'On-chain · Verified'}</div>
-          <div class="sb-chain-hash">${c.hash}</div>
-        </div>
-        <svg class="sb-chain-icon" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-      </a>
-    </div>`;
-  document.getElementById('detailPanel').innerHTML = detailHtml;
+function selectCommunity(id){
+  selectedId=id;drawMarkers();
+  const c=communities.find(x=>x.id===id);
+  const t=isUa;
+  document.getElementById('detailPanel').innerHTML=`
+    <div style="position:relative;margin-bottom:2px;"><button class="close-btn" onclick="closeCommunity()">×</button></div>
+    <div class="detail-bar"></div>
+    <div class="detail-name">${t?c.name:c.nameEn}</div>
+    <div class="detail-region">${t?c.region:c.regionEn}</div>
+    <div class="metrics">
+      <div class="metric"><div class="metric-v" style="color:#C1121F">${c.destruction}%</div><div class="metric-l">${t?'Руйнування':'Destruction'}</div></div>
+      <div class="metric"><div class="metric-v" style="color:#2D6A4F">${c.recovered}%</div><div class="metric-l">${t?'Відновлено':'Recovered'}</div></div>
+      <div class="metric"><div class="metric-v" style="color:#D4A017">${c.need}%</div><div class="metric-l">${t?'Потреба':'Need gap'}</div></div>
+      <div class="metric"><div class="metric-v" style="color:var(--gold)">$${c.aid}M</div><div class="metric-l">${t?'Допомога':'Aid'}</div></div>
+    </div>
+    ${[['infra',t?'Інфраструктура':'Infrastructure'],['housing',t?'Житло':'Housing'],['social',t?'Соц. сервіси':'Social services'],['education',t?'Освіта':'Education']].map(([k,l])=>`
+    <div class="prog-row"><div class="prog-label"><span>${l}</span><span>${c[k]}%</span></div><div class="prog-bar"><div class="prog-fill" style="width:${c[k]}%"></div></div></div>`).join('')}
+    <a class="chain-link" href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener">
+      <div><div class="chain-lbl">${t?'On-chain · Верифіковано':'On-chain · Verified'}</div><div class="chain-hash">${c.hash}</div></div>
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+    </a>`;
+  switchTab('data');
+  if(window.innerWidth<=768){document.getElementById('panel').classList.add('open');document.getElementById('panel').classList.remove('closed');}
 }
 
-function closeCommunity() {
-  selectedId = null;
-  drawMarkers();
-  const isUa = document.body.className === 'ua';
-  document.getElementById('detailPanel').innerHTML = `<div class="sb-empty"><div class="sb-empty-txt">${isUa?'Клікніть на громаду на карті':'Click a community on the map'}</div></div>`;
+function closeCommunity(){
+  selectedId=null;drawMarkers();
+  document.getElementById('detailPanel').innerHTML=`<div class="empty-tip">${isUa?'← Клікніть на громаду на карті':'← Click a community on the map'}</div>`;
 }
 
-function toggleSidebar() {
-  const sb = document.getElementById('sidebar');
-  const btn = document.getElementById('layersBtn');
-  const isOpen = !sb.classList.contains('closed');
-  sb.classList.toggle('closed', isOpen);
-  btn.classList.toggle('active', !isOpen);
-  setTimeout(() => map.invalidateSize(), 250);
+function togglePanel(){
+  panelOpen=!panelOpen;
+  const p=document.getElementById('panel');
+  const btn=document.getElementById('layersNavBtn');
+  if(window.innerWidth<=768){
+    p.classList.toggle('open',panelOpen);
+    p.classList.toggle('closed',!panelOpen);
+  } else {
+    p.classList.toggle('closed',!panelOpen);
+    document.getElementById('toggleArrow').textContent=panelOpen?'›':'‹';
+  }
+  btn.className=panelOpen?'layers-btn open':'layers-btn closed';
+  setTimeout(()=>map.invalidateSize(),260);
 }
 
-function setLang(l) {
-  document.body.className = l;
-  document.getElementById('bua').classList.toggle('on', l==='ua');
-  document.getElementById('ben').classList.toggle('on', l==='en');
-  localStorage.setItem('lang', l);
-  if(selectedId) selectCommunity(selectedId);
+function switchTab(tab){
+  document.getElementById('tab-data').classList.toggle('on',tab==='data');
+  document.getElementById('tab-ai').classList.toggle('on',tab==='ai');
+  const pd=document.getElementById('pane-data');
+  const pa=document.getElementById('pane-ai');
+  pd.style.display=tab==='data'?'block':'none';
+  if(tab==='ai'){pa.style.display='flex';pa.style.flexDirection='column';pa.style.flex='1';pa.style.height='0';}
+  else{pa.style.display='none';}
+  if(tab==='ai')document.getElementById('aiMsgs').scrollTop=9999;
 }
 
-// Init
+function setLang(l){
+  isUa=l==='ua';
+  document.body.className=l;
+  document.getElementById('bua').classList.toggle('on',isUa);
+  document.getElementById('ben').classList.toggle('on',!isUa);
+  document.getElementById('aiInp').placeholder=isUa?'Запитайте про будь-яку громаду...':'Ask about any community...';
+  updateLegend();drawMarkers();
+  if(selectedId)selectCommunity(selectedId);
+  localStorage.setItem('lang',l);
+}
+
+const sugsUA=['Де найбільша потреба зараз?','Порівняй Харків та Херсон','Які громади відновились найкраще?'];
+const sugsEN=['Where is the greatest need now?','Compare Kharkiv and Kherson','Which communities recovered best?'];
+function useSug(i){document.getElementById('aiInp').value=isUa?sugsUA[i]:sugsEN[i];sendAI();}
+
+let sending=false;
+function buildSystem(){
+  return[
+    'You are UA Rebuild AI — an analyst for Ukraine recovery data.',
+    'Answer questions about Ukraine post-war recovery, damage, aid, reconstruction.',
+    'Be concise, factual, empathetic. Under 100 words.',
+    'Community pilot data:',
+    ...communities.map(c=>`${c.nameEn}: destruction ${c.destruction}%, recovered ${c.recovered}%, aid $${c.aid}M, need ${c.need}%`),
+    selectedId?`Currently selected: ${communities.find(x=>x.id===selectedId).nameEn}`:'',
+    `Answer in ${isUa?'Ukrainian':'English'}.`
+  ].filter(Boolean).join('\n');
+}
+
+async function sendAI(){
+  if(sending)return;
+  const inp=document.getElementById('aiInp');
+  const msg=inp.value.trim();if(!msg)return;
+  switchTab('ai');
+  appendMsg('usr',msg);inp.value='';
+  sending=true;document.getElementById('sendBtn').disabled=true;
+  document.getElementById('aiSugs').style.display='none';
+  const typing=addTyping();
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:300,system:buildSystem(),messages:[{role:'user',content:msg}]})});
+    const data=await res.json();
+    typing.remove();
+    appendMsg('ai',data.content?.[0]?.text||'Error');
+  }catch(e){typing.remove();appendMsg('ai',isUa?'Помилка з\'єднання.':'Connection error.');}
+  sending=false;document.getElementById('sendBtn').disabled=false;
+}
+
+function appendMsg(type,text){
+  const el=document.createElement('div');el.className=type==='usr'?'msg-usr':'msg-ai';el.textContent=text;
+  const msgs=document.getElementById('aiMsgs');msgs.appendChild(el);msgs.scrollTop=9999;
+}
+function addTyping(){
+  const el=document.createElement('div');el.className='msg-typing';el.innerHTML='<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+  document.getElementById('aiMsgs').appendChild(el);document.getElementById('aiMsgs').scrollTop=9999;return el;
+}
+
+function fixLayout(){
+  const navH=document.getElementById('nav').offsetHeight;
+  document.getElementById('wrap').style.height=(window.innerHeight-navH)+'px';
+  map.invalidateSize();
+}
+window.addEventListener('resize',fixLayout);fixLayout();
+
+const saved=localStorage.getItem('lang')||'ua';
+setLang(saved);
 drawMarkers();
 updateLegend();
-const saved = localStorage.getItem('lang') || 'ua';
-setLang(saved);
 </script>
 </body>
 </html>
