@@ -18,7 +18,7 @@
   --border:#C8C8C4;--dark:#1A1A18;
 }
 html{font-family:'Inter',sans-serif;color:var(--ink);scroll-behavior:smooth;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
-body{background:var(--bg);overflow-x:hidden;padding-top:46px;}
+body{background:var(--bg);overflow-x:hidden;}
 
 /* ── LANG ── */
 .en{display:none;}.ua{display:inline;}
@@ -50,11 +50,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--bg2);border
 .mobnav a,.mobnav button{display:block;width:100%;text-align:left;padding:9px 0;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);background:none;border:none;cursor:pointer;font-family:'Inter',sans-serif;border-bottom:1px solid var(--border);text-decoration:none;}
 
 /* ── HERO ── */
-.hero{margin-top:46px;position:relative;min-height:100vh;display:flex;flex-direction:column;}
-.hero-img{position:relative;flex:1;min-height:55vh;overflow:hidden;}
+.hero{margin-top:0;padding-top:46px;position:relative;min-height:100vh;display:flex;flex-direction:column;}
+.hero-img{position:relative;flex:1;min-height:65vh;overflow:hidden;}
 .hero-bg{position:absolute;inset:0;background-image:url('hero.jpg');background-size:cover;background-position:center 40%;}
-.hero-fade{position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 0%,rgba(10,10,10,.55) 35%,rgba(10,10,10,.35) 70%,rgba(10,10,10,.2) 100%);}
-.hero-kicker{position:absolute;top:22px;left:32px;font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);text-shadow:0 1px 8px rgba(0,0,0,.6);}
+.hero-fade{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,0.85) 0%,rgba(10,10,10,.5) 30%,rgba(10,10,10,.25) 65%,rgba(10,10,10,.1) 100%);}
+.hero-kicker{position:absolute;top:16px;left:32px;font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);text-shadow:0 1px 8px rgba(0,0,0,.6);opacity:0.8;}
 .hero-card{display:none;}
 .dpulse{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:gpulse 2s infinite;display:inline-block;margin-right:5px;vertical-align:middle;}
 @keyframes gpulse{0%,100%{opacity:1;}50%{opacity:.3;}}
@@ -65,7 +65,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--bg2);border
 .card-hash{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gold);}
 .card-lnk{display:inline-block;margin-top:5px;font-size:9px;color:var(--gold);text-decoration:none;text-transform:uppercase;letter-spacing:.1em;}
 .card-lnk:hover{opacity:.7;}
-.hero-hl{position:absolute;bottom:0;left:0;right:0;padding:0 32px;}
+.hero-hl{position:absolute;bottom:32px;left:0;right:0;padding:0 32px;}
 .h1{font-family:'Oswald',sans-serif;font-weight:700;line-height:.96;color:#F4F2EE;font-size:clamp(36px,7vw,88px);letter-spacing:-.02em;text-shadow:0 2px 24px rgba(0,0,0,.5);}
 .h1g{color:var(--gold);}
 .h1sub{font-family:'Oswald',sans-serif;font-size:clamp(12px,3vw,20px);letter-spacing:.04em;color:var(--muted);margin-bottom:14px;margin-top:4px;}
@@ -104,19 +104,19 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--bg2);border
 .ch-txt{font-size:12px;color:var(--ink2);line-height:1.7;}
 
 /* ── WALL ── */
-.wall-sec{padding:72px 32px 0;background:var(--bg);}
+.wall-sec{padding:72px 32px 0;background:var(--bg2);}
 .wall-sec-in{max-width:1280px;margin:0 auto;}
-.wgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:0;}
+.wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:2px;margin-top:28px;}
 .wc{background:var(--surface);padding:22px;border:1px solid var(--border);transition:border-color .2s;display:flex;flex-direction:column;}
-.wc:hover{border-color:var(--gold);}
-.wc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;gap:8px;}
-.wc-num{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted2);font-weight:400;letter-spacing:.05em;padding-top:1px;flex-shrink:0;}
-.wc-name{font-family:'Oswald',sans-serif;font-size:21px;font-weight:600;color:var(--ink);margin-bottom:11px;letter-spacing:.01em;line-height:1.1;}
+.wc:hover{border-color:var(--gold);box-shadow:0 4px 20px rgba(184,150,12,0.07);}
+.wc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;}
+.wc-num{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted2);font-weight:400;letter-spacing:.05em;padding-top:2px;}
+.wc-name{font-family:'Oswald',sans-serif;font-size:20px;font-weight:600;color:var(--ink);margin-bottom:12px;letter-spacing:.01em;line-height:1.1;}
 .wc-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:11px;align-items:center;}
-.tag{font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border:1px solid rgba(184,150,12,.5);color:var(--gold);white-space:nowrap;}
+.tag{font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border:1px solid rgba(184,150,12,0.5);color:var(--gold);white-space:nowrap;}
 .tag-uk{font-size:9px;color:var(--muted2);margin-left:2px;}
 .wc-impact{font-size:12px;color:var(--ink2);line-height:1.7;flex:1;margin-bottom:16px;}
-.wc-foot{padding-top:10px;border-top:1px solid var(--border);margin-top:auto;}
+.wc-foot{padding-top:10px;border-top:1px solid var(--bg2);margin-top:auto;}
 .vbadge{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:3px;}
 .vbadge svg{width:12px;height:12px;}
 .wc-hash{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted2);}
@@ -336,8 +336,8 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
   <div class="hero-below">
     <div class="hb-in">
       <p class="hero-p">
-        <span class="ua">Публічний архів внесків у відновлення України. Кожна пожертва, кожна відновлена школа, <strong>записані назавжди, верифіковані на блокчейні.</strong></span>
-        <span class="en">A verified public archive of humanitarian and reconstruction contributions. Every donation, every volunteer effort, every rebuilt school, <strong>permanently recorded, independently verifiable.</strong></span>
+        <span class="ua">Публічний архів внесків у відновлення України. Кожна пожертва, кожна відновлена школа: <strong>записані назавжди, верифіковані на блокчейні.</strong></span>
+        <span class="en">A verified public archive of humanitarian and reconstruction contributions. Every donation, every volunteer effort, every rebuilt school: <strong>permanently recorded, independently verifiable.</strong></span>
       </p>
       <div class="hbtns">
         <a class="btn-g" href="#wall"><span class="ua">Стіна відбудовників</span><span class="en">Wall of Rebuilders</span></a>
@@ -407,14 +407,14 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
 <section class="wall-sec" id="wall">
   <div class="wall-sec-in">
     <div style="margin-bottom:32px;">
-      <div class="sec-lbl"><span class="ua">Визнані учасники</span><span class="en">Recognized Contributors</span></div>
+      <div class="sec-lbl"><span class="ua">Визнані учасники</span><span class="en">Recognized contributors</span></div>
       <div class="sec-h2" style="margin-bottom:10px;">
         <span class="ua">СТІНА<br>ВІДБУДОВНИКІВ</span>
         <span class="en">WALL OF<br>REBUILDERS</span>
       </div>
-      <p style="font-size:13px;color:var(--muted);max-width:520px;line-height:1.7;">
-        <span class="ua">Верифікований внесок on-chain. Не рейтинг — постійний запис тих хто прийшов допомогти Україні.</span>
-        <span class="en">Verified contribution on-chain. Not a ranking — a permanent record of those who showed up.</span>
+      <p style="font-size:13px;color:var(--muted);max-width:460px;line-height:1.7;">
+        <span class="ua">Верифікований внесок on-chain. Не рейтинг — постійний незмінний запис.</span>
+        <span class="en">Verified contribution on-chain. Not a ranking — a permanent, immutable record.</span>
       </p>
     </div>
 
@@ -477,11 +477,24 @@ footer{background:var(--dark);padding:40px 32px 20px;border-top:2px solid var(--
         </div>
       </div>
 
-    </div>
-    <div style="text-align:center;padding:40px 0 72px;">
-      <a href="wall.html" class="btn-o" style="display:inline-block;padding:12px 40px;font-size:10px;font-weight:700;letter-spacing:.14em;">
-        <span class="ua">Всі відбудовники →</span><span class="en">All Rebuilders →</span>
-      </a>
+      <!-- CTA card — same row as other cards -->
+      <div class="wc" style="background:var(--dark);border-color:rgba(184,150,12,0.4);justify-content:center;">
+        <div style="height:1px;background:var(--gold);margin-bottom:20px;opacity:0.5;"></div>
+        <div style="font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">
+          <span class="ua">Всі записи на BNB Chain</span><span class="en">All records on BNB Chain</span>
+        </div>
+        <p style="font-size:12px;color:rgba(242,242,240,0.5);line-height:1.7;margin-bottom:20px;">
+          <span class="ua">Незмінні · Публічно перевіряються · Назавжди</span>
+          <span class="en">Immutable · Publicly auditable · Forever</span>
+        </p>
+        <a href="wall.html" style="display:inline-block;padding:9px 20px;border:1px solid var(--gold);color:var(--gold);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;transition:all .15s;margin-bottom:10px;" onmouseover="this.style.background='var(--gold)';this.style.color='#0A0A0A'" onmouseout="this.style.background='transparent';this.style.color='var(--gold)'">
+          <span class="ua">Всі відбудовники →</span><span class="en">All Rebuilders →</span>
+        </a>
+        <div style="margin-top:6px;">
+          <a href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener" style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(184,150,12,0.5);text-decoration:none;">BscScan ↗</a>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
