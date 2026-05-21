@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>UA Rebuild — Wall of Rebuilders</title>
-<link rel="icon" href="favicon-32.png" type="image/png"/>
+<link rel="icon" href="favicon.svg" type="image/svg+xml"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
@@ -37,15 +37,16 @@ nav{position:sticky;top:0;z-index:100;background:var(--bg2);border-bottom:1px so
 .fb.on,.fb:hover{background:var(--ink);color:var(--gold);border-color:var(--ink);}
 .wall{max-width:1280px;margin:0 auto;padding:22px 24px 0;}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(285px,1fr));gap:2px;}
-.card{background:var(--surface);padding:22px;border:1px solid var(--border);transition:border-color .15s;display:flex;flex-direction:column;}
-.card:hover{border-color:var(--gold);}
-.card-bar{height:2px;background:var(--gold);margin-bottom:16px;}
-.card-name{font-family:'Oswald',sans-serif;font-size:23px;color:var(--ink);margin-bottom:8px;letter-spacing:.02em;}
-.card-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px;align-items:center;}
+.card{background:var(--surface);padding:28px 24px 22px;border:1px solid var(--border);border-top:2px solid var(--gold);transition:box-shadow .2s,transform .2s;display:flex;flex-direction:column;}
+.card:hover{box-shadow:0 6px 28px rgba(0,0,0,.08);transform:translateY(-2px);}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;}
+.card-num{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted2);letter-spacing:.05em;}
+.card-name{font-family:'Oswald',sans-serif;font-size:20px;font-weight:600;color:var(--ink);margin-bottom:12px;letter-spacing:.01em;line-height:1.1;}
+.card-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:0;align-items:center;}
 .tag{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border:1px solid var(--gold);color:var(--gold);}
 .tag-uk{font-size:9px;color:var(--muted2);margin-left:2px;}
-.card-impact{font-size:11px;color:var(--ink2);line-height:1.65;flex:1;margin-bottom:14px;}
-.card-foot{padding-top:11px;border-top:1px solid var(--border);margin-top:auto;}
+.card-impact{font-size:12px;color:var(--ink2);line-height:1.7;flex:1;margin-bottom:16px;}
+.card-foot{padding-top:12px;border-top:1px solid var(--border);margin-top:auto;display:flex;flex-direction:column;gap:3px;}
 .vbadge{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:3px;}
 .vbadge svg{width:12px;height:12px;}
 .card-hash{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted2);}
@@ -119,7 +120,7 @@ body{padding-top:var(--nav-h);}
   <div class="nav-gold"></div>
   <div class="nav-in">
     <a class="nav-logo" href="index.html">
-      <img src="logo_white.svg" alt="UA Rebuild" onerror="this.outerHTML='&lt;span class=nav-logo-text&gt;&lt;span&gt;UA&lt;/span&gt; Rebuild&lt;/span&gt;'"/>
+      <img src="logo_white.svg" alt="UA Rebuild" style="height:24px;width:auto;filter:brightness(0) saturate(100%);" onerror="this.style.display='none'"/>
     </a>
     <div class="nav-links">
       <a href="index.html#challenge"><span class="ua">Проблема</span><span class="en">Challenge</span></a>
@@ -152,9 +153,7 @@ body{padding-top:var(--nav-h);}
   <p class="ph-sub">
     <span class="ua">Кожен бейдж — верифікований внесок on-chain. Не рейтинг — постійний незмінний запис тих хто прийшов допомогти Україні.</span>
     <span class="en">Each badge represents a verified on-chain contribution. Not a ranking — a permanent, immutable record of those who showed up for Ukraine.</span>
-  </p>
-  <div class="ph-stats">
-    <div><div class="ph-sn">7</div><div class="ph-sl"><span class="ua">Організацій</span><span class="en">Organizations</span></div></div>
+  </p></div>
     <div><div class="ph-sn">9</div><div class="ph-sl"><span class="ua">Записів on-chain</span><span class="en">On-chain records</span></div></div>
     <div><div class="ph-sn">BNB</div><div class="ph-sl"><span class="ua">Мережа верифікації</span><span class="en">Verification network</span></div></div>
   </div>
@@ -173,9 +172,9 @@ body{padding-top:var(--nav-h);}
 <div class="wall"><div class="grid" id="wallGrid">
 
   <div class="card" data-cats="reconstruction emergency">
-    <div class="card-bar"></div>
+    <div class="card-top"><div class="card-num">01</div>
     <div class="card-name">ACTED Ukraine</div>
-    <div class="card-tags"><span class="tag">Shelter</span><span class="tag-uk">/ Укриття</span><span class="tag">Reconstruction</span><span class="tag-uk">/ Відбудова</span></div>
+    <div class="card-tags"><span class="tag">Shelter</span><span class="tag">Reconstruction</span></div>
     <div class="card-impact">Restored 1,200 damaged homes and winterized 4 community centers in Mykolaiv region.</div>
     <div class="card-foot">
       <div class="vbadge"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg><span class="ua">Верифіковано on-chain</span><span class="en">Verified on-chain</span></div>
@@ -185,9 +184,9 @@ body{padding-top:var(--nav-h);}
   </div>
 
   <div class="card" data-cats="humanitarian emergency">
-    <div class="card-bar"></div>
+    <div class="card-top"><div class="card-num">02</div>
     <div class="card-name">UNHCR Ukraine</div>
-    <div class="card-tags"><span class="tag">Displacement</span><span class="tag-uk">/ Переміщення</span><span class="tag">Emergency aid</span><span class="tag-uk">/ Екстрена допомога</span></div>
+    <div class="card-tags"><span class="tag">Displacement</span><span class="tag">Emergency aid</span></div>
     <div class="card-impact">Reached 1.4M internally displaced persons with emergency cash assistance and protection services.</div>
     <div class="card-foot">
       <div class="vbadge"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg><span class="ua">Верифіковано on-chain</span><span class="en">Verified on-chain</span></div>
@@ -197,9 +196,9 @@ body{padding-top:var(--nav-h);}
   </div>
 
   <div class="card" data-cats="reconstruction education">
-    <div class="card-bar"></div>
+    <div class="card-top"><div class="card-num">03</div>
     <div class="card-name">Rebuild Ukraine Alliance</div>
-    <div class="card-tags"><span class="tag">Infrastructure</span><span class="tag-uk">/ Інфраструктура</span><span class="tag">Education</span><span class="tag-uk">/ Освіта</span></div>
+    <div class="card-tags"><span class="tag">Infrastructure</span><span class="tag">Education</span></div>
     <div class="card-impact">Coordinated reconstruction of 18 schools and 6 water treatment facilities across Donetsk frontline communities.</div>
     <div class="card-foot">
       <div class="vbadge"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg><span class="ua">Верифіковано on-chain</span><span class="en">Verified on-chain</span></div>
@@ -209,9 +208,9 @@ body{padding-top:var(--nav-h);}
   </div>
 
   <div class="card" data-cats="food humanitarian">
-    <div class="card-bar"></div>
+    <div class="card-top"><div class="card-num">04</div>
     <div class="card-name">Caritas Ukraine</div>
-    <div class="card-tags"><span class="tag">Food</span><span class="tag-uk">/ Харчування</span><span class="tag">Social support</span><span class="tag-uk">/ Соціальна підтримка</span></div>
+    <div class="card-tags"><span class="tag">Food</span><span class="tag">Social support</span></div>
     <div class="card-impact">Distributed food packages to 280,000 vulnerable households; running 12 day centers for displaced elderly.</div>
     <div class="card-foot">
       <div class="vbadge"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg><span class="ua">Верифіковано on-chain</span><span class="en">Verified on-chain</span></div>
@@ -221,9 +220,9 @@ body{padding-top:var(--nav-h);}
   </div>
 
   <div class="card" data-cats="food humanitarian">
-    <div class="card-bar"></div>
+    <div class="card-top"><div class="card-num">05</div>
     <div class="card-name">World Central Kitchen</div>
-    <div class="card-tags"><span class="tag">Food</span><span class="tag-uk">/ Харчування</span><span class="tag">Frontline</span><span class="tag-uk">/ Лінія фронту</span></div>
+    <div class="card-tags"><span class="tag">Food</span><span class="tag">Frontline</span></div>
     <div class="card-impact">8.4M meals served in frontline communities. 23 field kitchens operational across eastern Ukraine.</div>
     <div class="card-foot">
       <div class="vbadge"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg><span class="ua">Верифіковано on-chain</span><span class="en">Verified on-chain</span></div>
@@ -233,9 +232,9 @@ body{padding-top:var(--nav-h);}
   </div>
 
   <div class="card" data-cats="medical humanitarian">
-    <div class="card-bar"></div>
+    <div class="card-top"><div class="card-num">06</div>
     <div class="card-name">Razom for Ukraine</div>
-    <div class="card-tags"><span class="tag">Medical</span><span class="tag-uk">/ Медицина</span><span class="tag">Logistics</span><span class="tag-uk">/ Логістика</span></div>
+    <div class="card-tags"><span class="tag">Medical</span><span class="tag">Logistics</span></div>
     <div class="card-impact">$4.2M in medical equipment delivered to 38 hospitals across Kharkiv and Donetsk oblasts.</div>
     <div class="card-foot">
       <div class="vbadge"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg><span class="ua">Верифіковано on-chain</span><span class="en">Verified on-chain</span></div>
@@ -245,9 +244,9 @@ body{padding-top:var(--nav-h);}
   </div>
 
   <div class="card" data-cats="humanitarian emergency">
-    <div class="card-bar"></div>
+    <div class="card-top"><div class="card-num">07</div>
     <div class="card-name">Nova Ukraine</div>
-    <div class="card-tags"><span class="tag">Humanitarian</span><span class="tag-uk">/ Гуманітарна</span><span class="tag">Diaspora</span><span class="tag-uk">/ Діаспора</span></div>
+    <div class="card-tags"><span class="tag">Humanitarian</span><span class="tag">Diaspora</span></div>
     <div class="card-impact">$28M in aid delivered via 40+ partner organizations; generator program serving 210 critical facilities.</div>
     <div class="card-foot">
       <div class="vbadge"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg><span class="ua">Верифіковано on-chain</span><span class="en">Verified on-chain</span></div>
@@ -258,52 +257,13 @@ body{padding-top:var(--nav-h);}
 
 </div></div>
 
-<div class="wfoot">
-  <div class="wfoot-note"><span class="ua">Всі записи закріплені на BNB Chain · Незмінні · Публічно перевіряються</span><span class="en">All records anchored on BNB Chain · Immutable · Publicly auditable</span></div>
   <a class="btn-scan" href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener">View contract on BscScan →</a>
-</div>
-
-<!-- SUBMIT SECTION -->
-<div class="submit-section">
-  <div class="submit-in">
-    <div class="submit-lbl"><span class="ua">Подати внесок на верифікацію</span><span class="en">Submit your contribution</span></div>
-    <div class="submit-h2"><span class="ua">ЗАЛИШ СВІЙ СЛІД<br><span style="color:var(--gold)">НАЗАВЖДИ</span></span><span class="en">LEAVE YOUR MARK<br><span style="color:var(--gold)">FOREVER</span></span></div>
-    <p class="submit-sub"><span class="ua">Ваш внесок буде верифіковано партнерською організацією та зафіксовано на BNB Chain. Незмінно. Публічно.</span><span class="en">Your contribution will be verified by a partner organization and permanently recorded on BNB Chain. Immutable. Public.</span></p>
-    <div class="submit-form">
-      <div class="sf-row">
-        <div class="sf-field">
-          <label class="sf-label"><span class="ua">Ваше ім'я або організація</span><span class="en">Your name or organization</span></label>
-          <input class="sf-input" type="text" placeholder="Марина Л. / Nova Ukraine"/>
-        </div>
-        <div class="sf-field">
-          <label class="sf-label"><span class="ua">Тип внеску</span><span class="en">Contribution type</span></label>
-          <select class="sf-select">
-            <option value=""><span class="ua">Оберіть</span><span class="en">Select</span></option>
-            <option>Donation / Пожертва</option>
-            <option>Volunteer work / Волонтерство</option>
-            <option>NGO project / Проєкт НГО</option>
-            <option>In-kind / Натуральна допомога</option>
-          </select>
-        </div>
-      </div>
-      <div class="sf-field">
-        <label class="sf-label"><span class="ua">Опис внеску</span><span class="en">Description</span></label>
-        <textarea class="sf-textarea" placeholder="Що зроблено, скільки людей охоплено, коли, де..."></textarea>
-      </div>
-      <div class="sf-field">
-        <label class="sf-label"><span class="ua">Підтверджуючий документ (посилання або скріншот)</span><span class="en">Supporting document (link or screenshot)</span></label>
-        <input class="sf-input" type="text" placeholder="https:// або опишіть що можете надати"/>
-      </div>
-      <div class="sf-note"><span class="ua">Пілотна фаза: верифікація вручну протягом 3-5 днів. Після верифікації отримаєте хеш вашого запису на BNB Chain.</span><span class="en">Pilot phase: manual verification within 3-5 days. After verification you will receive your BNB Chain record hash.</span></div>
-      <button class="btn-submit"><span class="ua">Подати на верифікацію →</span><span class="en">Submit for verification →</span></button>
-    </div>
-  </div>
 </div>
 
 <footer>
   <div class="ft">
     <div class="ft-copy">© 2026 UA Rebuild · <span class="ua">Всі записи незмінні</span><span class="en">All records immutable</span></div>
-    <div class="ft-chain"><div class="ft-dot"></div><span class="ua">Верифіковано на BNB Chain</span><span class="en">Verified on BNB Chain</span></div>
+    <div class="ft-chain"><div class="ft-dot"></div>BNB Chain</div>
   </div>
 </footer>
 

@@ -20,7 +20,7 @@
   --red:#C1121F;--green:#2D6A4F;
   --nav-h:46px;
 }
-html,body{font-family:'Inter',sans-serif;height:100%;overflow:hidden;color:var(--ink);background:var(--bg);}
+html,body{font-family:'Inter',sans-serif;height:100%;overflow:hidden;color:var(--ink);background:var(--bg);margin:0;}
 .en{display:none!important;}.ua{display:inline!important;}
 body.en .en{display:inline!important;}body.en .ua{display:none!important;}
 
@@ -201,7 +201,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;background:var(--surface,#F4
   <div class="nav-gold"></div>
   <div class="nav-in">
     <a class="nav-logo" href="index.html">
-      <img src="logo_white.svg" alt="UA Rebuild" onerror="this.outerHTML='&lt;span class=nav-logo-text&gt;&lt;span&gt;UA&lt;/span&gt; Rebuild&lt;/span&gt;'"/>
+      <img src="logo_white.svg" alt="UA Rebuild" style="height:24px;width:auto;filter:brightness(0) saturate(100%);" onerror="this.style.display='none'"/>
     </a>
     <div class="nav-links">
       <a href="index.html#challenge"><span class="ua">Проблема</span><span class="en">Challenge</span></a>
