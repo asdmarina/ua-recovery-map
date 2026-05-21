@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>UA Rebuild — Wall of Rebuilders</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#EDECEA;--bg2:#E2E0DD;--surface:#F4F3F1;--gold:#B8960C;--ink:#0A0A0A;--ink2:#2A2A2A;--muted:#5A5855;--muted2:#8A8880;--border:#C8C8C4;--dark:#1A1A18;}
+html{font-family:'Inter',sans-serif;color:var(--ink);scroll-behavior:smooth;-webkit-font-smoothing:antialiased;}
+body{background:var(--bg);}
+.en{display:none;}.ua{display:inline;}
+body.en .en{display:inline;}body.en .ua{display:none;}
+nav{position:sticky;top:0;z-index:100;background:var(--bg2);border-bottom:1px solid var(--border);}
+.nav-gold{height:2px;background:var(--gold);}
+.nav-in{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:44px;gap:12px;}
+.back{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .15s;}
+.back:hover{color:var(--ink);}
+.back svg{width:13px;height:13px;}
+.nav-logo{display:flex;align-items:center;text-decoration:none;margin-right:auto;}
+.ltog{display:flex;border:1px solid var(--border);margin-left:auto;}
+.ltog button{padding:4px 9px;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-family:'Inter',sans-serif;border:none;background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;}
+.ltog button.on{background:var(--gold);color:var(--ink);}
+.ph{max-width:1280px;margin:0 auto;padding:52px 24px 36px;}
+.ph-lbl{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.ph-lbl::before{content:'';display:block;width:20px;height:1px;background:var(--gold);}
+.ph-h1{font-family:'Oswald',sans-serif;font-size:clamp(48px,8vw,92px);line-height:.95;margin-bottom:10px;}
+.ph-sub{font-size:14px;color:var(--muted);max-width:460px;line-height:1.7;}
+.ph-stats{display:flex;gap:28px;margin-top:24px;padding-top:18px;border-top:1px solid var(--border);flex-wrap:wrap;}
+.ph-sn{font-family:'Oswald',sans-serif;font-size:30px;color:var(--gold);line-height:1;}
+.ph-sl{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.filters{max-width:1280px;margin:0 auto;padding:0 24px 24px;display:flex;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--gold);}
+.fb{padding:5px 13px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;}
+.fb.on,.fb:hover{background:var(--ink);color:var(--gold);border-color:var(--ink);}
+.wall{max-width:1280px;margin:0 auto;padding:22px 24px 0;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(285px,1fr));gap:2px;}
+.card{background:var(--surface);padding:28px 24px 22px;border:1px solid var(--border);border-top:2px solid var(--gold);transition:box-shadow .2s,transform .2s;display:flex;flex-direction:column;}
+.card:hover{box-shadow:0 6px 28px rgba(0,0,0,.08);transform:translateY(-2px);}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;}
+.card-num{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted2);letter-spacing:.05em;}
+.card-name{font-family:'Oswald',sans-serif;font-size:20px;font-weight:600;color:var(--ink);margin-bottom:12px;letter-spacing:.01em;line-height:1.1;}
+.card-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:0;align-items:center;}
+.tag{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border:1px solid var(--gold);color:var(--gold);}
+.tag-uk{font-size:9px;color:var(--muted2);margin-left:2px;}
+.card-impact{font-size:12px;color:var(--ink2);line-height:1.7;flex:1;margin-bottom:16px;}
+.card-foot{padding-top:12px;border-top:1px solid var(--border);margin-top:auto;display:flex;flex-direction:column;gap:3px;}
+.vbadge{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:3px;}
+.vbadge svg{width:12px;height:12px;}
+.card-hash{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted2);}
+.card-lnk{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--gold);text-decoration:none;display:inline-block;margin-top:3px;transition:opacity .15s;}
+.card-lnk:hover{opacity:.7;}
+.wfoot{max-width:1280px;margin:0 auto;padding:18px 24px 44px;border-top:1px solid var(--gold);text-align:center;}
+.wfoot-note{font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;}
+.btn-scan{padding:8px 22px;border:1px solid var(--gold);color:var(--gold);background:transparent;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-family:'Inter',sans-serif;text-decoration:none;display:inline-block;transition:all .15s;}
+.btn-scan:hover{background:var(--gold);color:var(--ink);}
+
+/* Submit section */
+.submit-section{background:var(--dark);padding:64px 24px;}
+.submit-in{max-width:640px;margin:0 auto;text-align:center;}
+.submit-lbl{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;}
+.submit-h2{font-family:'Oswald',sans-serif;font-size:clamp(36px,6vw,64px);color:#F2F2F0;line-height:1;margin-bottom:16px;}
+.submit-sub{font-size:13px;color:#8A8880;line-height:1.7;margin-bottom:32px;}
+.submit-form{display:flex;flex-direction:column;gap:12px;text-align:left;}
+.sf-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.sf-field{display:flex;flex-direction:column;gap:5px;}
+.sf-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#8A8880;}
+.sf-input,.sf-select,.sf-textarea{background:#2A2A28;border:1px solid #3A3A38;color:#F2F2F0;padding:10px 12px;font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .15s;width:100%;}
+.sf-input:focus,.sf-select:focus,.sf-textarea:focus{border-color:var(--gold);}
+.sf-textarea{resize:vertical;min-height:80px;}
+.sf-select option{background:#2A2A28;}
+.sf-note{font-size:10px;color:#5A5855;line-height:1.6;padding:10px 12px;border-left:2px solid var(--gold);}
+.btn-submit{padding:12px 32px;background:var(--gold);color:var(--ink);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-family:'Inter',sans-serif;border:none;cursor:pointer;transition:opacity .15s;margin-top:8px;width:100%;}
+.btn-submit:hover{opacity:.85;}
+
+footer{background:var(--dark);padding:32px 24px 18px;border-top:1px solid rgba(184,150,12,0.3);}
+.ft{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.ft-copy{font-size:10px;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;}
+.ft-chain{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;}
+.ft-dot{width:5px;height:5px;background:var(--gold);}
+@media(max-width:600px){
+  .grid{grid-template-columns:1fr;}
+  .ph{padding:32px 20px 24px;}
+  .filters{padding:0 20px 18px;}
+  .wall{padding:16px 20px 0;}
+  .sf-row{grid-template-columns:1fr;}
+}
+
+/* ── NAV (shared) ── */
+:root{--nav-h:46px;}
+nav{position:fixed;top:0;left:0;right:0;z-index:500;background:var(--surface,#F4F3F1);border-bottom:1px solid var(--border,#C8C8C4);}
+.nav-gold{height:2px;background:var(--gold,#B8960C);}
+.nav-in{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:44px;gap:20px;}
+.nav-logo{display:flex;align-items:center;text-decoration:none;margin-right:auto;}
+.nav-logo img{height:24px;width:auto;}
+.nav-logo-text{font-family:'Oswald',sans-serif;font-size:20px;font-weight:600;letter-spacing:.04em;color:var(--ink,#0A0A0A);}
+.nav-logo-text span{color:var(--gold,#B8960C);}
+.nav-links{display:flex;align-items:center;gap:20px;}
+.nav-links a{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted,#5A5855);text-decoration:none;transition:color .15s;white-space:nowrap;}
+.nav-links a:hover{color:var(--gold,#B8960C);}
+.nav-links a.active{color:var(--gold,#B8960C);}
+.ltog{display:flex;border:1px solid var(--border,#C8C8C4);overflow:hidden;margin-left:4px;}
+.ltog button{padding:4px 9px;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-family:'Inter',sans-serif;border:none;background:transparent;color:var(--muted,#5A5855);cursor:pointer;transition:all .15s;}
+.ltog button.on{background:var(--gold,#B8960C);color:#0A0A0A;}
+.burger{display:none;background:none;border:none;cursor:pointer;padding:4px;flex-shrink:0;}
+.burger span{display:block;width:18px;height:1.5px;background:var(--ink,#0A0A0A);margin:4px 0;}
+.mobnav{display:none;padding:12px 24px;background:var(--surface,#F4F3F1);border-top:1px solid var(--border,#C8C8C4);}
+.mobnav.open{display:block;}
+.mobnav a{display:block;padding:9px 0;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2,#2A2A2A);text-decoration:none;border-bottom:1px solid var(--border,#C8C8C4);}
+.mobnav a:last-child{border-bottom:none;}
+@media(max-width:768px){.nav-links{display:none;}.burger{display:block;}}
+
+body{padding-top:var(--nav-h);}
+</style>
+</head>
+<body class="ua">
+<nav>
+  <div class="nav-gold"></div>
+  <div class="nav-in">
+    <a class="nav-logo" href="index.html">
+      <img src="logo_white.svg" alt="UA Rebuild" style="height:24px;width:auto;filter:brightness(0) saturate(100%);" onerror="this.style.display='none'"/>
+    </a>
+    <div class="nav-links">
+      <a href="index.html#challenge"><span class="ua">Проблема</span><span class="en">Challenge</span></a>
+      <a href="wall.html" class="active"><span class="ua">Стіна відбудовників</span><span class="en">Wall of Rebuilders</span></a>
+      <a href="index.html#how"><span class="ua">Як це працює</span><span class="en">How it works</span></a>
+      <a href="map.html"><span class="ua">Карта</span><span class="en">Map</span></a>
+    </div>
+    <div class="ltog">
+      <button class="on" id="bua" onclick="setLang('ua')">UA</button>
+      <button id="ben" onclick="setLang('en')">EN</button>
+    </div>
+    <button class="burger" onclick="toggleNav()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mobnav" id="mobnav">
+    <a href="index.html#challenge" onclick="toggleNav()"><span class="ua">Проблема</span><span class="en">Challenge</span></a>
+    <a href="wall.html" onclick="toggleNav()"><span class="ua">Стіна відбудовників</span><span class="en">Wall of Rebuilders</span></a>
+    <a href="index.html#how" onclick="toggleNav()"><span class="ua">Як це працює</span><span class="en">How it works</span></a>
+    <a href="map.html" onclick="toggleNav()"><span class="ua">Карта</span><span class="en">Map</span></a>
+  </div>
+</nav>
+
+<div class="ph">
+  <div class="ph-lbl"><span class="ua">Визнані учасники</span><span class="en">Recognized contributors</span></div>
+  <div class="ph-h1">
+    <span class="ua">СТІНА<br><span style="color:var(--gold)">ВІДБУДОВНИКІВ</span></span>
+    <span class="en">WALL OF<br><span style="color:var(--gold)">REBUILDERS</span></span>
+  </div>
+  <p class="ph-sub">
+    <span class="ua">Кожен бейдж — верифікований внесок on-chain. Не рейтинг — постійний незмінний запис тих хто прийшов допомогти Україні.</span>
+    <span class="en">Each badge represents a verified on-chain contribution. Not a ranking — a permanent, immutable record of those who showed up for Ukraine.</span>
+  </p></div>
+    <div><div class="ph-sn">9</div><div class="ph-sl"><span class="ua">Записів on-chain</span><span class="en">On-chain records</span></div></div>
+    <div><div class="ph-sn">BNB</div><div class="ph-sl"><span class="ua">Мережа верифікації</span><span class="en">Verification network</span></div></div>
+  </div>
+</div>
+
+<div class="filters">
+  <button class="fb on" onclick="filter('all',this)"><span class="ua">Всі</span><span class="en">All</span></button>
+  <button class="fb" onclick="filter('medical',this)">Medical aid</button>
+  <button class="fb" onclick="filter('reconstruction',this)">Reconstruction</button>
+  <button class="fb" onclick="filter('emergency',this)">Emergency aid</button>
+  <button class="fb" onclick="filter('education',this)">Education</button>
+  <button class="fb" onclick="filter('food',this)">Food</button>
+  <button class="fb" onclick="filter('humanitarian',this)">Humanitarian</button>
+</div>
+
+<div class="wall"><div class="grid" id="wallGrid">
+
+  <div class="card" data-cats="reconstruction emergency">
+    <div class="card-top"><div class="card-num">01</div>
+    <div class="card-name">ACTED Ukraine</div>
+    <div class="card-tags"><span class="tag">Shelter</span><span class="tag">Reconstruction</span></div>
+    <div class="card-impact">Restored 1,200 damaged homes and winterized 4 community centers in Mykolaiv region.</div>
+    <div class="card-foot">
+      <div class="vbadge"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg><span class="ua">Верифіковано on-chain</span><span class="en">Verified on-chain</span></div>
+      <div class="card-hash">0x7b…c114 · BNB Chain</div>
+      <a class="card-lnk" href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener">View on BscScan →</a>
+    </div>
+  </div>
+
+  <div class="card" data-cats="humanitarian emergency">
+    <div class="card-top"><div class="card-num">02</div>
+    <div class="card-name">UNHCR Ukraine</div>
+    <div class="card-tags"><span class="tag">Displacement</span><span class="tag">Emergency aid</span></div>
+    <div class="card-impact">Reached 1.4M internally displaced persons with emergency cash assistance and protection services.</div>
+    <div class="card-foot">
+      <div class="vbadge"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg><span class="ua">Верифіковано on-chain</span><span class="en">Verified on-chain</span></div>
+      <div class="card-hash">0x9d…e330 · BNB Chain</div>
+      <a class="card-lnk" href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener">View on BscScan →</a>
+    </div>
+  </div>
+
+  <div class="card" data-cats="reconstruction education">
+    <div class="card-top"><div class="card-num">03</div>
+    <div class="card-name">Rebuild Ukraine Alliance</div>
+    <div class="card-tags"><span class="tag">Infrastructure</span><span class="tag">Education</span></div>
+    <div class="card-impact">Coordinated reconstruction of 18 schools and 6 water treatment facilities across Donetsk frontline communities.</div>
+    <div class="card-foot">
+      <div class="vbadge"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg><span class="ua">Верифіковано on-chain</span><span class="en">Verified on-chain</span></div>
+      <div class="card-hash">0x2a…f701 · BNB Chain</div>
+      <a class="card-lnk" href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener">View on BscScan →</a>
+    </div>
+  </div>
+
+  <div class="card" data-cats="food humanitarian">
+    <div class="card-top"><div class="card-num">04</div>
+    <div class="card-name">Caritas Ukraine</div>
+    <div class="card-tags"><span class="tag">Food</span><span class="tag">Social support</span></div>
+    <div class="card-impact">Distributed food packages to 280,000 vulnerable households; running 12 day centers for displaced elderly.</div>
+    <div class="card-foot">
+      <div class="vbadge"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg><span class="ua">Верифіковано on-chain</span><span class="en">Verified on-chain</span></div>
+      <div class="card-hash">0x5c…b229 · BNB Chain</div>
+      <a class="card-lnk" href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener">View on BscScan →</a>
+    </div>
+  </div>
+
+  <div class="card" data-cats="food humanitarian">
+    <div class="card-top"><div class="card-num">05</div>
+    <div class="card-name">World Central Kitchen</div>
+    <div class="card-tags"><span class="tag">Food</span><span class="tag">Frontline</span></div>
+    <div class="card-impact">8.4M meals served in frontline communities. 23 field kitchens operational across eastern Ukraine.</div>
+    <div class="card-foot">
+      <div class="vbadge"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg><span class="ua">Верифіковано on-chain</span><span class="en">Verified on-chain</span></div>
+      <div class="card-hash">0xd5…8e9a · BNB Chain</div>
+      <a class="card-lnk" href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener">View on BscScan →</a>
+    </div>
+  </div>
+
+  <div class="card" data-cats="medical humanitarian">
+    <div class="card-top"><div class="card-num">06</div>
+    <div class="card-name">Razom for Ukraine</div>
+    <div class="card-tags"><span class="tag">Medical</span><span class="tag">Logistics</span></div>
+    <div class="card-impact">$4.2M in medical equipment delivered to 38 hospitals across Kharkiv and Donetsk oblasts.</div>
+    <div class="card-foot">
+      <div class="vbadge"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg><span class="ua">Верифіковано on-chain</span><span class="en">Verified on-chain</span></div>
+      <div class="card-hash">0x8a…c3e1 · BNB Chain</div>
+      <a class="card-lnk" href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener">View on BscScan →</a>
+    </div>
+  </div>
+
+  <div class="card" data-cats="humanitarian emergency">
+    <div class="card-top"><div class="card-num">07</div>
+    <div class="card-name">Nova Ukraine</div>
+    <div class="card-tags"><span class="tag">Humanitarian</span><span class="tag">Diaspora</span></div>
+    <div class="card-impact">$28M in aid delivered via 40+ partner organizations; generator program serving 210 critical facilities.</div>
+    <div class="card-foot">
+      <div class="vbadge"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg><span class="ua">Верифіковано on-chain</span><span class="en">Verified on-chain</span></div>
+      <div class="card-hash">0x1e…d445 · BNB Chain</div>
+      <a class="card-lnk" href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener">View on BscScan →</a>
+    </div>
+  </div>
+
+</div></div>
+
+  <a class="btn-scan" href="https://testnet.bscscan.com/address/0x93f529ad791d7f0fd27ca4091c253b5291947fcd" target="_blank" rel="noopener">View contract on BscScan →</a>
+</div>
+
+<footer>
+  <div class="ft">
+    <div class="ft-copy">© 2026 UA Rebuild · <span class="ua">Всі записи незмінні</span><span class="en">All records immutable</span></div>
+    <div class="ft-chain"><div class="ft-dot"></div>BNB Chain</div>
+  </div>
+</footer>
+
+<script>
+function setLang(l){
+  document.body.className=l;
+  document.getElementById('bua').classList.toggle('on',l==='ua');
+  document.getElementById('ben').classList.toggle('on',l==='en');
+  localStorage.setItem('lang',l);
+}
+function filter(cat,btn){
+  document.querySelectorAll('.fb').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('.card').forEach(c=>{
+    c.style.display=(cat==='all'||c.dataset.cats.includes(cat))?'flex':'none';
+  });
+}
+const saved=localStorage.getItem('lang')||'ua';
+setLang(saved);
+</script>
+</body>
+</html>
