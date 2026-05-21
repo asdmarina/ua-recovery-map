@@ -316,7 +316,8 @@ function getColor(c,layer){
 
 let activeLayer='destruction',selectedId=null,markers={},isUa=true,panelOpen=true;
 
-const map=L.map('mapEl',{center:[48.5,31.5],zoom:6,zoomControl:true,attributionControl:false});
+const isMobile = window.innerWidth <= 768;
+const map=L.map('mapEl',{center:[48.5,31.5],zoom:isMobile?5:6,zoomControl:!isMobile,attributionControl:false});
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19}).addTo(map);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19,opacity:0.6,pane:'overlayPane'}).addTo(map);
 
@@ -338,6 +339,17 @@ function updateLegend(){
   document.getElementById('legend').innerHTML=`<div class="leg-title">${isUa?leg.ua:leg.en}</div>`+leg.items.map(([c,l])=>`<div class="leg-item"><div class="leg-dot" style="background:${c};"></div><div class="leg-lbl">${l}</div></div>`).join('');
 }
 
+function setLayerMob(layer,btn){
+  activeLayer=layer;
+  document.querySelectorAll('.mob-lsw-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  // Also sync desktop switcher
+  document.querySelectorAll('.lsw-btn').forEach((b,i)=>{
+    const layers=['destruction','recovery','aid','conflict'];
+    b.classList.toggle('on',layers[i]===layer);
+  });
+  drawMarkers();updateLegend();
+}
 function setLayer(layer,btn){
   activeLayer=layer;
   document.querySelectorAll('.lsw-btn').forEach(b=>b.classList.remove('on'));
